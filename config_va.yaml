@@ -1,0 +1,33 @@
+# Configuration for VA Embedding Training
+# This config extends the base config with VA-specific settings
+
+# LoRA settings (same as base config)
+lora_r: 32
+lora_alpha: 32
+lora_dropout: 0.1
+lora_trainable: ["query_key_value", "dense", "dense_h_to_4h", "dense_4h_to_h"]
+
+# Training settings
+max_length: 1023  # 2047 + 1 (VA token) = 2048 total
+train_bsz: 1
+eval_bsz: 1
+gradient_accumulation_steps: 4
+learning_rate: 0.0001
+weight_decay: 0.01
+num_epochs: 5
+num_workers: 8
+warmup_steps: 50
+logging_steps: 1
+save_steps: 100
+
+# VA Embedding specific settings
+va_hidden_dim: 64          # Hidden dimension in VA projection MLP
+freeze_va_embedding: false  # Whether to freeze VA embedding (train it by default)
+va_learning_rate: 0.0001   # Learning rate for VA embedding (same as LoRA by default)
+
+# Dataset paths (relative to training script)
+train_data: "../../../Datasets/OpenS2S_Qwen3TTS/glm4voice_va_format/train.jsonl"
+eval_data: "../../../Datasets/OpenS2S_Qwen3TTS/glm4voice_va_format/eval.jsonl"
+
+# Model settings
+base_model: "THUDM/glm-4-voice-9b"

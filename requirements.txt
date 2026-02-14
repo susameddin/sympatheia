@@ -1,0 +1,17 @@
+torch>=2.0
+torchaudio>=2.0
+transformers>=4.40
+peft>=0.10
+trl>=0.8
+datasets
+accelerate
+deepspeed
+soundfile
+gradio
+numpy
+matplotlib
+pyyaml
+hyperpyyaml
+safetensors
+tqdm
+wandb

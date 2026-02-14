@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model weights (too large for git)
+*.pt
+*.bin
+*.safetensors
+
+# Training artifacts
+experiments/
+results*/
+wandb/
+core.*
+
+# Audio files
+*.wav
+*.mp3
+*.flac
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
