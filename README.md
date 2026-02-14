@@ -26,7 +26,7 @@ Each emotion is mapped to a continuous (valence, arousal) coordinate, enabling i
 ```bash
 python train_opens2s_qwen3tts_va_text.py
 ```
-Hyperparameters are in `config.yaml`. DeepSpeed configs: `ds_config.json` / `ds_config_zero2.json`.
+Hyperparameters are in `config.yaml`. DeepSpeed config: `ds_config.json`.
 
 ### Inference
 ```bash
