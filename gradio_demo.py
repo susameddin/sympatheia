@@ -6,7 +6,7 @@ and generates an emotionally-conditioned speech response.
 
 Usage:
     python gradio_demo.py \
-        --checkpoint experiments/glm-model-opens2s-qwen3tts-va-text-lora-20260205-213752/checkpoint-700 \
+        --checkpoint ~/emo_recog_2025s/Models/GLM-4-Voice/glm-4-voice-finetune/experiments/glm-model-opens2s-qwen3tts-va-text-lora-20260208-001117/checkpoint-1600 \
         --port 7860
 """
 
@@ -38,6 +38,8 @@ import gradio as gr
 from transformers import AutoTokenizer
 from peft import AutoPeftModelForCausalLM
 from src.vocoder import GLM4CodecEncoder, GLM4CodecDecoder
+from audio_emotion.models import AudioEmotionRecognizer
+from audio_emotion.config import EMOTION_VA_MAPPING as _VA_MAP
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -101,6 +103,7 @@ glm_speech_encoder = None
 glm_speech_decoder = None
 glm_model = None
 audio_0_id = None
+emotion_recognizer = None  # Set if --enable-auto-detect
 
 # ---------------------------------------------------------------------------
 # VA Plane Visualization
@@ -351,6 +354,47 @@ def on_slider_change(valence, arousal):
     return create_va_plane_figure(valence, arousal)
 
 
+def on_mode_change(mode):
+    """Toggle visibility of manual vs auto-detect controls."""
+    is_manual = (mode == "Select Manually")
+    return (
+        gr.update(visible=is_manual),   # manual_controls group
+        gr.update(visible=not is_manual),  # detect_controls group
+    )
+
+
+def on_detect_emotion(audio_path):
+    """Detect emotion from input audio and update sliders + plot."""
+    if audio_path is None:
+        raise gr.Error("Please record or upload an audio file first.")
+
+    result = emotion_recognizer.predict_full(audio_path)
+    v, a = result["valence"], result["arousal"]
+
+    # Find nearest emotion for info display
+    best_emo, best_dist = None, float("inf")
+    for emo, (ev, ea) in _VA_MAP.items():
+        d = np.sqrt((v - ev) ** 2 + (a - ea) ** 2)
+        if d < best_dist:
+            best_dist, best_emo = d, emo
+
+    info = f"Detected: V={v:+.2f}, A={a:+.2f} (nearest: {best_emo})"
+
+    return (
+        v,
+        a,
+        create_va_plane_figure(v, a),
+        info,
+    )
+
+
+def run_inference_with_mode(audio_path, mode, valence, arousal, detect_v, detect_a):
+    """Pick VA values based on active mode, then run inference."""
+    if mode == "Detect From Audio":
+        valence, arousal = detect_v, detect_a
+    return run_inference(audio_path, valence, arousal)
+
+
 # ---------------------------------------------------------------------------
 # Gradio UI
 # ---------------------------------------------------------------------------
@@ -376,27 +420,48 @@ def build_ui():
                 )
 
                 gr.Markdown("### Emotion Control")
-                emotion_preset = gr.Dropdown(
-                    choices=emotion_choices,
-                    value="neutral",
-                    label="Emotion Preset",
+
+                emotion_mode = gr.Radio(
+                    choices=["Select Manually", "Detect From Audio"],
+                    value="Select Manually",
+                    label="Emotion Input Mode",
                 )
 
-                valence_slider = gr.Slider(
-                    minimum=-1.0,
-                    maximum=1.0,
-                    value=0.0,
-                    step=0.01,
-                    label="Valence  (Negative \u2190 \u2192 Positive)",
-                )
+                # --- Manual controls ---
+                with gr.Group(visible=True) as manual_controls:
+                    emotion_preset = gr.Dropdown(
+                        choices=emotion_choices,
+                        value="neutral",
+                        label="Emotion Preset",
+                    )
+                    valence_slider = gr.Slider(
+                        minimum=-1.0,
+                        maximum=1.0,
+                        value=0.0,
+                        step=0.01,
+                        label="Valence  (Negative \u2190 \u2192 Positive)",
+                    )
+                    arousal_slider = gr.Slider(
+                        minimum=-1.0,
+                        maximum=1.0,
+                        value=0.0,
+                        step=0.01,
+                        label="Arousal  (Calm \u2190 \u2192 Energetic)",
+                    )
 
-                arousal_slider = gr.Slider(
-                    minimum=-1.0,
-                    maximum=1.0,
-                    value=0.0,
-                    step=0.01,
-                    label="Arousal  (Calm \u2190 \u2192 Energetic)",
-                )
+                # --- Auto-detect controls ---
+                with gr.Group(visible=False) as detect_controls:
+                    detect_btn = gr.Button(
+                        "Detect Emotion from Audio",
+                        variant="secondary",
+                    )
+                    detect_info = gr.Textbox(
+                        label="Detected Emotion",
+                        interactive=False,
+                        lines=1,
+                    )
+                    detect_v = gr.Number(value=0.0, visible=False)
+                    detect_a = gr.Number(value=0.0, visible=False)
 
                 generate_btn = gr.Button(
                     "Generate Emotional Response", variant="primary"
@@ -423,6 +488,13 @@ def build_ui():
 
         # ---- Event wiring ----
 
+        # Mode toggle → show/hide manual vs detect controls
+        emotion_mode.change(
+            fn=on_mode_change,
+            inputs=[emotion_mode],
+            outputs=[manual_controls, detect_controls],
+        )
+
         # Slider release → update plot (register first so we can cancel them)
         val_event = valence_slider.release(
             fn=on_slider_change,
@@ -443,10 +515,17 @@ def build_ui():
             cancels=[val_event, aro_event],
         )
 
-        # Generate button → run inference
+        # Detect emotion from audio → update detected VA + plot
+        detect_btn.click(
+            fn=on_detect_emotion,
+            inputs=[audio_input],
+            outputs=[detect_v, detect_a, va_plot, detect_info],
+        )
+
+        # Generate button → use VA from active mode
         generate_btn.click(
-            fn=run_inference,
-            inputs=[audio_input, valence_slider, arousal_slider],
+            fn=run_inference_with_mode,
+            inputs=[audio_input, emotion_mode, valence_slider, arousal_slider, detect_v, detect_a],
             outputs=[output_audio, output_text, va_plot],
         )
 
@@ -472,6 +551,11 @@ if __name__ == "__main__":
         help="Enable HTTPS with a self-signed cert (needed for mic access in Safari)",
     )
     args = parser.parse_args()
+
+    # Load audio emotion recognition model (used by "Detect From Audio" mode)
+    print("Loading audio emotion recognition model...")
+    emotion_recognizer = AudioEmotionRecognizer(device="cuda")
+    print("Emotion recognition model loaded.")
 
     # Load models globally
     glm_tokenizer, glm_speech_encoder, glm_speech_decoder, glm_model, audio_0_id = (
