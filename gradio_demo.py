@@ -40,6 +40,7 @@ from peft import AutoPeftModelForCausalLM
 from src.vocoder import GLM4CodecEncoder, GLM4CodecDecoder
 from audio_emotion.models import AudioEmotionRecognizer
 from audio_emotion.config import EMOTION_VA_MAPPING as _VA_MAP
+from audio_emotion.text_to_va import TextToVAConverter
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -104,6 +105,7 @@ glm_speech_decoder = None
 glm_model = None
 audio_0_id = None
 emotion_recognizer = None  # Set if --enable-auto-detect
+text_to_va_converter = None  # Set in __main__ after models are loaded
 
 # ---------------------------------------------------------------------------
 # VA Plane Visualization
@@ -355,12 +357,24 @@ def on_slider_change(valence, arousal):
 
 
 def on_mode_change(mode):
-    """Toggle visibility of manual vs auto-detect controls."""
-    is_manual = (mode == "Select Manually")
+    """Toggle visibility of manual vs auto-detect vs describe controls."""
+    is_manual   = (mode == "Select Manually")
+    is_detect   = (mode == "Detect From Audio")
+    is_describe = (mode == "Describe Your Feeling")
     return (
-        gr.update(visible=is_manual),   # manual_controls group
-        gr.update(visible=not is_manual),  # detect_controls group
+        gr.update(visible=is_manual),    # manual_controls group
+        gr.update(visible=is_detect),    # detect_controls group
+        gr.update(visible=is_describe),  # describe_controls group
     )
+
+
+def on_describe_emotion(description_text: str):
+    """Convert free-text emotion description to VA values and update the plot."""
+    if not description_text or not description_text.strip():
+        raise gr.Error("Please enter an emotion description first.")
+
+    v, a, info = text_to_va_converter.convert(description_text)
+    return float(v), float(a), create_va_plane_figure(v, a), info
 
 
 def on_detect_emotion(audio_path):
@@ -388,10 +402,13 @@ def on_detect_emotion(audio_path):
     )
 
 
-def run_inference_with_mode(audio_path, mode, valence, arousal, detect_v, detect_a):
+def run_inference_with_mode(audio_path, mode, valence, arousal,
+                            detect_v, detect_a, describe_v, describe_a):
     """Pick VA values based on active mode, then run inference."""
     if mode == "Detect From Audio":
         valence, arousal = detect_v, detect_a
+    elif mode == "Describe Your Feeling":
+        valence, arousal = describe_v, describe_a
     return run_inference(audio_path, valence, arousal)
 
 
@@ -422,7 +439,7 @@ def build_ui():
                 gr.Markdown("### Emotion Control")
 
                 emotion_mode = gr.Radio(
-                    choices=["Select Manually", "Detect From Audio"],
+                    choices=["Select Manually", "Detect From Audio", "Describe Your Feeling"],
                     value="Select Manually",
                     label="Emotion Input Mode",
                 )
@@ -463,6 +480,26 @@ def build_ui():
                     detect_v = gr.Number(value=0.0, visible=False)
                     detect_a = gr.Number(value=0.0, visible=False)
 
+                # --- Describe-your-feeling controls ---
+                with gr.Group(visible=False) as describe_controls:
+                    feeling_text = gr.Textbox(
+                        label="Describe Your Feeling",
+                        placeholder='e.g. "I\'m feeling a bit down but also somewhat hopeful"',
+                        lines=2,
+                        max_lines=4,
+                    )
+                    describe_btn = gr.Button(
+                        "Extract Emotion from Description",
+                        variant="secondary",
+                    )
+                    describe_info = gr.Textbox(
+                        label="Extracted Emotion",
+                        interactive=False,
+                        lines=1,
+                    )
+                    describe_v = gr.Number(value=0.0, visible=False)
+                    describe_a = gr.Number(value=0.0, visible=False)
+
                 generate_btn = gr.Button(
                     "Generate Emotional Response", variant="primary"
                 )
@@ -488,11 +525,18 @@ def build_ui():
 
         # ---- Event wiring ----
 
-        # Mode toggle → show/hide manual vs detect controls
+        # Mode toggle → show/hide manual vs detect vs describe controls
         emotion_mode.change(
             fn=on_mode_change,
             inputs=[emotion_mode],
-            outputs=[manual_controls, detect_controls],
+            outputs=[manual_controls, detect_controls, describe_controls],
+        )
+
+        # Describe emotion → extract VA from text, update hidden numbers + plot
+        describe_btn.click(
+            fn=on_describe_emotion,
+            inputs=[feeling_text],
+            outputs=[describe_v, describe_a, va_plot, describe_info],
         )
 
         # Slider release → update plot (register first so we can cancel them)
@@ -525,7 +569,12 @@ def build_ui():
         # Generate button → use VA from active mode
         generate_btn.click(
             fn=run_inference_with_mode,
-            inputs=[audio_input, emotion_mode, valence_slider, arousal_slider, detect_v, detect_a],
+            inputs=[
+                audio_input, emotion_mode,
+                valence_slider, arousal_slider,
+                detect_v, detect_a,
+                describe_v, describe_a,
+            ],
             outputs=[output_audio, output_text, va_plot],
         )
 
@@ -561,6 +610,10 @@ if __name__ == "__main__":
     glm_tokenizer, glm_speech_encoder, glm_speech_decoder, glm_model, audio_0_id = (
         load_models(args.checkpoint)
     )
+
+    # Initialise the text-to-VA converter (reuses already-loaded glm_model)
+    text_to_va_converter = TextToVAConverter(glm_model, glm_tokenizer)
+    print("Text-to-VA converter ready.")
 
     # Build and launch
     demo = build_ui()
