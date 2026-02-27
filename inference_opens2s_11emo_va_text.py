@@ -21,6 +21,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import argparse
+import random
 import torch
 from transformers import AutoTokenizer
 from peft import AutoPeftModelForCausalLM
@@ -59,6 +60,24 @@ def parse_args():
         default=None,
         help="Path to input audio file. If not set, uses a default eval sample",
     )
+    parser.add_argument(
+        "--compare-mode",
+        action="store_true",
+        help="Run emotion comparison: for each emotion sample one eval query and generate "
+             "correct / N/A / opposite VA outputs. Saves under results_11emo/emotion_comparison/",
+    )
+    parser.add_argument(
+        "--eval-audio-dir",
+        type=str,
+        default="/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k/audio/eval",
+        help="Root of eval audio dir containing {emotion}_query/ subdirs (used with --compare-mode)",
+    )
+    parser.add_argument(
+        "--compare-seed",
+        type=int,
+        default=42,
+        help="Random seed for sampling eval audio in compare mode (default: 42)",
+    )
     return parser.parse_args()
 
 
@@ -94,6 +113,22 @@ def build_checkpoint_paths(args):
         sys.exit(1)
 
     return paths
+
+
+# Opposite emotion mapping — partner is the emotion farthest away in VA space
+OPPOSITE_EMOTIONS = {
+    "sad":        "excited",    # (-0.75,-0.65) ↔ ( 0.75, 0.90)
+    "excited":    "sad",        # ( 0.75, 0.90) ↔ (-0.75,-0.65)
+    "frustrated": "excited",    # (-0.82,-0.20) → Excited is farthest
+    "neutral":    "angry",      # ( 0.00, 0.00) → Angry is farthest
+    "happy":      "sad",        # ( 0.85, 0.35) → Sad is farthest
+    "angry":      "relaxed",    # (-0.85, 0.85) → Relaxed is farthest
+    "fear":       "tired",      # (-0.40, 0.65) → Tired is farthest
+    "relaxed":    "angry",      # ( 0.40,-0.45) → Angry is farthest
+    "surprised":  "sad",        # ( 0.10, 0.80) → Sad is farthest
+    "disgusted":  "happy",      # (-0.80, 0.35) → Happy is farthest
+    "tired":      "excited",    # (-0.15,-0.75) → Excited is farthest
+}
 
 
 # Helper function to check if token is audio
@@ -219,6 +254,11 @@ def build_va_conditions():
         va_conditions.append((name, v, a))
         print(f"  {name}: V={v:.2f}, A={a:.2f}")
 
+    # 4. N/A condition — no valence/arousal provided, model must infer from audio
+    print("\n=== No Emotional Cue (N/A) ===")
+    va_conditions.append(("na", None, None))
+    print("  na: system prompt = 'User emotion N/A'")
+
     print(f"\n=== Total conditions: {len(va_conditions)} ===")
     return va_conditions, emotion_anchors, custom_points
 
@@ -265,45 +305,35 @@ def run_inference_for_checkpoint(
 
     for name, valence, arousal in va_conditions:
         print(f"\n{'='*60}")
-        print(f"[{ckpt_name}] Generating: {name} (valence={valence:.2f}, arousal={arousal:.2f})")
+        if valence is None:
+            print(f"[{ckpt_name}] Generating: {name} (no emotional cue)")
+        else:
+            print(f"[{ckpt_name}] Generating: {name} (valence={valence:.2f}, arousal={arousal:.2f})")
         print(f"{'='*60}")
 
-        system_prompt = f"Please respond in English. User emotion (valence={valence:.2f}, arousal={arousal:.2f})"
+        if valence is None:
+            system_prompt = "Please respond in English. User emotion N/A"
+        else:
+            system_prompt = f"Please respond in English. User emotion (valence={valence:.2f}, arousal={arousal:.2f})"
         inputs = f"<|system|>\n{system_prompt}\n<|user|>\n{user_input}\n<|assistant|>\n"
 
         inference_start_time = time.time()
-        with torch.no_grad():
-            model_inputs = glm_tokenizer(inputs, return_tensors="pt").to(glm_model.device)
-            outputs = glm_model.generate(
-                **model_inputs,
-                temperature=0.2,
-                top_p=0.8,
-                max_new_tokens=2000,
-            )
+        text_output, tts_speech = generate_one(
+            inputs, glm_model, glm_tokenizer, glm_speech_decoder, audio_0_id
+        )
         inference_time = time.time() - inference_start_time
 
-        generated_tokens = outputs[0][model_inputs["input_ids"].shape[1]:]
-
-        audio_token_ids, text_token_ids = [], []
-        for token in generated_tokens:
-            if is_audio_token(token, audio_0_id):
-                audio_token_ids.append(token)
-            else:
-                text_token_ids.append(token)
-
-        text_output = glm_tokenizer.decode(text_token_ids, skip_special_tokens=True)
         print(f"Text output: {text_output[:200]}..." if len(text_output) > 200 else f"Text output: {text_output}")
-        print(f"Audio tokens generated: {len(audio_token_ids)}")
 
-        if len(audio_token_ids) == 0:
+        if tts_speech is None:
             print(f"WARNING: No audio tokens generated for {name} - skipping")
             failed_count += 1
             continue
 
-        audio_ids_shifted = torch.tensor([[atok.item() - audio_0_id for atok in audio_token_ids]], dtype=torch.long)
-        tts_speech = glm_speech_decoder(audio_ids_shifted)
-
-        out_path = results_dir / f"output_{name}_v{valence:.2f}_a{arousal:.2f}.wav"
+        if valence is None:
+            out_path = results_dir / f"output_{name}.wav"
+        else:
+            out_path = results_dir / f"output_{name}_v{valence:.2f}_a{arousal:.2f}.wav"
         sf.write(str(out_path), tts_speech.squeeze(), 22050)
         print(f"Saved: {out_path}")
         print(f"Time: {inference_time:.2f}s")
@@ -322,6 +352,159 @@ def run_inference_for_checkpoint(
     torch.cuda.empty_cache()
 
     return output_count, failed_count, ckpt_total_time
+
+
+def generate_one(
+    inputs, glm_model, glm_tokenizer, glm_speech_decoder, audio_0_id
+):
+    """Shared generation helper — returns (text_output, tts_speech or None)."""
+    with torch.no_grad():
+        model_inputs = glm_tokenizer(inputs, return_tensors="pt").to(glm_model.device)
+        outputs = glm_model.generate(
+            **model_inputs,
+            temperature=0.2,
+            top_p=0.8,
+            max_new_tokens=2000,
+        )
+
+    generated_tokens = outputs[0][model_inputs["input_ids"].shape[1]:]
+    audio_token_ids, text_token_ids = [], []
+    for token in generated_tokens:
+        if is_audio_token(token, audio_0_id):
+            audio_token_ids.append(token)
+        else:
+            text_token_ids.append(token)
+
+    text_output = glm_tokenizer.decode(text_token_ids, skip_special_tokens=True)
+
+    if not audio_token_ids:
+        return text_output, None
+
+    audio_ids_shifted = torch.tensor(
+        [[tok.item() - audio_0_id for tok in audio_token_ids]], dtype=torch.long
+    )
+    tts_speech = glm_speech_decoder(audio_ids_shifted)
+    return text_output, tts_speech
+
+
+def run_emotion_comparison(
+    checkpoint_path,
+    emotion_anchors,
+    eval_audio_dir,
+    glm_tokenizer,
+    glm_speech_encoder,
+    glm_speech_decoder,
+    audio_0_id,
+    seed=42,
+):
+    """
+    For each of the 11 emotions:
+      - Sample one query wav from eval_audio_dir/{emotion}_query/
+      - Generate three responses:
+          correct  — system prompt with the emotion's own VA values
+          na       — system prompt with 'User emotion N/A'
+          opposite — system prompt with the farthest-away emotion's VA values
+      - Save all outputs under results_11emo/emotion_comparison/{emotion}/
+    """
+    rng = random.Random(seed)
+    ckpt_name = checkpoint_path.name
+
+    print(f"\n{'#'*70}")
+    print(f"# COMPARE MODE — CHECKPOINT: {ckpt_name}")
+    print(f"# Path: {checkpoint_path}")
+    print(f"{'#'*70}")
+
+    load_start = time.time()
+    print(f"\nLoading model from {checkpoint_path}...")
+    glm_model = AutoPeftModelForCausalLM.from_pretrained(
+        str(checkpoint_path),
+        device_map="auto",
+        trust_remote_code=True,
+    )
+    print(f"Model loaded in {time.time() - load_start:.1f}s")
+
+    results_dir = checkpoint_path / "results_11emo" / "emotion_comparison"
+    results_dir.mkdir(parents=True, exist_ok=True)
+
+    ckpt_start = time.time()
+    output_count = 0
+    failed_count = 0
+
+    for emotion, (valence, arousal) in emotion_anchors.items():
+        print(f"\n{'='*60}")
+        print(f"[{ckpt_name}] Emotion: {emotion}  (V={valence:.2f}, A={arousal:.2f})")
+        print(f"{'='*60}")
+
+        # ── Sample one eval query wav ────────────────────────────────────────
+        query_dir = Path(eval_audio_dir) / f"{emotion}_query"
+        wav_files = sorted(query_dir.glob("*.wav"))
+        if not wav_files:
+            print(f"  WARNING: no wav files found in {query_dir}, skipping")
+            failed_count += 3
+            continue
+
+        chosen_wav = rng.choice(wav_files)
+        print(f"  Input: {chosen_wav.name}")
+
+        # Encode audio
+        audio_tokens = glm_speech_encoder([str(chosen_wav)])[0]
+        user_input = "".join([f"<|audio_{x}|>" for x in audio_tokens])
+
+        # Create per-emotion output dir and save input copy
+        emotion_dir = results_dir / emotion
+        emotion_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(chosen_wav, emotion_dir / "input_audio.wav")
+
+        # ── Opposite emotion ────────────────────────────────────────────────
+        opp_name = OPPOSITE_EMOTIONS[emotion]
+        opp_v, opp_a = emotion_anchors[opp_name]
+
+        conditions = [
+            (
+                f"correct_{emotion}_v{valence:.2f}_a{arousal:.2f}",
+                f"Please respond in English. User emotion (valence={valence:.2f}, arousal={arousal:.2f})",
+            ),
+            (
+                "na",
+                "Please respond in English. User emotion N/A",
+            ),
+            (
+                f"opposite_{opp_name}_v{opp_v:.2f}_a{opp_a:.2f}",
+                f"Please respond in English. User emotion (valence={opp_v:.2f}, arousal={opp_a:.2f})",
+            ),
+        ]
+
+        for out_stem, system_prompt in conditions:
+            inputs = f"<|system|>\n{system_prompt}\n<|user|>\n{user_input}\n<|assistant|>\n"
+            t0 = time.time()
+            text_out, tts_speech = generate_one(
+                inputs, glm_model, glm_tokenizer, glm_speech_decoder, audio_0_id
+            )
+            elapsed = time.time() - t0
+
+            print(f"  [{out_stem}] {elapsed:.1f}s | text: {text_out[:100]!r}")
+
+            if tts_speech is None:
+                print(f"  WARNING: no audio tokens for {out_stem} — skipping")
+                failed_count += 1
+                continue
+
+            out_path = emotion_dir / f"output_{out_stem}.wav"
+            sf.write(str(out_path), tts_speech.squeeze(), 22050)
+            print(f"  Saved: {out_path.name}")
+            output_count += 1
+
+    ckpt_total = time.time() - ckpt_start
+    print(f"\n{'='*60}")
+    print(f"[{ckpt_name}] COMPARE DONE: {output_count} outputs, {failed_count} failed, {ckpt_total:.1f}s")
+    print(f"Results: {results_dir}")
+    print(f"{'='*60}")
+
+    del glm_model
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    return output_count, failed_count, ckpt_total
 
 
 def main():
@@ -360,7 +543,7 @@ def main():
     audio_tokens = glm_speech_encoder([str(user_audio_path)])[0]
     user_input = "".join([f"<|audio_{x}|>" for x in audio_tokens])
 
-    # Build VA conditions
+    # Build VA conditions (always needed for emotion_anchors)
     va_conditions, emotion_anchors, custom_points = build_va_conditions()
 
     # Run inference for each checkpoint
@@ -368,15 +551,27 @@ def main():
     all_results = []
 
     for ckpt_path in checkpoint_paths:
-        output_count, failed_count, ckpt_time = run_inference_for_checkpoint(
-            checkpoint_path=ckpt_path,
-            va_conditions=va_conditions,
-            user_input=user_input,
-            user_audio_path=user_audio_path,
-            glm_tokenizer=glm_tokenizer,
-            glm_speech_decoder=glm_speech_decoder,
-            audio_0_id=audio_0_id,
-        )
+        if args.compare_mode:
+            output_count, failed_count, ckpt_time = run_emotion_comparison(
+                checkpoint_path=ckpt_path,
+                emotion_anchors=emotion_anchors,
+                eval_audio_dir=args.eval_audio_dir,
+                glm_tokenizer=glm_tokenizer,
+                glm_speech_encoder=glm_speech_encoder,
+                glm_speech_decoder=glm_speech_decoder,
+                audio_0_id=audio_0_id,
+                seed=args.compare_seed,
+            )
+        else:
+            output_count, failed_count, ckpt_time = run_inference_for_checkpoint(
+                checkpoint_path=ckpt_path,
+                va_conditions=va_conditions,
+                user_input=user_input,
+                user_audio_path=user_audio_path,
+                glm_tokenizer=glm_tokenizer,
+                glm_speech_decoder=glm_speech_decoder,
+                audio_0_id=audio_0_id,
+            )
         all_results.append((ckpt_path.name, output_count, failed_count, ckpt_time))
 
     overall_time = time.time() - overall_start

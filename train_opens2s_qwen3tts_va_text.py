@@ -28,8 +28,8 @@ MAX_LENGTH = config["max_length"]
 #     "validation": "../../../Datasets/OpenS2S_Qwen3TTS/glm4voice_va_format/eval.jsonl",
 # }
 data_files = {
-    "train": "/engram/naplab/users/sd3705/Datasets/OpenS2S_11Emo/glm4voice_va_format/train.jsonl",
-    "validation": "/engram/naplab/users/sd3705/Datasets/OpenS2S_11Emo/glm4voice_va_format/eval.jsonl",
+    "train": "/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k/tokens/train_na.jsonl",
+    "validation": "/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k/tokens/eval_na.jsonl",
 }
 raw_datasets = load_dataset("json", data_files=data_files)
 train_dataset = raw_datasets["train"]
