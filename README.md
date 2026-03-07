@@ -59,7 +59,7 @@ The `dataset_creation/` directory contains the pipeline for creating the 11-emot
 
 ## Emotion Recognition Modules
 
-Four modalities decode (valence, arousal) from different input signals:
+Multiple modalities decode (valence, arousal) from different input signals:
 
 ### EEG (`eeg_emotion/`)
 Within-subject MLP on Differential Entropy features from the DEAP dataset.
@@ -81,9 +81,11 @@ ResNet18 fine-tuned on AffectNet_Balanced for 8-class emotion classification, ma
 - **Train**: `python -m face_emotion.train`
 - **Inference**: `FaceVAPredictor().predict_va(image)`
 
-### Audio (`audio_emotion/`)
-wav2vec2 (audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim) for VA prediction from speech.
-- **Inference**: Pretrained model, no training required
+### Text (`text_to_va.py`)
+Converts free-text emotion descriptions to (valence, arousal) using the GLM-4 LLM with keyword-centroid fallback.
+- **Primary**: LLM prompt → structured JSON parse
+- **Fallback**: Keyword-weighted centroid over 11 emotion anchors
+- **Inference**: `TextToVAConverter(model, tokenizer).convert("I feel excited")`
 
 ## Project Structure
 
@@ -95,7 +97,7 @@ wav2vec2 (audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim) for VA predicti
 ├── eeg_emotion/                         # EEG → VA (DEAP, within-subject)
 ├── physio_emotion/                      # Physio → VA (DEAP, within-subject)
 ├── face_emotion/                        # Face → VA (AffectNet, ResNet18)
-├── audio_emotion/                       # Audio → VA (wav2vec2)
+├── text_to_va.py                        # Text → VA (GLM-4 LLM + keyword fallback)
 ├── src/                                 # Model utilities & vocoder
 ├── speech_tokenizer/                    # Speech encoding/decoding
 ├── cosyvoice/                           # CosyVoice TTS components
