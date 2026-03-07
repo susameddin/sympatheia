@@ -25,6 +25,12 @@ core.*
 
 # OS
 .DS_Store
+._.DS_Store
+
+# Logs, outputs, figures
+logs/
+figures/
+new_samples/
 
 # IDE
 .vscode/
