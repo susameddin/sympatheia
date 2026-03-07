@@ -57,6 +57,34 @@ The `dataset_creation/` directory contains the pipeline for creating the 11-emot
 
 `generate_qwen3tts_audio_11emo_multigpu.py` requires the [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) model package (`qwen_tts`). Install it separately or point the script's `sys.path` to your local clone.
 
+## Emotion Recognition Modules
+
+Four modalities decode (valence, arousal) from different input signals:
+
+### EEG (`eeg_emotion/`)
+Within-subject MLP on Differential Entropy features from the DEAP dataset.
+- **Model**: EEGDEModel — FC(160→256→128→64→2) with BN, ELU, Dropout
+- **Accuracy**: ~70% binary (valence/arousal), 32 per-subject models
+- **Train**: `python -m eeg_emotion.train --mode within_subject`
+- **Inference**: `EEGVAPredictor().predict_va(eeg_array, subject_id=5)`
+
+### Physiological signals (`physio_emotion/`)
+6-stream 1D CNN with channel attention on DEAP (BVP, GSR, Resp, Temp, zEMG, tEMG).
+- **Model**: PhysioMultiChannelModel — ~246K params, per-subject
+- **Train**: `python -m physio_emotion.train --mode within_subject`
+- **Inference**: `PhysioVAPredictor().predict_va(signals_dict, subject_id=5)`
+
+### Face (`face_emotion/`)
+ResNet18 fine-tuned on AffectNet_Balanced for 8-class emotion classification, mapped to VA via Russell's circumplex model.
+- **Model**: FaceEmotionModel — ResNet18, 75.4% test accuracy (8 classes)
+- **Emotions**: Anger, Contempt, Disgust, Fear, Happy, Neutral, Sad, Surprise
+- **Train**: `python -m face_emotion.train`
+- **Inference**: `FaceVAPredictor().predict_va(image)`
+
+### Audio (`audio_emotion/`)
+wav2vec2 (audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim) for VA prediction from speech.
+- **Inference**: Pretrained model, no training required
+
 ## Project Structure
 
 ```
@@ -64,6 +92,10 @@ The `dataset_creation/` directory contains the pipeline for creating the 11-emot
 ├── inference_opens2s_11emo_va_text.py   # Batch inference
 ├── gradio_demo.py                       # Interactive demo
 ├── config.yaml                          # Training hyperparameters
+├── eeg_emotion/                         # EEG → VA (DEAP, within-subject)
+├── physio_emotion/                      # Physio → VA (DEAP, within-subject)
+├── face_emotion/                        # Face → VA (AffectNet, ResNet18)
+├── audio_emotion/                       # Audio → VA (wav2vec2)
 ├── src/                                 # Model utilities & vocoder
 ├── speech_tokenizer/                    # Speech encoding/decoding
 ├── cosyvoice/                           # CosyVoice TTS components
