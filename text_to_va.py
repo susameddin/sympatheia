@@ -18,8 +18,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# Emotion anchor data (must stay in sync with EMOTION_ANCHORS in gradio_demo.py
-# and EMOTION_VA_MAPPING in audio_emotion/config.py)
+# Emotion anchor data (must stay in sync with EMOTION_ANCHORS in gradio_demo.py)
 # ---------------------------------------------------------------------------
 
 _ANCHORS = {

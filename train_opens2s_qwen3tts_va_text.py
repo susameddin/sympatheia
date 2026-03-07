@@ -6,13 +6,13 @@ from peft import LoraConfig
 from transformers import AutoModel, AutoTokenizer
 import yaml
 
-os.environ["WANDB_PROJECT"] = "glm-opens2s-qwen3tts-va-text-11emo"
+os.environ["WANDB_PROJECT"] = "Sympatheia-11emo-34K"
 
 # Reuse the same hyperparameter config as train.py
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
-run_name = f"glm-model-opens2s-qwen3tts-va-text-lora-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
+run_name = f"sympatheia-11emo-34k-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
 output_dir = f"./experiments/{run_name}"
 os.makedirs(output_dir, exist_ok=True)
 
@@ -28,8 +28,8 @@ MAX_LENGTH = config["max_length"]
 #     "validation": "../../../Datasets/OpenS2S_Qwen3TTS/glm4voice_va_format/eval.jsonl",
 # }
 data_files = {
-    "train": "/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k/tokens/train_na.jsonl",
-    "validation": "/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k/tokens/eval_na.jsonl",
+    "train": "/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_Combined/train.jsonl",
+    "validation": "/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_Combined/eval.jsonl",
 }
 raw_datasets = load_dataset("json", data_files=data_files)
 train_dataset = raw_datasets["train"]

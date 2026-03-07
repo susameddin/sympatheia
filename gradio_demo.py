@@ -38,9 +38,7 @@ import gradio as gr
 from transformers import AutoTokenizer
 from peft import AutoPeftModelForCausalLM
 from src.vocoder import GLM4CodecEncoder, GLM4CodecDecoder
-from audio_emotion.models import AudioEmotionRecognizer
-from audio_emotion.config import EMOTION_VA_MAPPING as _VA_MAP
-from audio_emotion.text_to_va import TextToVAConverter
+from text_to_va import TextToVAConverter
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -104,7 +102,6 @@ glm_speech_encoder = None
 glm_speech_decoder = None
 glm_model = None
 audio_0_id = None
-emotion_recognizer = None  # Set if --enable-auto-detect
 text_to_va_converter = None  # Set in __main__ after models are loaded
 
 # ---------------------------------------------------------------------------
@@ -271,28 +268,33 @@ def run_inference(audio_path, valence, arousal):
     """
     Full inference pipeline:
       1. Encode input audio to tokens
-      2. Build prompt with VA values
+      2. Build prompt (with VA values, or N/A if valence is None)
       3. Generate response
       4. Separate text / audio tokens
       5. Decode audio tokens to waveform
 
+    Pass valence=None to let the model self-detect emotion ("User emotion N/A").
     Returns (output_audio_tuple, text_response, va_figure).
     """
     if audio_path is None:
         raise gr.Error("Please record or upload an audio file first.")
-
-    valence = max(-1.0, min(1.0, float(valence)))
-    arousal = max(-1.0, min(1.0, float(arousal)))
 
     # 1. Encode input audio
     audio_tokens = glm_speech_encoder([audio_path])[0]
     user_input = "".join([f"<|audio_{x}|>" for x in audio_tokens])
 
     # 2. Build prompt (matches training format)
-    system_prompt = (
-        f"Please respond in English. "
-        f"User emotion (valence={valence:.2f}, arousal={arousal:.2f})"
-    )
+    if valence is None:
+        system_prompt = "Please respond in English. User emotion N/A"
+        va_fig = create_va_plane_figure(0.0, 0.0)
+    else:
+        valence = max(-1.0, min(1.0, float(valence)))
+        arousal = max(-1.0, min(1.0, float(arousal)))
+        system_prompt = (
+            f"Please respond in English. "
+            f"User emotion (valence={valence:.2f}, arousal={arousal:.2f})"
+        )
+        va_fig = create_va_plane_figure(valence, arousal)
     inputs = f"<|system|>\n{system_prompt}\n<|user|>\n{user_input}\n<|assistant|>\n"
 
     # 3. Generate
@@ -323,7 +325,7 @@ def run_inference(audio_path, valence, arousal):
         return (
             None,
             text_output + "\n\n[WARNING: No audio tokens generated]",
-            create_va_plane_figure(valence, arousal),
+            va_fig,
         )
 
     audio_ids_shifted = torch.tensor(
@@ -335,7 +337,7 @@ def run_inference(audio_path, valence, arousal):
     return (
         (SAMPLE_RATE, audio_numpy),
         text_output,
-        create_va_plane_figure(valence, arousal),
+        va_fig,
     )
 
 
@@ -357,13 +359,11 @@ def on_slider_change(valence, arousal):
 
 
 def on_mode_change(mode):
-    """Toggle visibility of manual vs auto-detect vs describe controls."""
+    """Toggle visibility of manual vs describe controls."""
     is_manual   = (mode == "Select Manually")
-    is_detect   = (mode == "Detect From Audio")
     is_describe = (mode == "Describe Your Feeling")
     return (
         gr.update(visible=is_manual),    # manual_controls group
-        gr.update(visible=is_detect),    # detect_controls group
         gr.update(visible=is_describe),  # describe_controls group
     )
 
@@ -377,36 +377,12 @@ def on_describe_emotion(description_text: str):
     return float(v), float(a), create_va_plane_figure(v, a), info
 
 
-def on_detect_emotion(audio_path):
-    """Detect emotion from input audio and update sliders + plot."""
-    if audio_path is None:
-        raise gr.Error("Please record or upload an audio file first.")
-
-    result = emotion_recognizer.predict_full(audio_path)
-    v, a = result["valence"], result["arousal"]
-
-    # Find nearest emotion for info display
-    best_emo, best_dist = None, float("inf")
-    for emo, (ev, ea) in _VA_MAP.items():
-        d = np.sqrt((v - ev) ** 2 + (a - ea) ** 2)
-        if d < best_dist:
-            best_dist, best_emo = d, emo
-
-    info = f"Detected: V={v:+.2f}, A={a:+.2f} (nearest: {best_emo})"
-
-    return (
-        v,
-        a,
-        create_va_plane_figure(v, a),
-        info,
-    )
-
 
 def run_inference_with_mode(audio_path, mode, valence, arousal,
-                            detect_v, detect_a, describe_v, describe_a):
+                            describe_v, describe_a):
     """Pick VA values based on active mode, then run inference."""
     if mode == "Detect From Audio":
-        valence, arousal = detect_v, detect_a
+        valence, arousal = None, None
     elif mode == "Describe Your Feeling":
         valence, arousal = describe_v, describe_a
     return run_inference(audio_path, valence, arousal)
@@ -466,20 +442,6 @@ def build_ui():
                         label="Arousal  (Calm \u2190 \u2192 Energetic)",
                     )
 
-                # --- Auto-detect controls ---
-                with gr.Group(visible=False) as detect_controls:
-                    detect_btn = gr.Button(
-                        "Detect Emotion from Audio",
-                        variant="secondary",
-                    )
-                    detect_info = gr.Textbox(
-                        label="Detected Emotion",
-                        interactive=False,
-                        lines=1,
-                    )
-                    detect_v = gr.Number(value=0.0, visible=False)
-                    detect_a = gr.Number(value=0.0, visible=False)
-
                 # --- Describe-your-feeling controls ---
                 with gr.Group(visible=False) as describe_controls:
                     feeling_text = gr.Textbox(
@@ -525,11 +487,11 @@ def build_ui():
 
         # ---- Event wiring ----
 
-        # Mode toggle → show/hide manual vs detect vs describe controls
+        # Mode toggle → show/hide manual vs describe controls
         emotion_mode.change(
             fn=on_mode_change,
             inputs=[emotion_mode],
-            outputs=[manual_controls, detect_controls, describe_controls],
+            outputs=[manual_controls, describe_controls],
         )
 
         # Describe emotion → extract VA from text, update hidden numbers + plot
@@ -559,20 +521,12 @@ def build_ui():
             cancels=[val_event, aro_event],
         )
 
-        # Detect emotion from audio → update detected VA + plot
-        detect_btn.click(
-            fn=on_detect_emotion,
-            inputs=[audio_input],
-            outputs=[detect_v, detect_a, va_plot, detect_info],
-        )
-
         # Generate button → use VA from active mode
         generate_btn.click(
             fn=run_inference_with_mode,
             inputs=[
                 audio_input, emotion_mode,
                 valence_slider, arousal_slider,
-                detect_v, detect_a,
                 describe_v, describe_a,
             ],
             outputs=[output_audio, output_text, va_plot],
@@ -600,11 +554,6 @@ if __name__ == "__main__":
         help="Enable HTTPS with a self-signed cert (needed for mic access in Safari)",
     )
     args = parser.parse_args()
-
-    # Load audio emotion recognition model (used by "Detect From Audio" mode)
-    print("Loading audio emotion recognition model...")
-    emotion_recognizer = AudioEmotionRecognizer(device="cuda")
-    print("Emotion recognition model loaded.")
 
     # Load models globally
     glm_tokenizer, glm_speech_encoder, glm_speech_decoder, glm_model, audio_0_id = (
