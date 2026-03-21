@@ -1,6 +1,6 @@
-# Emotion-Aware Speech Model
+# Sympatheia
 
-Fine-tuning GLM-4-Voice with continuous Valence-Arousal (VA) conditioning for emotion-controlled speech-to-speech generation across 12 emotions, trained on the Sympatheia dataset.
+Fine-tuning GLM-4-Voice with continuous Valence-Arousal (VA) conditioning for emotion-controlled speech-to-speech generation across 12 emotions, trained on the Sympatheia18K dataset.
 
 ## Emotions
 
