@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """
-Generate audio responses from model conditions for empathy evaluation.
+Generate audio responses from model conditions using NEUTRAL audio input.
+
+Unlike generate_responses.py (which uses emotionally expressive query audio),
+this script uses neutral audio from Part2 and injects emotion labels via system
+prompt only.  This isolates how well models adapt to externally stated emotions
+(not perceived from audio).
 
 Conditions:
   base          — base GLM-4-Voice (THUDM/glm-4-voice-9b), no emotion conditioning
   finetuned_va  — fine-tuned LoRA checkpoint + valence/arousal in system prompt
-  finetuned_na  — fine-tuned LoRA checkpoint + no emotion values (same plain prompt as base)
+  finetuned_na  — fine-tuned LoRA checkpoint + "User emotion N/A" prompt
 
 Outputs:
   <output-dir>/audio/finetuned_va/  — fine-tuned with VA
@@ -15,27 +20,27 @@ Outputs:
 
 The output dir is auto-constructed from the experiment name + checkpoint step
 when --output-dir is not explicitly provided:
-  /engram/naplab/users/sd3705/emo_recog_2025s/eval_<experiment>_ckpt<step>/
+  <engram>/eval_neutral_<experiment>_ckpt<step>/
 
 Usage:
     # Auto-versioned output dir, full eval (including base):
-    conda run -n glm4voice3_eval python -m eval.generate_responses \\
+    conda run -n glm4voice3_eval python -m eval.generate_responses_neutral \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 1400 \\
         --num-samples 10
 
     # Skip base model, reuse from shared dir:
-    conda run -n glm4voice3_eval python -m eval.generate_responses \\
+    conda run -n glm4voice3_eval python -m eval.generate_responses_neutral \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 1400 \\
-        --shared-dir /engram/naplab/users/sd3705/emo_recog_2025s/eval_shared \\
+        --shared-dir results/eval_neutral_shared \\
         --skip-base
 
     # Quick test with 2 emotions:
-    conda run -n glm4voice3_eval python -m eval.generate_responses \\
+    conda run -n glm4voice3_eval python -m eval.generate_responses_neutral \\
         --emotions happy sad \\
         --num-samples 2 \\
-        --output-dir /tmp/eval_test/
+        --output-dir /tmp/eval_neutral_test/
 """
 
 import argparse
@@ -68,11 +73,15 @@ DEFAULT_FINETUNED_EXPERIMENT = (
     "experiments/sympatheia-12emo-20260312-100309"
 )
 DEFAULT_CHECKPOINT_STEP = 2000
-DEFAULT_EVAL_AUDIO_DIR = "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Emotional/audio/eval"
+DEFAULT_NEUTRAL_AUDIO_DIR = (
+    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral"
+    "/audio/eval/query/neutral"
+)
 DEFAULT_ENGRAM_BASE = "/engram/naplab/users/sd3705/emo_recog_2025s"
 DECODER_SAMPLE_RATE = 22050
 
 PLAIN_SYSTEM_PROMPT = "Please respond in English."
+NA_SYSTEM_PROMPT = "Please respond in English. User emotion N/A"
 
 
 # ---------------------------------------------------------------------------
@@ -81,7 +90,7 @@ PLAIN_SYSTEM_PROMPT = "Please respond in English."
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate model responses for empathy evaluation (3 conditions)"
+        description="Generate model responses for neutral-input emotion evaluation (3 conditions)"
     )
     parser.add_argument(
         "--finetuned-experiment", type=str, default=DEFAULT_FINETUNED_EXPERIMENT,
@@ -94,17 +103,17 @@ def parse_args():
              f"Default: {DEFAULT_CHECKPOINT_STEP}",
     )
     parser.add_argument(
-        "--eval-audio-dir", type=str, default=DEFAULT_EVAL_AUDIO_DIR,
-        help=f"Root dir containing {{emotion}}_query/ subdirs (input queries). Default: {DEFAULT_EVAL_AUDIO_DIR}",
+        "--neutral-audio-dir", type=str, default=DEFAULT_NEUTRAL_AUDIO_DIR,
+        help=f"Directory containing neutral query .wav files. Default: {DEFAULT_NEUTRAL_AUDIO_DIR}",
     )
     parser.add_argument(
         "--num-samples", type=int, default=10,
-        help="Number of query audio files to sample per emotion (default: 10)",
+        help="Number of neutral audio files to use (same files reused across all emotions, default: 10)",
     )
     parser.add_argument(
         "--output-dir", type=str, default=None,
         help="Output directory for audio files and manifest.jsonl. "
-             "Default: auto-constructed as <engram>/eval_emotional_<experiment>_ckpt<step>/",
+             "Default: auto-constructed as <engram>/eval_neutral_<experiment>_ckpt<step>/",
     )
     parser.add_argument(
         "--shared-dir", type=str, default=None,
@@ -136,29 +145,30 @@ def parse_args():
 # Data utilities
 # ---------------------------------------------------------------------------
 
-def sample_queries(eval_audio_dir: str, emotions: list, num_samples: int, seed: int) -> list:
-    """Sample up to num_samples WAV files per emotion from {eval_audio_dir}/{emotion}_query/."""
+def sample_queries_neutral(neutral_dir: str, emotions: list, num_samples: int, seed: int) -> list:
+    """Sample N neutral WAV files and replicate across all emotions.
+
+    The same N files are reused for every emotion so that any difference in
+    model responses must come from the emotion conditioning, not audio content.
+    """
     rng = random.Random(seed)
+    all_wavs = sorted(Path(neutral_dir).glob("*.wav"))
+    if not all_wavs:
+        return []
+    chosen = rng.sample(all_wavs, min(num_samples, len(all_wavs)))
+    chosen = sorted(chosen)
+
     samples = []
-    print(f"\nSampling queries from: {eval_audio_dir}")
+    print(f"\nSampling {len(chosen)} neutral queries from: {neutral_dir}")
     for emotion in sorted(emotions):
-        query_dir = Path(eval_audio_dir) / f"{emotion.lower()}_query"
-        if not query_dir.exists():
-            print(f"  WARNING: {query_dir} not found — skipping {emotion}")
-            continue
-        wavs = sorted(query_dir.glob("*.wav"))
-        if not wavs:
-            print(f"  WARNING: no .wav files in {query_dir} — skipping {emotion}")
-            continue
-        chosen = rng.sample(wavs, min(num_samples, len(wavs)))
-        for i, wav in enumerate(sorted(chosen)):
+        for i, wav in enumerate(chosen):
             samples.append({
                 "id": f"{emotion.lower()}_{i:02d}",
                 "emotion": emotion,
                 "wav": wav,
             })
-        print(f"  {emotion:<12}: {len(chosen)} queries")
-    print(f"Total: {len(samples)} queries\n")
+        print(f"  {emotion:<12}: {len(chosen)} queries (neutral audio)")
+    print(f"Total: {len(samples)} queries ({len(chosen)} unique files × {len(emotions)} emotions)\n")
     return samples
 
 
@@ -243,12 +253,15 @@ def main():
     # Auto-construct output dir from experiment + checkpoint if not provided
     if args.output_dir is None:
         exp_name = finetuned_exp.name
-        engram_base = Path(args.shared_dir).parent if args.shared_dir else Path(DEFAULT_ENGRAM_BASE)
-        output_dir = engram_base / f"eval_emotional_{exp_name}_ckpt{args.checkpoint_step}"
+        output_dir = Path(DEFAULT_ENGRAM_BASE) / f"eval_neutral_{exp_name}_ckpt{args.checkpoint_step}"
     else:
         output_dir = Path(args.output_dir)
+        if not output_dir.is_absolute():
+            output_dir = PROJECT_ROOT / output_dir
 
     shared_dir = Path(args.shared_dir) if args.shared_dir else None
+    if shared_dir and not shared_dir.is_absolute():
+        shared_dir = PROJECT_ROOT / shared_dir
 
     # Set up audio dirs
     if args.skip_base and shared_dir:
@@ -272,7 +285,7 @@ def main():
     manifest_path = output_dir / "manifest.jsonl"
 
     print(f"Fine-tuned checkpoint : {finetuned_ckpt}")
-    print(f"Eval audio dir        : {args.eval_audio_dir}")
+    print(f"Neutral audio dir     : {args.neutral_audio_dir}")
     print(f"Output dir            : {output_dir}")
     if shared_dir:
         print(f"Shared dir            : {shared_dir}")
@@ -287,9 +300,9 @@ def main():
     emotions = [cap_map.get(e.lower(), e) for e in emotions]
 
     # Sample queries
-    samples = sample_queries(args.eval_audio_dir, emotions, args.num_samples, args.seed)
+    samples = sample_queries_neutral(args.neutral_audio_dir, emotions, args.num_samples, args.seed)
     if not samples:
-        print("No samples found. Check --eval-audio-dir and --emotions.", file=sys.stderr)
+        print("No samples found. Check --neutral-audio-dir and --emotions.", file=sys.stderr)
         sys.exit(1)
 
     # Load shared components (tokenizer + encoder + decoder — same for all models)
@@ -302,6 +315,8 @@ def main():
     print(f"audio_0_id = {audio_0_id}\n")
 
     # Pre-encode all query audio files (once, reused across model conditions)
+    # Note: same neutral file may be encoded multiple times (once per emotion),
+    # but encoding is fast and this keeps the code simple.
     print("Encoding query audio files...")
     for s in samples:
         s["user_tokens"] = encode_audio(s["wav"], encoder)
@@ -397,10 +412,10 @@ def main():
             else:
                 print(f"    [finetuned_va] Already exists, skipping")
 
-            # finetuned_na — no emotion values (plain prompt)
+            # finetuned_na — "User emotion N/A" prompt
             out_na = audio_dirs["finetuned_na"] / f"{s['id']}.wav"
             if not (args.skip_existing and out_na.exists()):
-                prompt = build_prompt(s["user_tokens"], PLAIN_SYSTEM_PROMPT)
+                prompt = build_prompt(s["user_tokens"], NA_SYSTEM_PROMPT)
                 t1 = time.time()
                 text, waveform = generate_one(prompt, ft_model, tokenizer, decoder, audio_0_id)
                 elapsed = time.time() - t1
@@ -461,7 +476,7 @@ def main():
     print(f"  finetuned_na:   {na_ok}/{total}")
     print(f"  Manifest:       {manifest_path}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni python -m eval.judge_qwen3omni \\")
+    print(f"  conda run -n qwen3omni python -m eval.judge_qwen3omni_neutral \\")
     print(f"      --manifest {manifest_path.resolve()}")
     print(f"{'='*60}")
 

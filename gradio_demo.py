@@ -46,16 +46,17 @@ from text_to_va import TextToVAConverter
 
 EMOTION_ANCHORS = {
     "sad":        (-0.75, -0.65),
-    "excited":    (0.75,  0.90),
-    "frustrated": (-0.82, -0.20),
-    "neutral":    (0.00,  0.00),
-    "happy":      (0.85,  0.35),
-    "angry":      (-0.85, 0.85),
-    "fear":       (-0.40, 0.65),
-    "relaxed":    (0.40, -0.45),
-    "surprised":  (0.10,  0.80),
-    "disgusted":  (-0.80, 0.35),
+    "excited":    ( 0.75,  0.90),
+    "frustrated": (-0.80,  0.35),
+    "neutral":    ( 0.00,  0.00),
+    "happy":      ( 0.85,  0.35),
+    "angry":      (-0.85,  0.85),
+    "anxious":    (-0.40,  0.65),
+    "relaxed":    ( 0.25, -0.60),
+    "surprised":  ( 0.10,  0.80),
+    "disgusted":  (-0.82, -0.20),
     "tired":      (-0.15, -0.75),
+    "content":    ( 0.60, -0.20),
 }
 
 EMOTION_COLORS = {
@@ -65,11 +66,12 @@ EMOTION_COLORS = {
     "neutral":    (0.60, 0.60, 0.60),   # Medium gray
     "happy":      (0.40, 0.80, 0.20),   # Lime green
     "angry":      (0.85, 0.10, 0.10),   # Red
-    "fear":       (0.50, 0.10, 0.70),   # Deep purple
+    "anxious":    (0.50, 0.10, 0.70),   # Deep purple
     "relaxed":    (0.20, 0.65, 0.55),   # Teal
     "surprised":  (0.95, 0.50, 0.80),   # Pink
     "disgusted":  (0.55, 0.60, 0.20),   # Olive green
     "tired":      (0.50, 0.50, 0.70),   # Muted lavender
+    "content":    (0.80, 0.70, 0.30),   # Warm gold
 }
 
 LABEL_OFFSETS = {
@@ -79,11 +81,12 @@ LABEL_OFFSETS = {
     "neutral":    ( 10,   8),
     "happy":      (  0,  10),
     "angry":      (-10,  10),
-    "fear":       ( 14,   4),
+    "anxious":    ( 14,   4),
     "relaxed":    (  0,  10),
     "surprised":  (  0,  10),
     "disgusted":  ( 14,   4),
     "tired":      (  0, -14),
+    "content":    (  0, -14),
 }
 
 _HEATMAP_SIGMA = 0.35

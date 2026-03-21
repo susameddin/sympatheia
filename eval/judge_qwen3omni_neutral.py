@@ -1,33 +1,35 @@
 #!/usr/bin/env python3
 """
-Judge model responses for empathetic quality using Qwen3-Omni.
+Judge model responses for emotion-adaptation quality using Qwen3-Omni.
 
-For each entry in manifest.jsonl (produced by eval/generate_responses.py),
-Qwen3-Omni listens to each model's audio response and rates how well it
-empathizes with the user's emotional state (1–5 scale).
+This is the neutral-input variant of judge_qwen3omni.py.  The key difference
+is the rubric: instead of rating empathy toward an emotionally expressive user,
+the judge rates how well the model *adapts* to a *stated* emotion label when
+the user's actual audio was neutral.
 
-Conditions judged:
-  base          — base GLM-4-Voice response
-  finetuned_va  — fine-tuned model response with emotion VA conditioning
-  finetuned_na  — fine-tuned model response without emotion values
+For each entry in a manifest.jsonl, Qwen3-Omni listens to each model's audio
+response and rates how well it adapts to the stated emotion (1–5 scale).
+
+Conditions judged (auto-detected from manifest):
+  base, finetuned_va, finetuned_na, opens2s, qwen3omni
 
 Outputs:
-  <output-dir>/judgments.jsonl  — one record per (sample, condition)
-  <output-dir>/summary.json     — aggregated mean/std per condition and emotion
+  <output-dir>/judgments.jsonl   — one record per (sample, condition)
+  <output-dir>/summary.json      — aggregated mean/std per condition and emotion
   Prints a comparison table to stdout.
 
 Usage:
-    conda run -n qwen3omni python -m eval.judge_qwen3omni \\
-        --manifest results/eval_judge/manifest.jsonl
+    conda run -n qwen3omni python -m eval.judge_qwen3omni_neutral \\
+        --manifest results/eval_neutral/manifest.jsonl
 
     # Judge only specific conditions:
-    conda run -n qwen3omni python -m eval.judge_qwen3omni \\
-        --manifest results/eval_judge/manifest.jsonl \\
+    conda run -n qwen3omni python -m eval.judge_qwen3omni_neutral \\
+        --manifest results/eval_neutral/manifest.jsonl \\
         --conditions base finetuned_va
 
     # Resume interrupted run:
-    conda run -n qwen3omni python -m eval.judge_qwen3omni \\
-        --manifest results/eval_judge/manifest.jsonl \\
+    conda run -n qwen3omni python -m eval.judge_qwen3omni_neutral \\
+        --manifest results/eval_neutral/manifest.jsonl \\
         --skip-existing
 """
 
@@ -46,24 +48,29 @@ import torch
 # ---------------------------------------------------------------------------
 
 DEFAULT_MODEL = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
-ALL_CONDITIONS = ["base", "finetuned_va", "finetuned_na", "opens2s", "osum_no_think", "osum_think", "qwen3omni"]
+ALL_CONDITIONS = ["base", "finetuned_va", "finetuned_na", "opens2s", "qwen3omni"]
 
 JUDGE_SYSTEM_PROMPT = """\
-You are an expert evaluator of empathetic conversational AI. Your task is to \
-rate how well a voice assistant's spoken response supports and empathizes with \
-the user, given the user's emotional state.
+You are an expert evaluator of emotion-adaptive conversational AI. Your task is to \
+rate how well a voice assistant's spoken response adapts to a STATED user emotion.
+
+IMPORTANT CONTEXT: The user's audio input is emotionally NEUTRAL. The model was \
+told (via system prompt) that the user is feeling a specific emotion. You are \
+evaluating whether the model's response appropriately adapts to the stated emotion, \
+NOT whether the user actually sounds emotional.
 
 Rate the response on a scale from 1 to 5 using this rubric:
-  1 — Completely ignores or contradicts the user's emotion
-  2 — Minimal acknowledgment, mostly generic or off-topic
-  3 — Some empathy shown but inconsistent or superficial
-  4 — Clear empathy and support, appropriate to the emotion
-  5 — Excellent empathy: acknowledges emotion, validates, offers meaningful support
+  1 — Response completely ignores the stated emotion, treats user as neutral
+  2 — Minimal adaptation; response is mostly generic regardless of stated emotion
+  3 — Some adaptation shown but inconsistent or superficial
+  4 — Clear adaptation to the stated emotion; tone and content are appropriate
+  5 — Excellent adaptation: response clearly tailored to the stated emotion with \
+appropriate tone, word choice, and emotional support
 
-Respond with ONLY the rating number (1–5) followed by a vertical bar and a \
+Respond with ONLY the rating number (1-5) followed by a vertical bar and a \
 brief one-sentence justification.
 Format exactly: <rating>|<justification>
-Example: 4|The response acknowledges the user's frustration and offers calm, supportive guidance.\
+Example: 4|The response appropriately acknowledges the user's stated frustration and offers calm, supportive guidance.\
 """
 
 
@@ -73,11 +80,11 @@ Example: 4|The response acknowledges the user's frustration and offers calm, sup
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Judge audio responses for empathetic quality with Qwen3-Omni"
+        description="Judge audio responses for emotion-adaptation quality with Qwen3-Omni (neutral-input eval)"
     )
     parser.add_argument(
         "--manifest", type=str, required=True,
-        help="Path to manifest.jsonl produced by eval/generate_responses.py",
+        help="Path to manifest.jsonl produced by eval/generate_responses_neutral.py",
     )
     parser.add_argument(
         "--output-dir", type=str, default=None,
@@ -119,11 +126,13 @@ def load_judge_model(model_path: str):
 
 
 def build_conversation(emotion: str, valence: float, arousal: float, audio_path: str) -> list:
-    """Build the conversation dict for Qwen3-Omni."""
+    """Build the conversation dict for Qwen3-Omni judge (neutral-input variant)."""
     user_text = (
-        f"The user is feeling {emotion} "
-        f"(valence={valence:.2f}, arousal={arousal:.2f}). "
-        "Listen to the voice assistant's response below and rate its empathetic quality."
+        f"The model was told the user is feeling {emotion} "
+        f"(valence={valence:.2f}, arousal={arousal:.2f}), "
+        "but the user's actual audio was emotionally neutral. "
+        "Listen to the voice assistant's response below and rate how well "
+        "it adapts to the stated emotion."
     )
     return [
         {
@@ -236,7 +245,7 @@ def aggregate_judgments(judgments: list, conditions: list) -> dict:
 def print_summary_table(summary: dict, conditions: list):
     """Print a human-readable comparison table."""
     print(f"\n{'='*60}")
-    print("QWEN3-OMNI EMPATHY RATINGS (1–5)")
+    print("EMOTION-ADAPTATION RATINGS (1–5)  [Neutral-Input Eval]")
     print(f"{'='*60}")
     header = f"{'Condition':<20} {'Mean':>6} {'Std':>6} {'N':>5}"
     print(header)
@@ -279,7 +288,7 @@ def main():
     output_dir = Path(args.output_dir) if args.output_dir else manifest_path.parent
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # For OpenS2S manifests, use separate output files to avoid overwriting GLM results
+    # For separate manifests, use separate output files to avoid overwriting
     manifest_stem = manifest_path.stem  # e.g. "manifest" or "manifest_opens2s"
     if manifest_stem == "manifest":
         judgments_path = output_dir / "judgments.jsonl"

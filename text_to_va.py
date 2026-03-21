@@ -4,7 +4,7 @@ Text-to-Valence/Arousal converter.
 Uses the already-loaded GLM-4 LLM to extract (valence, arousal) values from a
 free-text emotion description (e.g. "I'm feeling really down and exhausted").
 
-Falls back to a keyword-weighted centroid over the 11 emotion anchors if the
+Falls back to a keyword-weighted centroid over the 12 emotion anchors if the
 LLM response cannot be parsed — requiring no additional imports.
 """
 
@@ -24,15 +24,16 @@ logger = logging.getLogger(__name__)
 _ANCHORS = {
     "sad":        (-0.75, -0.65),
     "excited":    ( 0.75,  0.90),
-    "frustrated": (-0.82, -0.20),
+    "frustrated": (-0.80,  0.35),
     "neutral":    ( 0.00,  0.00),
     "happy":      ( 0.85,  0.35),
     "angry":      (-0.85,  0.85),
-    "fear":       (-0.40,  0.65),
-    "relaxed":    ( 0.40, -0.45),
+    "anxious":    (-0.40,  0.65),
+    "relaxed":    ( 0.25, -0.60),
     "surprised":  ( 0.10,  0.80),
-    "disgusted":  (-0.80,  0.35),
+    "disgusted":  (-0.82, -0.20),
     "tired":      (-0.15, -0.75),
+    "content":    ( 0.60, -0.20),
 }
 
 # Synonym lists for the keyword fallback
@@ -45,20 +46,22 @@ _SYNONYMS = {
                    "bothered", "exasperated", "impatient"],
     "neutral":    ["neutral", "okay", "fine", "alright", "indifferent", "normal",
                    "so-so", "meh", "whatever"],
-    "happy":      ["happy", "joyful", "pleased", "glad", "content", "cheerful",
+    "happy":      ["happy", "joyful", "pleased", "glad", "cheerful",
                    "delighted", "good", "great", "wonderful", "fantastic"],
     "angry":      ["angry", "furious", "rage", "mad", "livid", "outraged",
                    "irate", "enraged", "fuming"],
-    "fear":       ["afraid", "scared", "fearful", "anxious", "nervous",
+    "anxious":    ["anxious", "afraid", "scared", "fearful", "nervous",
                    "worried", "terrified", "dread", "panicked", "uneasy"],
     "relaxed":    ["relaxed", "calm", "peaceful", "serene", "at ease",
-                   "comfortable", "tranquil", "chill", "easy"],
+                   "tranquil", "chill", "easy"],
     "surprised":  ["surprised", "shocked", "astonished", "amazed", "stunned",
                    "startled", "taken aback"],
     "disgusted":  ["disgusted", "revolted", "repulsed", "sick", "nauseated",
                    "appalled", "grossed out"],
     "tired":      ["tired", "exhausted", "sleepy", "fatigued", "drained",
                    "worn out", "weary", "lethargic", "sluggish"],
+    "content":    ["content", "satisfied", "fulfilled", "at peace", "pleased",
+                   "gratified", "comfortable"],
 }
 
 _INTENSITY_BOOST  = ["very", "super", "extremely", "really", "incredibly",
@@ -82,15 +85,16 @@ Arousal ranges from -1.0 (very calm/low energy) to +1.0 (very energetic/high ene
 Reference emotion anchors:
   sad:        valence=-0.75, arousal=-0.65
   excited:    valence=+0.75, arousal=+0.90
-  frustrated: valence=-0.82, arousal=-0.20
+  frustrated: valence=-0.80, arousal=+0.35
   neutral:    valence=+0.00, arousal=+0.00
   happy:      valence=+0.85, arousal=+0.35
   angry:      valence=-0.85, arousal=+0.85
-  fear:       valence=-0.40, arousal=+0.65
-  relaxed:    valence=+0.40, arousal=-0.45
+  anxious:    valence=-0.40, arousal=+0.65
+  relaxed:    valence=+0.25, arousal=-0.60
   surprised:  valence=+0.10, arousal=+0.80
-  disgusted:  valence=-0.80, arousal=+0.35
+  disgusted:  valence=-0.82, arousal=-0.20
   tired:      valence=-0.15, arousal=-0.75
+  content:    valence=+0.60, arousal=-0.20
 
 Output exactly one JSON object on a single line and nothing else:
 {"valence": <float in [-1,1]>, "arousal": <float in [-1,1]>}"""
@@ -105,7 +109,7 @@ class TextToVAConverter:
     Converts free-text emotion descriptions to (valence, arousal) tuples.
 
     Primary:  GLM-4 LLM prompt → structured JSON parse
-    Fallback: Keyword-weighted centroid over 11 emotion anchors
+    Fallback: Keyword-weighted centroid over 12 emotion anchors
     """
 
     def __init__(self, glm_model, glm_tokenizer):

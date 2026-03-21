@@ -12,6 +12,9 @@ __pycache__/
 *.bin
 *.safetensors
 
+# Model/feature caches
+**/cache/
+
 # Training artifacts
 experiments/
 results*/
@@ -31,6 +34,9 @@ core.*
 logs/
 figures/
 new_samples/
+
+# Retired scripts
+dataset_creation/retired/
 
 # IDE
 .vscode/

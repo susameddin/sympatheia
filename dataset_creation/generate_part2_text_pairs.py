@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
 """
-Generate Part 2 of the Sympatheia dataset: 11 response emotions per query.
+Generate Part 2 v2 of the Sympatheia dataset: neutral-only queries with
+12 response emotions.
 
-For each unique query (in emotion X), generate responses for all 11 target
-response emotions. The VA label during training will come from the response
-emotion — teaching the model to prioritize the label over the audio.
+All queries are neutral (no emotional coloring). For each neutral query,
+generate responses for all 12 target emotions. The VA label comes from the
+response emotion, forcing the model to rely on the VA label rather than
+the query audio's emotion.
 
 Dataset counts:
-  - Non-neutral emotions (10): 100 queries each = 1,000 unique queries
-  - Neutral: 500 unique queries
-  - Total: 1,500 unique queries × 11 response emotions = 16,500 pairs
+  - 500 neutral queries × 12 response emotions = 6,000 pairs
 
 Two-stage pipeline:
-  Stage 1: Generate user query in the query emotion's style (thinking OFF)
-  Stage 2: For each of 11 response emotions, generate a response in that
-           emotional register (thinking ON)
+  Stage 1: Generate neutral user queries (thinking OFF)
+  Stage 2: For each of 12 response emotions, generate a response that
+           clearly addresses the user's emotional state (thinking ON)
 
 Run (preview mode — inspect a few samples before full run):
-  conda run -n qwen3-tts4 python dataset_creation/generate_part2_text_pairs.py \\
-      --llm-model Qwen/Qwen3-32B-Instruct \\
-      --output-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/metadata/ \\
+  conda run -n qwen3-tts4 python dataset_creation/generate_part2_text_pairs.py \
+      --llm-model /engram/naplab/users/sd3705/models/Qwen3-32B \
+      --output-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/metadata/ \
       --preview 3
 
 Run (full):
-  conda run -n qwen3-tts4 python dataset_creation/generate_part2_text_pairs.py \\
-      --llm-model Qwen/Qwen3-32B-Instruct \\
-      --output-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/metadata/ \\
+  conda run -n qwen3-tts4 python dataset_creation/generate_part2_text_pairs.py \
+      --llm-model /engram/naplab/users/sd3705/models/Qwen3-32B \
+      --output-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/metadata/ \
       --resume
 """
 
@@ -38,54 +38,236 @@ from collections import defaultdict
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
+import numpy as np
 import torch
+from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Emotion style descriptions (mirrors generate_new_text_pairs.py)
+# Response emotion context — rich descriptions for Stage 2 prompt
 # ─────────────────────────────────────────────────────────────────────────────
-EMOTION_STYLE = {
-    "Sad":        {"query": "Very sad",        "response": "Warm, gentle, reassuring"},
-    "Excited":    {"query": "Very excited",    "response": "Upbeat, bright, lively"},
-    "Frustrated": {"query": "Very frustrated", "response": "Calm, patient, steady"},
-    "Neutral":    {"query": "Neutral",         "response": "Neutral, clear, friendly"},
-    "Happy":      {"query": "Very happy",      "response": "Cheerful, warm, upbeat"},
-    "Angry":      {"query": "Very angry",      "response": "Calm, firm, controlled"},
-    "Fear":       {"query": "Very scared",     "response": "Soft, soothing, steady"},
-    "Relaxed":    {"query": "Very relaxed",    "response": "Calm, chill, soothing"},
-    "Surprised":  {"query": "Very surprised",  "response": "Curious, bright, attentive"},
-    "Disgusted":  {"query": "Very disgusted",  "response": "Calm, brief, slightly distanced"},
-    "Tired":      {"query": "Very tired",      "response": "Low energy, slow, gentle"},
+RESPONSE_EMOTION_CONTEXT = {
+    "Sad": {
+        "user_feeling": "deeply sad, emotionally hurt, and feeling down",
+        "response_goal": "comfort them and validate their sadness while answering their question — connect the answer to their emotional wellbeing where natural",
+        "example_cues": "acknowledge their pain warmly, answer their actual question, then tie the answer back to gentle encouragement or comfort; show you care about both their feelings and their needs",
+        "avoid": "Don't forget to answer their actual question. Don't spend the entire response on emotional validation without addressing what they asked. Don't minimize their sadness either — do both.",
+    },
+    "Excited": {
+        "user_feeling": "bursting with excitement, thrilled, and full of energy",
+        "response_goal": "match their high energy and celebrate with them while answering their question enthusiastically",
+        "example_cues": "mirror their excitement, answer their question with genuine enthusiasm, amplify what they're excited about by connecting it to real content and information",
+        "avoid": "Don't be merely polite or lukewarm. Don't replace the answer with pure cheerleading — celebrate AND answer. Don't tone down their energy.",
+    },
+    "Frustrated": {
+        "user_feeling": "very frustrated, stuck, and losing patience",
+        "response_goal": "validate their frustration and show understanding, then answer their question with practical, useful content",
+        "example_cues": "acknowledge that the situation is annoying, show you understand why they're frustrated, then provide a real answer — frustrated people need both empathy and solutions",
+        "avoid": "Don't be dismissive of their frustration. Don't tell them to 'just relax'. Don't skip answering their question to only talk about their frustration.",
+    },
+    "Neutral": {
+        "user_feeling": "neutral — not expressing any strong emotion",
+        "response_goal": "answer their question helpfully and naturally, without commenting on or acknowledging their emotional state",
+        "example_cues": "just be a warm, friendly, helpful assistant; respond to the content of their message without any emotional framing or acknowledgment",
+        "avoid": "Don't comment on their calmness or neutrality (e.g. 'It's great that you're in a calm place'). Don't project emotions. Don't be therapeutic. Just answer the question like a normal friendly assistant.",
+    },
+    "Happy": {
+        "user_feeling": "genuinely happy, joyful, and in a wonderful mood",
+        "response_goal": "share in their happiness warmly and celebrate what makes them happy, while answering their question with that same positive energy",
+        "example_cues": "express genuine joy for them, answer their question with warm positive energy, reference what makes them happy and connect it to the actual content of your answer",
+        "avoid": "Don't be generic. Don't just say 'that's great' without answering the question. Share their joy AND give them a real, useful response.",
+    },
+    "Angry": {
+        "user_feeling": "very angry, upset, and possibly feeling wronged",
+        "response_goal": "validate their anger and show you understand why they're upset, then answer their question calmly and helpfully",
+        "example_cues": "acknowledge their right to be angry, stay calm and measured, then provide a real answer to their question; show you're on their side while being helpful",
+        "avoid": "Don't ignore their anger. Don't be preachy or lecture them. Don't tell them to calm down. Don't forget to answer their actual question.",
+    },
+    "Anxious": {
+        "user_feeling": "anxious, worried, and feeling unsafe or nervous",
+        "response_goal": "reassure them and acknowledge their anxiety, then answer their question with clear, concrete information that naturally helps reduce their worry",
+        "example_cues": "validate that their anxiety is understandable, provide a clear and specific answer — concrete information naturally reduces anxiety; connect the answer to reassurance",
+        "avoid": "Don't dismiss their anxiety as irrational. Don't say 'don't worry about it'. Don't add unnecessary caveats that increase worry. Answer clearly while being reassuring.",
+    },
+    "Relaxed": {
+        "user_feeling": "very relaxed, at ease, and content",
+        "response_goal": "match their calm energy while answering their question at a leisurely, unhurried pace",
+        "example_cues": "keep the vibe mellow and easy, answer their question without introducing urgency, enjoy the conversational moment together",
+        "avoid": "Don't introduce stress or urgency. Don't be overly energetic. Answer the question while matching their relaxed vibe.",
+    },
+    "Surprised": {
+        "user_feeling": "genuinely surprised and taken aback (in a curious way)",
+        "response_goal": "engage with their surprise and share in the wonder, while answering their question with genuine curiosity",
+        "example_cues": "share in the surprise, answer their question while exploring the unexpected together, build on their sense of discovery with real information",
+        "avoid": "Don't be indifferent to what surprised them. Show genuine curiosity and engagement while still answering the question.",
+    },
+    "Disgusted": {
+        "user_feeling": "disgusted, repulsed, or revolted by something",
+        "response_goal": "validate their disgust directly and show you understand why it's repulsive, then answer their question without lingering unnecessarily",
+        "example_cues": "use words like 'disgusting', 'gross', or 'revolting' to show you truly understand; acknowledge their reaction makes complete sense; then answer their actual question",
+        "avoid": "Don't philosophize or try to normalize what disgusted them. Don't use generic words like 'frustrating' instead of naming the disgust. Don't forget to answer the question.",
+    },
+    "Tired": {
+        "user_feeling": "exhausted, drained, running on empty, and worn out",
+        "response_goal": "acknowledge how exhausted they are and validate their need for rest, while answering their question gently and concisely",
+        "example_cues": "recognize their exhaustion, answer their question briefly and gently — don't overload them; keep it warm but concise so you don't add to their mental load",
+        "avoid": "Don't skip acknowledging their tiredness. Don't give an overly long response. Don't forget to answer their question. Keep it gentle and manageable.",
+    },
+    "Content": {
+        "user_feeling": "content, satisfied, and at peace",
+        "response_goal": "appreciate the moment with them and reinforce their contentment, while answering their question warmly",
+        "example_cues": "acknowledge their peaceful state, answer their question with warm gentle energy, reflect on what's making them feel good while providing real content",
+        "avoid": "Don't introduce new problems or urgency. Don't be overly energetic. Answer the question while keeping the contented, peaceful vibe.",
+    },
 }
 
-ALL_EMOTIONS = list(EMOTION_STYLE.keys())
+ALL_EMOTIONS = list(RESPONSE_EMOTION_CONTEXT.keys())
 
-# Queries per emotion — Neutral gets 5× more as it is most common in practice
-SAMPLES_PER_EMOTION: Dict[str, int] = {e: 100 for e in ALL_EMOTIONS}
-SAMPLES_PER_EMOTION["Neutral"] = 500
+NUM_NEUTRAL_QUERIES = 500
 
 TOPIC_POOL = [
+    # Daily life
     "daily routine",
+    "morning habits",
+    "evening wind-down routine",
+    "commuting to work or school",
+    "running errands",
+    "organizing your living space",
+    "home chores",
+    "laundry and cleaning",
+    "meal prepping for the week",
+    "grocery shopping",
+    # Work & study
     "work or study stress",
+    "job interviews",
+    "workplace relationships with colleagues",
+    "switching careers",
+    "working from home",
+    "balancing work and personal life",
+    "learning something new",
+    "taking an online course",
+    "preparing for an exam",
+    "giving a presentation",
+    # Relationships & social
     "family dynamics",
     "friendship",
+    "dating and romantic relationships",
+    "dealing with difficult neighbors",
+    "reconnecting with old friends",
+    "hosting a dinner party",
+    "attending a wedding",
+    "helping a friend move",
+    "meeting new people",
+    "family traditions and holidays",
+    # Health & wellness
     "health and wellness",
-    "weather",
+    "starting a new exercise routine",
+    "getting enough sleep",
+    "dealing with a minor illness",
+    "visiting the dentist or doctor",
+    "mental health and self-care",
+    "trying meditation or yoga",
+    "managing allergies",
+    "staying hydrated throughout the day",
+    "recovering from a sports injury",
+    # Food & cooking
     "food and dining",
+    "trying a new restaurant",
+    "cooking a complicated recipe",
+    "baking desserts",
+    "dietary restrictions and food choices",
+    "coffee and tea preferences",
+    "ordering takeout",
+    "farmer's markets and local produce",
+    "meal planning on a budget",
+    "kitchen gadgets and tools",
+    # Travel & outdoors
     "travel plans",
+    "booking flights and hotels",
+    "road trip planning",
+    "camping and hiking",
+    "visiting a national park",
+    "navigating public transportation",
+    "packing for a trip",
+    "jet lag and time zones",
+    "travel photography",
+    "exploring a new city",
+    # Entertainment & media
     "movies or TV shows",
+    "podcasts and audiobooks",
+    "live music and concerts",
+    "board games and card games",
+    "video games",
+    "reading books and book clubs",
+    "stand-up comedy shows",
+    "museum and art gallery visits",
+    "streaming services and recommendations",
+    "theater and live performances",
+    # Hobbies & creativity
     "hobbies",
+    "painting or drawing",
+    "playing a musical instrument",
+    "gardening and plant care",
+    "DIY home improvement projects",
+    "photography as a hobby",
+    "knitting or crafting",
+    "writing a journal or blog",
+    "collecting things as a hobby",
+    "learning a new language",
+    # Finance & practical
     "money and finances",
-    "technology",
-    "current news",
-    "sports",
-    "learning something new",
-    "home chores",
-    "pets",
+    "budgeting and saving money",
+    "investing for beginners",
+    "paying off student loans or debt",
+    "renting versus buying a home",
     "shopping",
+    "online shopping habits",
+    "comparing insurance plans",
+    "tax season preparation",
+    "negotiating a salary raise",
+    # Technology & digital life
+    "technology",
+    "smartphone tips and tricks",
+    "managing email and notifications",
+    "home automation and smart devices",
+    "computer troubleshooting",
     "social media",
+    "online privacy and security",
+    "backing up important files",
+    "choosing a new laptop or phone",
+    "using productivity apps",
+    "setting up a home Wi-Fi network",
+    # Nature & weather
+    "weather",
+    "seasonal changes and preparation",
+    "dealing with extreme heat or cold",
+    "rainy day activities",
+    "gardening with the seasons",
+    "weather forecasts and planning outdoor events",
+    "stargazing and astronomy",
+    "birdwatching or wildlife spotting",
+    # Sports & fitness
+    "sports",
+    "following a favorite sports team",
+    "learning to swim or a new sport",
+    "running a marathon or 5K",
+    "joining a gym or fitness class",
+    "watching the Olympics or World Cup",
+    "cycling or biking",
+    "yoga and stretching routines",
+    # Life transitions & future
     "future plans",
+    "moving to a new city",
+    "starting a side project",
+    "adopting or fostering a pet",
+    "pets",
+    "planning a big life milestone",
+    "retirement planning",
+    "volunteering and community service",
+    "setting personal goals for the year",
+    "current news",
+    "discussing a recent documentary",
 ]
 
 
@@ -94,11 +276,11 @@ TOPIC_POOL = [
 # ─────────────────────────────────────────────────────────────────────────────
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate Part 2 text pairs: 11 response emotions per query"
+        description="Generate Part 2 v2 text pairs: neutral queries × 11 response emotions"
     )
     parser.add_argument(
         "--llm-model",
-        default="Qwen/Qwen3-32B",
+        default="/engram/naplab/users/sd3705/models/Qwen3-32B",
         help="Path or HuggingFace ID of the LLM",
     )
     parser.add_argument(
@@ -108,17 +290,28 @@ def parse_args() -> argparse.Namespace:
         help="Directory to save metadata JSONL files",
     )
     parser.add_argument(
+        "--num-queries",
+        type=int,
+        default=NUM_NEUTRAL_QUERIES,
+        help=f"Number of unique neutral queries to generate (default: {NUM_NEUTRAL_QUERIES})",
+    )
+    parser.add_argument(
+        "--overgenerate-factor",
+        type=float,
+        default=2.5,
+        help="Over-generate by this factor to compensate for dedup filtering (default: 2.5)",
+    )
+    parser.add_argument(
+        "--dedup-threshold",
+        type=float,
+        default=0.85,
+        help="Cosine similarity threshold for dedup (default: 0.85)",
+    )
+    parser.add_argument(
         "--train-ratio",
         type=float,
         default=0.7,
         help="Fraction of queries for training set (default: 0.7)",
-    )
-    parser.add_argument(
-        "--emotions",
-        nargs="+",
-        default=ALL_EMOTIONS,
-        choices=ALL_EMOTIONS,
-        help="Query emotions to generate (default: all 11)",
     )
     parser.add_argument(
         "--response-emotions",
@@ -172,7 +365,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--resume",
         action="store_true",
-        help="Resume from stage1_checkpoint_part2.jsonl if it exists",
+        help="Resume from stage1_checkpoint_part2v2.jsonl if it exists",
     )
     parser.add_argument(
         "--preview",
@@ -180,9 +373,8 @@ def parse_args() -> argparse.Namespace:
         default=0,
         metavar="N",
         help=(
-            "Preview mode: generate N query groups (N×11 pairs) and print "
-            "them to stdout, then exit without writing the full dataset. "
-            "Samples 1 query per emotion for diversity."
+            "Preview mode: generate N neutral queries and their 11 response "
+            "variants, then print them to stdout and exit."
         ),
     )
     return parser.parse_args()
@@ -191,55 +383,79 @@ def parse_args() -> argparse.Namespace:
 # ─────────────────────────────────────────────────────────────────────────────
 # Prompt builders
 # ─────────────────────────────────────────────────────────────────────────────
-def build_stage1_messages(emotion: str, topic: str) -> List[Dict[str, str]]:
-    """Chat messages for Stage 1 — user query in the given emotion."""
-    query_style = EMOTION_STYLE[emotion]["query"]
+def build_stage1_messages(topic: str) -> List[Dict[str, str]]:
+    """Chat messages for Stage 1 — neutral user query."""
     return [
         {
             "role": "system",
-            "content": "You are generating training data for an empathetic speech dialogue system.",
+            "content": "You are generating training data for a speech dialogue system.",
         },
         {
             "role": "user",
             "content": (
-                f"Generate a natural, conversational, spoken-style instruction or question "
-                f"(1\u20132 sentences) that someone who is {query_style} might say about: {topic}.\n\n"
+                f"Generate a natural, conversational, spoken-style question or request "
+                f"(1\u20132 sentences) about: {topic}.\n\n"
                 "Requirements:\n"
+                "- The tone must be completely NEUTRAL \u2014 no emotional words, no excitement, "
+                "no sadness, no frustration, no strong feelings of any kind\n"
+                "- It should sound like a calm, matter-of-fact person asking a straightforward question\n"
                 "- Spoken English only (as if said aloud, not written)\n"
-                "- The emotional state should naturally show in the words and phrasing\n"
-                "- Output ONLY the instruction text \u2014 no quotes, no explanation"
+                "- Do NOT include emotional adjectives, exclamation marks, or sentiment words\n"
+                "- Output ONLY the question/request text \u2014 no quotes, no explanation"
             ),
         },
     ]
 
 
 def build_stage2_messages(
-    query_emotion: str, response_emotion: str, instruction: str
+    response_emotion: str, instruction: str
 ) -> List[Dict[str, str]]:
     """
-    Chat messages for Stage 2 — response in the response_emotion's style.
-
-    The prompt explicitly states:
-      1. The user's emotional state (from query_emotion)
-      2. The target response style (from response_emotion)
-    This mirrors the EMOTION_STYLE mappings used in Part 1.
+    Chat messages for Stage 2 — response addressing a user in a specific
+    emotional state. The instruction is always a neutral query.
     """
-    query_style = EMOTION_STYLE[query_emotion]["query"]
-    response_style = EMOTION_STYLE[response_emotion]["response"]
+    ctx = RESPONSE_EMOTION_CONTEXT[response_emotion]
     return [
         {
             "role": "system",
             "content": (
-                "You are an empathetic AI assistant. "
-                "Think carefully about the user's emotional state and what would be most helpful before responding."
+                "You are a deeply empathetic AI assistant. You always acknowledge and "
+                "address the user's emotions explicitly and warmly. At the same time, "
+                "you always answer their actual question or request \u2014 weaving emotional "
+                "support and the topic together naturally. Never ignore the user's "
+                "emotions, and never ignore their question."
             ),
         },
         {
             "role": "user",
             "content": (
-                f'The user (who is {query_style}) said: "{instruction}"\n\n'
-                f"Generate a concise, natural spoken response (2\u20133 sentences) that is {response_style}.\n"
-                "It should be dialogue-appropriate and sound natural when spoken aloud.\n\n"
+                f"The user is feeling {ctx['user_feeling']}.\n"
+                f"They said: \"{instruction}\"\n\n"
+                f"Your goal: {ctx['response_goal']}.\n"
+                f"Guidelines: {ctx['example_cues']}.\n"
+                f"Avoid: {ctx['avoid']}\n\n"
+                "Generate a natural spoken response (3\u20135 sentences) that:\n"
+                "1. Answers their question AND addresses their emotional state, woven together naturally throughout\n"
+                "2. The emotional awareness should flow into the answer itself \u2014 not be a separate block\n"
+                "3. Do NOT open with an explicit emotion label like 'I'm sorry you're sad' or 'I can tell you're frustrated' \u2014 "
+                "instead, let the empathy come through in HOW you talk about the topic and connect it to their feelings\n"
+                "4. A listener could tell WHAT EMOTION you're responding to AND what the user asked about\n\n"
+                "IMPORTANT: Your response must contain a real answer to the user's question. "
+                "The empathy and the answer should feel like one flowing conversation, not two separate parts.\n\n"
+                "BAD example (emotional but ignores the question):\n"
+                "  User (sad): 'How is the weather today?'\n"
+                "  'I'm so sorry you're feeling so down \u2014 that must be really hard. "
+                "It's completely okay to feel this way. Would you like to talk about what's on your mind?'\n"
+                "BAD example (answer and emotion feel disconnected):\n"
+                "  User (sad): 'How is the weather today?'\n"
+                "  'The weather today is mild and partly cloudy. I can hear you're going through "
+                "a really tough time, and I'm sorry you're carrying that weight.'\n"
+                "GOOD example (empathy woven naturally into the answer):\n"
+                "  User (sad): 'How is the weather today?'\n"
+                "  'It's actually a pretty gentle day out there \u2014 mild and partly cloudy, the kind of "
+                "weather that's easy on you when everything feels heavy. Sometimes just stepping outside "
+                "for a quiet moment can take a bit of that weight off. You don't have to push through "
+                "everything at once.'\n\n"
                 "Output ONLY the response text \u2014 no quotes, no explanation."
             ),
         },
@@ -283,6 +499,57 @@ def is_valid(text: str) -> bool:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Embedding-based deduplication
+# ─────────────────────────────────────────────────────────────────────────────
+def build_dedup_filter(threshold: float = 0.85):
+    """Create a dedup checker using sentence embeddings.
+
+    Returns a callable ``is_duplicate(text) -> bool`` that returns True when
+    *text* is too similar (cosine similarity >= *threshold*) to any previously
+    accepted text.
+    """
+    emb_model = SentenceTransformer("all-MiniLM-L6-v2")
+    embeddings: List[np.ndarray] = []
+
+    def is_duplicate(text: str) -> bool:
+        emb = emb_model.encode([text], normalize_embeddings=True)[0]
+        if embeddings:
+            sims = np.dot(np.stack(embeddings), emb)
+            if float(np.max(sims)) >= threshold:
+                return True
+        embeddings.append(emb)
+        return False
+
+    return is_duplicate
+
+
+def dedup_and_trim(
+    instructions: List[Optional[str]],
+    target_count: int,
+    threshold: float = 0.85,
+) -> int:
+    """Post-generation dedup + trim.  Modifies *instructions* in-place.
+
+    Returns the number of unique queries kept.
+    """
+    is_dup = build_dedup_filter(threshold)
+    kept = 0
+    for i, inst in enumerate(instructions):
+        if inst is None:
+            continue
+        if is_dup(inst):
+            instructions[i] = None
+        else:
+            kept += 1
+            if kept >= target_count:
+                # Null out remaining to trim to target
+                for j in range(i + 1, len(instructions)):
+                    instructions[j] = None
+                break
+    return kept
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Batch generation
 # ─────────────────────────────────────────────────────────────────────────────
 def generate_batch(
@@ -316,44 +583,33 @@ def generate_batch(
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Slot building
+# Slot building — all neutral queries
 # ─────────────────────────────────────────────────────────────────────────────
 def build_query_slots(
-    emotions: List[str],
+    num_queries: int,
     preview_n: int,
     seed: int,
 ) -> List[Dict[str, Any]]:
-    """
-    Build the list of unique query slots: (emotion, topic, local_index).
-
-    In preview mode, sample 1 query per emotion up to preview_n total.
-    In full mode, use SAMPLES_PER_EMOTION counts.
-    """
     rng = random.Random(seed)
     slots = []
 
-    if preview_n > 0:
-        # 1 query per emotion, cycling through emotions until we have preview_n
-        for i, emotion in enumerate(emotions[:preview_n]):
-            topic = rng.choice(TOPIC_POOL)
-            slots.append({"emotion": emotion, "topic": topic, "local_idx": 0})
-    else:
-        for emotion in emotions:
-            n = SAMPLES_PER_EMOTION[emotion]
-            topics: List[str] = []
-            while len(topics) < n:
-                shuffled = TOPIC_POOL[:]
-                rng.shuffle(shuffled)
-                topics.extend(shuffled)
-            topics = topics[:n]
-            for i, topic in enumerate(topics):
-                slots.append({"emotion": emotion, "topic": topic, "local_idx": i})
+    n = preview_n if preview_n > 0 else num_queries
+
+    topics: List[str] = []
+    while len(topics) < n:
+        shuffled = TOPIC_POOL[:]
+        rng.shuffle(shuffled)
+        topics.extend(shuffled)
+    topics = topics[:n]
+
+    for i, topic in enumerate(topics):
+        slots.append({"emotion": "Neutral", "topic": topic, "local_idx": i})
 
     return slots
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Stage 1: generate query texts
+# Stage 1: generate neutral query texts
 # ─────────────────────────────────────────────────────────────────────────────
 def run_stage1(
     model,
@@ -363,6 +619,7 @@ def run_stage1(
     temperature: float,
     max_new_tokens: int,
     max_retries: int,
+    is_duplicate=None,
 ) -> List[Optional[str]]:
     results: List[Optional[str]] = [None] * len(slots)
     pending = list(range(len(slots)))
@@ -375,7 +632,7 @@ def run_stage1(
         prompts = [
             apply_template(
                 tokenizer,
-                build_stage1_messages(slots[i]["emotion"], slots[i]["topic"]),
+                build_stage1_messages(slots[i]["topic"]),
                 enable_thinking=False,
             )
             for i in pending
@@ -393,14 +650,14 @@ def run_stage1(
         still_pending = []
         for idx, raw in zip(pending, outputs):
             text = clean_output(raw)
-            if is_valid(text):
+            if is_valid(text) and (is_duplicate is None or not is_duplicate(text)):
                 results[idx] = text
             else:
                 still_pending.append(idx)
         pending = still_pending
 
     if pending:
-        print(f"[Stage 1] Warning: {len(pending)} slots failed — skipping.", file=sys.stderr)
+        print(f"[Stage 1] Warning: {len(pending)} slots failed/duplicate — skipping.", file=sys.stderr)
     return results
 
 
@@ -445,7 +702,6 @@ def run_stage2(
             apply_template(
                 tokenizer,
                 build_stage2_messages(
-                    query_emotion=slots[i]["emotion"],
                     response_emotion=resp_emo,
                     instruction=instructions[i],
                 ),
@@ -492,12 +748,12 @@ def print_preview(
     response_emotions: List[str],
 ):
     print("\n" + "=" * 70)
-    print("PREVIEW — sample query-response groups")
+    print("PREVIEW — sample query-response groups (all queries are NEUTRAL)")
     print("=" * 70)
     for i, (slot, inst) in enumerate(zip(slots, instructions)):
         if inst is None:
             continue
-        print(f"\nQUERY [{slot['emotion']}] (topic: {slot['topic']}):")
+        print(f"\nQUERY [Neutral] (topic: {slot['topic']}):")
         print(f"  \"{inst}\"")
         resps = response_map.get(i, {})
         for resp_emo in response_emotions:
@@ -518,83 +774,103 @@ def save_results(
     output_dir: Path,
     train_ratio: float,
     seed: int,
+    dedup_threshold: float = 0.85,
 ):
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Collect all pairs (query + response_emotion combinations)
-    # Group by query emotion for balanced train/eval split
-    emotion_pairs: Dict[str, List[Dict]] = defaultdict(list)
-    emotion_unique_queries: Dict[str, List[Dict]] = defaultdict(list)
+    all_pairs: List[Dict] = []
+    all_unique_queries: List[Dict] = []
 
+    # Re-index sequentially so indices are contiguous after dedup trimming
+    seq_idx = 0
     for i, (slot, inst) in enumerate(zip(slots, instructions)):
         if inst is None:
             continue
-        query_emotion = slot["emotion"]
-        query_index = f"p2_{query_emotion}_{slot['local_idx']:05d}"
+        query_index = f"p2v2_Neutral_{seq_idx:05d}"
+        seq_idx += 1
         resps = response_map.get(i, {})
 
-        # Track unique query (used for unique_queries files)
         unique_q = {
             "query_index": query_index,
             "query_text": inst,
-            "query_emotion": query_emotion,
+            "query_emotion": "Neutral",
         }
-        emotion_unique_queries[query_emotion].append(unique_q)
+        all_unique_queries.append(unique_q)
 
-        # Create one pair per response emotion
         for resp_emo in response_emotions:
             text = resps.get(resp_emo)
             if text is None:
                 continue
             pair_index = f"{query_index}_{resp_emo}"
-            emotion_pairs[query_emotion].append(
+            all_pairs.append(
                 {
                     "index": pair_index,
                     "query_index": query_index,
                     "query_text": inst,
-                    "query_emotion": query_emotion,
+                    "query_emotion": "Neutral",
                     "response_emotion": resp_emo,
                     "response_text": text,
                 }
             )
 
-    # Split: train/eval split is done AT THE QUERY LEVEL so the same query
-    # never appears in both splits (prevents data leakage)
-    rng = random.Random(seed + 1)
-    train_pairs: List[Dict] = []
-    eval_pairs: List[Dict] = []
-    train_queries: List[Dict] = []
-    eval_queries: List[Dict] = []
+    # ── Embedding-clustered train/eval split ─────────────────────────────────
+    # Cluster semantically similar queries so they stay in the same split
+    query_texts = [q["query_text"] for q in all_unique_queries]
+    print(f"\nEncoding {len(query_texts)} queries for cluster-based split...")
+    emb_model = SentenceTransformer("all-MiniLM-L6-v2")
+    query_embs = emb_model.encode(query_texts, normalize_embeddings=True)
 
-    print("\nEmotion breakdown:")
-    for emotion in ALL_EMOTIONS:
-        unique_qs = emotion_unique_queries.get(emotion, [])
-        if not unique_qs:
+    # Greedy clustering: group queries with cosine sim >= threshold
+    clusters: List[List[int]] = []
+    assigned: set = set()
+    for i in range(len(query_texts)):
+        if i in assigned:
             continue
+        cluster = [i]
+        assigned.add(i)
+        for j in range(i + 1, len(query_texts)):
+            if j in assigned:
+                continue
+            if float(np.dot(query_embs[i], query_embs[j])) >= dedup_threshold:
+                cluster.append(j)
+                assigned.add(j)
+        clusters.append(cluster)
 
-        rng.shuffle(unique_qs)
-        n_train_q = int(len(unique_qs) * train_ratio)
-        train_q_set = {q["query_index"] for q in unique_qs[:n_train_q]}
+    print(f"  {len(query_texts)} queries → {len(clusters)} clusters")
 
-        train_queries.extend(unique_qs[:n_train_q])
-        eval_queries.extend(unique_qs[n_train_q:])
+    # Split clusters into train/eval
+    rng = random.Random(seed + 1)
+    rng.shuffle(clusters)
+    n_train_clusters = int(len(clusters) * train_ratio)
 
-        t_pairs = [p for p in emotion_pairs.get(emotion, []) if p["query_index"] in train_q_set]
-        e_pairs = [p for p in emotion_pairs.get(emotion, []) if p["query_index"] not in train_q_set]
-        train_pairs.extend(t_pairs)
-        eval_pairs.extend(e_pairs)
+    train_indices: set = set()
+    for c in clusters[:n_train_clusters]:
+        train_indices.update(c)
 
-        n_q = len(unique_qs)
-        print(
-            f"  {emotion}: {n_q} queries → "
-            f"{len(t_pairs)} train pairs + {len(e_pairs)} eval pairs"
-        )
+    train_q_set = {all_unique_queries[i]["query_index"] for i in train_indices}
 
-    # Shuffle
+    train_queries = [all_unique_queries[i] for i in sorted(train_indices)]
+    eval_queries = [all_unique_queries[i] for i in range(len(all_unique_queries)) if i not in train_indices]
+
+    train_pairs = [p for p in all_pairs if p["query_index"] in train_q_set]
+    eval_pairs = [p for p in all_pairs if p["query_index"] not in train_q_set]
+
     rng.shuffle(train_pairs)
     rng.shuffle(eval_pairs)
     rng.shuffle(train_queries)
     rng.shuffle(eval_queries)
+
+    print(f"\nDataset split (cluster-based, threshold={dedup_threshold}):")
+    print(f"  Train: {len(train_queries)} queries → {len(train_pairs)} pairs")
+    print(f"  Eval:  {len(eval_queries)} queries → {len(eval_pairs)} pairs")
+
+    # Response emotion distribution
+    print("\nResponse emotion distribution (train):")
+    r_emo_count: Dict[str, int] = defaultdict(int)
+    for p in train_pairs:
+        r_emo_count[p["response_emotion"]] += 1
+    for emo in ALL_EMOTIONS:
+        print(f"  {emo:<12}: {r_emo_count.get(emo, 0)}")
 
     # Write files
     for name, data in [
@@ -622,44 +898,50 @@ def main():
     n_gpus = torch.cuda.device_count()
     print(f"\nDetected {n_gpus} GPU(s)")
     print(f"LLM model:          {args.llm_model}")
-    print(f"Query emotions:     {args.emotions}")
     print(f"Response emotions:  {args.response_emotions}")
     if preview_mode:
-        print(f"Mode:               PREVIEW ({args.preview} query groups)")
+        print(f"Mode:               PREVIEW ({args.preview} neutral queries × {len(args.response_emotions)} resp emotions)")
     else:
-        total_queries = sum(SAMPLES_PER_EMOTION[e] for e in args.emotions)
-        total_pairs = total_queries * len(args.response_emotions)
-        print(f"Mode:               FULL ({total_queries} queries × {len(args.response_emotions)} resp emotions = {total_pairs} pairs)")
+        total_pairs = args.num_queries * len(args.response_emotions)
+        print(f"Mode:               FULL ({args.num_queries} neutral queries × {len(args.response_emotions)} resp emotions = {total_pairs} pairs)")
 
-    # ── Build query slots ────────────────────────────────────────────────────
-    print("\nBuilding query slots...")
+    # ── Build query slots (over-generate to compensate for dedup) ───────────
+    raw_count = int(args.num_queries * args.overgenerate_factor) if not preview_mode else args.preview
+    print(f"\nBuilding query slots (all neutral)...")
+    print(f"  Target unique queries: {args.num_queries}")
+    if not preview_mode:
+        print(f"  Over-generate factor:  {args.overgenerate_factor}x → {raw_count} raw slots")
+        print(f"  Dedup threshold:       {args.dedup_threshold}")
     slots = build_query_slots(
-        emotions=args.emotions,
+        num_queries=raw_count,
         preview_n=args.preview,
         seed=args.random_seed,
     )
     print(f"Total query slots: {len(slots)}")
 
+    # ── Create dedup filter ──────────────────────────────────────────────────
+    is_dup = build_dedup_filter(threshold=args.dedup_threshold)
+
     # ── Load checkpoint if resuming ──────────────────────────────────────────
-    stage1_ckpt = args.output_dir / "stage1_checkpoint_part2.jsonl"
+    stage1_ckpt = args.output_dir / "stage1_checkpoint_part2v2.jsonl"
     instructions: List[Optional[str]] = [None] * len(slots)
 
     if not preview_mode and args.resume and stage1_ckpt.exists():
         print(f"\nResuming from Stage 1 checkpoint: {stage1_ckpt}")
-        ckpt_map: Dict[str, str] = {}
+        ckpt_map: Dict[int, str] = {}
         with stage1_ckpt.open("r", encoding="utf-8") as f:
             for line in f:
                 row = json.loads(line)
-                key = f"{row['emotion']}_{row['local_idx']}"
                 if row.get("instruction"):
-                    ckpt_map[key] = row["instruction"]
+                    ckpt_map[row["local_idx"]] = row["instruction"]
         for i, slot in enumerate(slots):
-            key = f"{slot['emotion']}_{slot['local_idx']}"
-            if key in ckpt_map:
-                instructions[i] = ckpt_map[key]
+            if slot["local_idx"] in ckpt_map:
+                inst = ckpt_map[slot["local_idx"]]
+                instructions[i] = inst
+                # Populate dedup filter with checkpoint texts
+                is_dup(inst)
         n_loaded = sum(1 for x in instructions if x is not None)
         print(f"Loaded {n_loaded}/{len(slots)} Stage 1 results from checkpoint")
-        # Re-run Stage 1 only for still-None slots
         still_none = [i for i, x in enumerate(instructions) if x is None]
         if still_none:
             print(f"Running Stage 1 for {len(still_none)} remaining slots...")
@@ -689,7 +971,7 @@ def main():
     # ── Stage 1 ──────────────────────────────────────────────────────────────
     if still_none:
         print("\n" + "=" * 60)
-        print("STAGE 1: Generating user queries (thinking OFF)")
+        print("STAGE 1: Generating NEUTRAL user queries (thinking OFF)")
         print("=" * 60)
         partial_slots = [slots[i] for i in still_none]
         partial_results = run_stage1(
@@ -700,12 +982,13 @@ def main():
             temperature=args.stage1_temperature,
             max_new_tokens=args.stage1_max_new_tokens,
             max_retries=args.max_retries,
+            is_duplicate=is_dup,
         )
         for i, res in zip(still_none, partial_results):
             instructions[i] = res
 
         n_ok1 = sum(1 for x in instructions if x is not None)
-        print(f"\nStage 1 complete: {n_ok1}/{len(slots)} succeeded")
+        print(f"\nStage 1 complete: {n_ok1}/{len(slots)} succeeded (before dedup)")
 
         # Save checkpoint
         if not preview_mode:
@@ -715,7 +998,7 @@ def main():
                     f.write(
                         json.dumps(
                             {
-                                "emotion": slot["emotion"],
+                                "emotion": "Neutral",
                                 "topic": slot["topic"],
                                 "local_idx": slot["local_idx"],
                                 "instruction": inst,
@@ -726,9 +1009,21 @@ def main():
                     )
             print(f"Stage 1 checkpoint saved → {stage1_ckpt}")
 
+    # ── Post-generation dedup + trim ────────────────────────────────────────
+    if not preview_mode:
+        target = args.num_queries
+        n_unique = dedup_and_trim(instructions, target, threshold=args.dedup_threshold)
+        print(f"\nAfter dedup + trim: {n_unique} unique queries (target: {target})")
+        if n_unique < target:
+            print(
+                f"WARNING: Only {n_unique} unique queries achieved. "
+                f"Consider increasing --overgenerate-factor (currently {args.overgenerate_factor}).",
+                file=sys.stderr,
+            )
+
     # ── Stage 2 ──────────────────────────────────────────────────────────────
     print("\n" + "=" * 60)
-    print("STAGE 2: Generating responses for all response emotions (thinking ON)")
+    print("STAGE 2: Generating emotion-specific responses (thinking ON)")
     print("=" * 60)
     response_map = run_stage2(
         model=model,
@@ -757,7 +1052,7 @@ def main():
             for i, (slot, inst) in enumerate(zip(slots, instructions)):
                 if inst is None:
                     continue
-                q_idx = f"p2_{slot['emotion']}_preview_{slot['local_idx']:05d}"
+                q_idx = f"p2v2_Neutral_preview_{slot['local_idx']:05d}"
                 resps = response_map.get(i, {})
                 for resp_emo in args.response_emotions:
                     text = resps.get(resp_emo)
@@ -768,7 +1063,7 @@ def main():
                                     "index": f"{q_idx}_{resp_emo}",
                                     "query_index": q_idx,
                                     "query_text": inst,
-                                    "query_emotion": slot["emotion"],
+                                    "query_emotion": "Neutral",
                                     "response_emotion": resp_emo,
                                     "response_text": text,
                                 },
@@ -792,6 +1087,7 @@ def main():
         output_dir=args.output_dir,
         train_ratio=args.train_ratio,
         seed=args.random_seed,
+        dedup_threshold=args.dedup_threshold,
     )
 
     print("\nDone!")

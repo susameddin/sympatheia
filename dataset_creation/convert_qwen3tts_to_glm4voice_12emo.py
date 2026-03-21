@@ -3,7 +3,7 @@
 Convert Qwen3-TTS generated audio to GLM-4-Voice format with Valence-Arousal values.
 
 Encodes audio files to tokens and creates JSONL files for GLM-4-Voice training
-using valence-arousal emotion representation for 11 emotions.
+using valence-arousal emotion representation for 12 emotions.
 """
 
 import argparse
@@ -18,27 +18,28 @@ from src.vocoder import GLM4CodecEncoder
 from tqdm import tqdm
 
 
-# Emotion to Valence-Arousal mapping for 11 emotions
+# Emotion to Valence-Arousal mapping for 12 emotions
 EMOTION_VA_MAPPING = {
     "Sad": (-0.75, -0.65),
     "Excited": (0.75, 0.90),
-    "Frustrated": (-0.82, -0.20),
+    "Frustrated": (-0.80, 0.35),
     "Neutral": (0.00, 0.00),
     "Happy": (0.85, 0.35),
     "Angry": (-0.85, 0.85),
-    "Fear": (-0.40, 0.65),
-    "Relaxed": (0.40, -0.45),
+    "Anxious": (-0.40, 0.65),
+    "Relaxed": (0.25, -0.60),
     "Surprised": (0.10, 0.80),
-    "Disgusted": (-0.80, 0.35),
+    "Disgusted": (-0.82, -0.20),
     "Tired": (-0.15, -0.75),
+    "Content": (0.60, -0.20),
 }
 
-ALL_EMOTIONS = ["Sad", "Excited", "Frustrated", "Neutral", "Happy", "Angry", "Fear", "Relaxed", "Surprised", "Disgusted", "Tired"]
+ALL_EMOTIONS = ["Sad", "Excited", "Frustrated", "Neutral", "Happy", "Angry", "Anxious", "Relaxed", "Surprised", "Disgusted", "Tired", "Content"]
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Convert Qwen3-TTS audio to GLM-4-Voice format with VA values (11 emotions)"
+        description="Convert Qwen3-TTS audio to GLM-4-Voice format with VA values (12 emotions)"
     )
     parser.add_argument(
         "--metadata-dir",

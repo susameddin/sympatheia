@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-Validate the Part 2 Sympatheia dataset.
+Validate the Part 2 v2 Sympatheia dataset (neutral-only queries).
 
 Checks:
   1. Metadata files exist and are well-formed
-  2. Unique query WAV files exist (1,500 expected)
-  3. Response pair WAV files exist (16,500 expected)
-  4. Final JSONL records have VA values matching response_emotion (not query_emotion)
-  5. Audio quality spot-check (duration, sample rate, no NaN/inf)
-  6. Per-emotion distribution table
+  2. All queries are neutral
+  3. Unique query WAV files exist (500 expected)
+  4. Response pair WAV files exist (5,500 expected)
+  5. Final JSONL records have VA values matching response_emotion
+  6. Audio quality spot-check (duration, sample rate, no NaN/inf)
+  7. Per-emotion distribution table
+  8. Content differentiation spot-check
 
 Run:
-  python dataset_creation/validate_part2_dataset.py \\
-      --dataset-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/
+  python dataset_creation/validate_part2_dataset.py \
+      --dataset-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/
 """
 
 import argparse
@@ -29,31 +31,32 @@ import soundfile as sf
 EMOTION_VA_MAPPING: Dict[str, Tuple[float, float]] = {
     "Sad":        (-0.75, -0.65),
     "Excited":    ( 0.75,  0.90),
-    "Frustrated": (-0.82, -0.20),
+    "Frustrated": (-0.80,  0.35),
     "Neutral":    ( 0.00,  0.00),
     "Happy":      ( 0.85,  0.35),
     "Angry":      (-0.85,  0.85),
-    "Fear":       (-0.40,  0.65),
-    "Relaxed":    ( 0.40, -0.45),
+    "Anxious":    (-0.40,  0.65),
+    "Relaxed":    ( 0.25, -0.60),
     "Surprised":  ( 0.10,  0.80),
-    "Disgusted":  (-0.80,  0.35),
+    "Disgusted":  (-0.82, -0.20),
     "Tired":      (-0.15, -0.75),
+    "Content":    ( 0.60, -0.20),
 }
 
 ALL_EMOTIONS = list(EMOTION_VA_MAPPING.keys())
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate Part 2 dataset")
+    parser = argparse.ArgumentParser(description="Validate Part 2 v2 dataset")
     parser.add_argument("--dataset-dir", type=Path, required=True,
-                        help="Root of the Part 2 dataset directory")
+                        help="Root of the Part 2 v2 dataset directory")
     parser.add_argument("--audio-spot-check", type=int, default=5,
                         help="Number of audio files to spot-check per emotion (default: 5)")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for sampling")
     return parser.parse_args()
 
 
-def load_jsonl(path: Path) -> List[Dict]:
+def load_jsonl(path: Path) -> Tuple[List[Dict], List[str]]:
     records = []
     errors = []
     with path.open(encoding="utf-8") as f:
@@ -128,10 +131,26 @@ def main():
             meta_data[name] = records
             print(f"  [OK] {name}: {len(records)} records")
 
-    # ── 2. Metadata content checks ───────────────────────────────────────────
-    section("2. Metadata content")
+    # ── 2. All queries must be neutral ────────────────────────────────────────
+    section("2. Query emotion check (all must be Neutral)")
 
-    # Check required fields in pairs
+    for split in ["train", "eval"]:
+        key = f"sampled_{split}.jsonl"
+        if key not in meta_data:
+            continue
+        pairs = meta_data[key]
+        non_neutral = [p for p in pairs if p.get("query_emotion") != "Neutral"]
+        if non_neutral:
+            print(f"  [ERROR] {split}: {len(non_neutral)} pairs have non-neutral query_emotion!")
+            for p in non_neutral[:5]:
+                print(f"    {p['index']}: query_emotion={p['query_emotion']}")
+            all_ok = False
+        else:
+            print(f"  [OK] {split}: all {len(pairs)} pairs have query_emotion=Neutral")
+
+    # ── 3. Metadata content checks ───────────────────────────────────────────
+    section("3. Metadata content")
+
     for split in ["train", "eval"]:
         key = f"sampled_{split}.jsonl"
         if key not in meta_data:
@@ -147,9 +166,8 @@ def main():
             missing = required - set(p.keys())
             if missing:
                 missing_field_count += 1
-            qe = p.get("query_emotion", "")
             re_ = p.get("response_emotion", "")
-            if qe not in ALL_EMOTIONS or re_ not in ALL_EMOTIONS:
+            if re_ not in ALL_EMOTIONS:
                 invalid_emo_count += 1
             pid = p.get("index", "")
             if pid in seen_ids:
@@ -167,29 +185,26 @@ def main():
     # Distribution table
     print("\n  Per-emotion pair counts (train):")
     train_pairs = meta_data.get("sampled_train.jsonl", [])
-    q_emo_count: Dict[str, int] = defaultdict(int)
     r_emo_count: Dict[str, int] = defaultdict(int)
     for p in train_pairs:
-        q_emo_count[p.get("query_emotion", "?")] += 1
         r_emo_count[p.get("response_emotion", "?")] += 1
-    print(f"  {'Emotion':<14} {'Query':<8} {'Response':<8}")
-    print(f"  {'-'*14} {'-'*8} {'-'*8}")
+    print(f"  {'Emotion':<14} {'Response pairs':<14}")
+    print(f"  {'-'*14} {'-'*14}")
     for emo in ALL_EMOTIONS:
-        print(f"  {emo:<14} {q_emo_count.get(emo, 0):<8} {r_emo_count.get(emo, 0):<8}")
+        print(f"  {emo:<14} {r_emo_count.get(emo, 0):<14}")
 
-    # ── 3. Audio file existence ──────────────────────────────────────────────
-    section("3. Audio file existence")
+    # ── 4. Audio file existence ──────────────────────────────────────────────
+    section("4. Audio file existence")
 
     for split in ["train", "eval"]:
-        # Query audio
+        # Query audio — all under neutral/
         uq_key = f"unique_queries_{split}.jsonl"
         if uq_key in meta_data:
             uq_list = meta_data[uq_key]
             missing_query = 0
             for q in uq_list:
-                qe = q.get("query_emotion", "")
                 qi = q.get("query_index", "")
-                path = audio_dir / split / "query" / qe.lower() / f"{qi}.wav"
+                path = audio_dir / split / "query" / "neutral" / f"{qi}.wav"
                 if not path.exists():
                     missing_query += 1
             status = "OK" if missing_query == 0 else "MISSING"
@@ -215,18 +230,16 @@ def main():
             if missing_resp:
                 all_ok = False
 
-    # ── 4. Audio quality spot-check ──────────────────────────────────────────
-    section("4. Audio quality spot-check")
+    # ── 5. Audio quality spot-check ──────────────────────────────────────────
+    section("5. Audio quality spot-check")
 
     n = args.audio_spot_check
     audio_issues = []
 
     for split in ["train", "eval"]:
-        # Sample query audio per emotion
-        for emo in ALL_EMOTIONS:
-            query_dir = audio_dir / split / "query" / emo.lower()
-            if not query_dir.exists():
-                continue
+        # Query audio — only neutral directory
+        query_dir = audio_dir / split / "query" / "neutral"
+        if query_dir.exists():
             wavs = list(query_dir.glob("*.wav"))
             sample = rng.sample(wavs, min(n, len(wavs)))
             for wav in sample:
@@ -234,7 +247,7 @@ def main():
                 if not r["ok"]:
                     audio_issues.append(r)
 
-        # Sample response audio per response emotion
+        # Response audio per response emotion
         for emo in ALL_EMOTIONS:
             resp_dir = audio_dir / split / "response" / emo.lower()
             if not resp_dir.exists():
@@ -254,8 +267,8 @@ def main():
     else:
         print(f"  [OK] All spot-checked audio files passed")
 
-    # ── 5. Final JSONL VA validation ─────────────────────────────────────────
-    section("5. Final JSONL VA value validation")
+    # ── 6. Final JSONL VA validation ─────────────────────────────────────────
+    section("6. Final JSONL VA value validation")
 
     va_tol = 1e-3
     for split in ["train", "eval"]:
@@ -269,11 +282,7 @@ def main():
             all_ok = False
             continue
 
-        va_mismatch = 0
         missing_va = 0
-        # We can't directly recover response_emotion from the JSONL without metadata,
-        # so we cross-check via VA values: verify each record's valence/arousal matches
-        # exactly one of the 11 emotions
         unrecognized_va = 0
         for r in records:
             v = r.get("valence")
@@ -294,7 +303,7 @@ def main():
         if missing_va or unrecognized_va:
             all_ok = False
 
-        # Cross-check a sample: VA should match response_emotion from metadata
+        # Cross-check VA against response_emotion from metadata
         pairs_key = f"sampled_{split}.jsonl"
         if pairs_key in meta_data and records:
             pairs_by_id = {p["index"]: p for p in meta_data[pairs_key]}
@@ -318,6 +327,44 @@ def main():
             else:
                 print(f"  [OK] {split}: VA cross-check passed (200 samples)")
 
+    # ── 7. Content differentiation spot-check ────────────────────────────────
+    section("7. Content differentiation spot-check")
+
+    for split in ["train"]:
+        pairs_key = f"sampled_{split}.jsonl"
+        if pairs_key not in meta_data:
+            print(f"  [SKIP] No {pairs_key} available")
+            continue
+
+        pairs = meta_data[pairs_key]
+        by_query: Dict[str, Dict[str, str]] = defaultdict(dict)
+        query_texts: Dict[str, str] = {}
+        for p in pairs:
+            qi = p["query_index"]
+            by_query[qi][p["response_emotion"]] = p["response_text"]
+            query_texts[qi] = p["query_text"]
+
+        # Find queries that have all 11 responses
+        full_queries = [qi for qi, resps in by_query.items() if len(resps) == len(ALL_EMOTIONS)]
+        if not full_queries:
+            print(f"  [WARN] No queries with all 11 response emotions found")
+            continue
+
+        # Show 2 sample queries with all their responses
+        n_samples = min(2, len(full_queries))
+        sample_queries = rng.sample(full_queries, n_samples)
+
+        for qi in sample_queries:
+            print(f"\n  Query [{qi}]: \"{query_texts[qi]}\"")
+            for emo in ALL_EMOTIONS:
+                text = by_query[qi].get(emo, "[missing]")
+                # Truncate long responses for display
+                display = text[:120] + "..." if len(text) > 120 else text
+                print(f"    [{emo:<12}] {display}")
+
+        print(f"\n  Shown {n_samples} sample queries with all 11 response emotions.")
+        print(f"  Verify that responses clearly differ by emotion for the same query.")
+
     # ── Summary ──────────────────────────────────────────────────────────────
     section("Summary")
     if all_ok:
@@ -326,7 +373,7 @@ def main():
         print("  SOME CHECKS FAILED — review issues above before training")
 
     # Save report
-    report_path = dataset_dir / "validation_report_part2.json"
+    report_path = dataset_dir / "validation_report_part2v2.json"
     with report_path.open("w") as f:
         json.dump(
             {

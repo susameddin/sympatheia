@@ -1,19 +1,19 @@
 """
-GLM-4-Voice inference with 11-emotion valence-arousal values in system prompt (text-based)
+GLM-4-Voice inference with 12-emotion valence-arousal values in system prompt (text-based)
 
-Uses continuous VA values for 11 trained emotional states.
+Uses continuous VA values for 12 trained emotional states.
 Supports interpolation between emotional states.
 Only generates outputs from the fine-tuned model.
 Supports running inference across multiple checkpoints in one run.
 
 Usage:
-    python inference_opens2s_11emo_va_text.py \
-        --experiment-dir experiments/glm-model-opens2s-11emo-va-text-lora \
-        --checkpoints 100 300 500
+    python inference_sympatheia.py \
+        --experiment-dir experiments/sympatheia-12emo-v2-YYYYMMDD-HHMMSS \
+        --checkpoints 200 400 600
 
     # Or run a single checkpoint (backward compatible):
-    python inference_opens2s_11emo_va_text.py \
-        --checkpoint experiments/glm-model-opens2s-11emo-va-text-lora/checkpoint-300
+    python inference_sympatheia.py \
+        --checkpoint experiments/sympatheia-12emo-v2-YYYYMMDD-HHMMSS/checkpoint-200
 """
 
 import sys
@@ -35,7 +35,7 @@ import gc
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="GLM-4-Voice 11-emotion VA inference (supports multiple checkpoints)"
+        description="GLM-4-Voice 12-emotion VA inference (supports multiple checkpoints)"
     )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
@@ -64,12 +64,12 @@ def parse_args():
         "--compare-mode",
         action="store_true",
         help="Run emotion comparison: for each emotion sample one eval query and generate "
-             "correct / N/A / opposite VA outputs. Saves under results_11emo/emotion_comparison/",
+             "correct / N/A / opposite VA outputs. Saves under results_12emo/emotion_comparison/",
     )
     parser.add_argument(
         "--eval-audio-dir",
         type=str,
-        default="/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k/audio/eval",
+        default="/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Emotional/audio/eval",
         help="Root of eval audio dir containing {emotion}_query/ subdirs (used with --compare-mode)",
     )
     parser.add_argument(
@@ -119,15 +119,16 @@ def build_checkpoint_paths(args):
 OPPOSITE_EMOTIONS = {
     "sad":        "excited",    # (-0.75,-0.65) ↔ ( 0.75, 0.90)
     "excited":    "sad",        # ( 0.75, 0.90) ↔ (-0.75,-0.65)
-    "frustrated": "excited",    # (-0.82,-0.20) → Excited is farthest
+    "frustrated": "content",    # (-0.80, 0.35) → Content is farthest
     "neutral":    "angry",      # ( 0.00, 0.00) → Angry is farthest
     "happy":      "sad",        # ( 0.85, 0.35) → Sad is farthest
     "angry":      "relaxed",    # (-0.85, 0.85) → Relaxed is farthest
-    "fear":       "tired",      # (-0.40, 0.65) → Tired is farthest
-    "relaxed":    "angry",      # ( 0.40,-0.45) → Angry is farthest
+    "anxious":    "tired",      # (-0.40, 0.65) → Tired is farthest
+    "relaxed":    "angry",      # ( 0.25,-0.60) → Angry is farthest
     "surprised":  "sad",        # ( 0.10, 0.80) → Sad is farthest
-    "disgusted":  "happy",      # (-0.80, 0.35) → Happy is farthest
+    "disgusted":  "happy",      # (-0.82,-0.20) → Happy is farthest
     "tired":      "excited",    # (-0.15,-0.75) → Excited is farthest
+    "content":    "frustrated", # ( 0.60,-0.20) → Frustrated is farthest
 }
 
 
@@ -146,25 +147,26 @@ def interpolate_va(va1, va2, t):
 
 def build_va_conditions():
     """Build the list of VA conditions to test."""
-    # 11 TRAINED EMOTION ANCHORS
+    # 12 TRAINED EMOTION ANCHORS
     emotion_anchors = {
         "sad":        (-0.75, -0.65),
-        "excited":    (0.75, 0.90),
-        "frustrated": (-0.82, -0.20),
-        "neutral":    (0.00, 0.00),
-        "happy":      (0.85, 0.35),
-        "angry":      (-0.85, 0.85),
-        "fear":       (-0.40, 0.65),
-        "relaxed":    (0.40, -0.45),
-        "surprised":  (0.10, 0.80),
-        "disgusted":  (-0.80, 0.35),
+        "excited":    ( 0.75,  0.90),
+        "frustrated": (-0.80,  0.35),
+        "neutral":    ( 0.00,  0.00),
+        "happy":      ( 0.85,  0.35),
+        "angry":      (-0.85,  0.85),
+        "anxious":    (-0.40,  0.65),
+        "relaxed":    ( 0.25, -0.60),
+        "surprised":  ( 0.10,  0.80),
+        "disgusted":  (-0.82, -0.20),
         "tired":      (-0.15, -0.75),
+        "content":    ( 0.60, -0.20),
     }
 
     va_conditions = []
 
-    # 1. All 11 trained emotion anchors
-    print("\n=== 11 Trained Emotion Anchors ===")
+    # 1. All 12 trained emotion anchors
+    print("\n=== 12 Trained Emotion Anchors ===")
     for name, (v, a) in emotion_anchors.items():
         va_conditions.append((name, v, a))
         print(f"  {name}: V={v:.2f}, A={a:.2f}")
@@ -190,9 +192,9 @@ def build_va_conditions():
         va_conditions.append((label, v, a))
         print(f"  {label}: V={v:.2f}, A={a:.2f}")
 
-    # Fear <-> Relaxed
-    for t, label in [(0.50, "fear_relaxed_mid")]:
-        v, a = interpolate_va(emotion_anchors["fear"], emotion_anchors["relaxed"], t)
+    # Anxious <-> Relaxed
+    for t, label in [(0.50, "anxious_relaxed_mid")]:
+        v, a = interpolate_va(emotion_anchors["anxious"], emotion_anchors["relaxed"], t)
         va_conditions.append((label, v, a))
         print(f"  {label}: V={v:.2f}, A={a:.2f}")
 
@@ -291,7 +293,7 @@ def run_inference_for_checkpoint(
     print(f"Model loaded in {load_time:.1f}s")
 
     # Create results folder
-    results_dir = checkpoint_path / "results_11emo"
+    results_dir = checkpoint_path / "results_12emo"
     results_dir.mkdir(parents=True, exist_ok=True)
 
     # Save input audio
@@ -398,13 +400,13 @@ def run_emotion_comparison(
     seed=42,
 ):
     """
-    For each of the 11 emotions:
+    For each of the 12 emotions:
       - Sample one query wav from eval_audio_dir/{emotion}_query/
       - Generate three responses:
           correct  — system prompt with the emotion's own VA values
           na       — system prompt with 'User emotion N/A'
           opposite — system prompt with the farthest-away emotion's VA values
-      - Save all outputs under results_11emo/emotion_comparison/{emotion}/
+      - Save all outputs under results_12emo/emotion_comparison/{emotion}/
     """
     rng = random.Random(seed)
     ckpt_name = checkpoint_path.name
@@ -423,7 +425,7 @@ def run_emotion_comparison(
     )
     print(f"Model loaded in {time.time() - load_start:.1f}s")
 
-    results_dir = checkpoint_path / "results_11emo" / "emotion_comparison"
+    results_dir = checkpoint_path / "results_12emo" / "emotion_comparison"
     results_dir.mkdir(parents=True, exist_ok=True)
 
     ckpt_start = time.time()
@@ -525,7 +527,7 @@ def main():
     if args.input_audio:
         user_audio_path = Path(args.input_audio)
     else:
-        user_audio_path = Path("/engram/naplab/users/sd3705/Datasets/OpenS2S_11Emo/audio/eval/neutral_query/4823.wav")
+        user_audio_path = Path("/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2/audio/eval/query/neutral/p2v2_Neutral_00029.wav")
         if not user_audio_path.exists():
             user_audio_path = Path("/engram/naplab/users/sd3705/Datasets/OpenS2S_9Emo/audio/eval/neutral_query/4823.wav")
     assert user_audio_path.exists(), f"Missing audio: {user_audio_path}"

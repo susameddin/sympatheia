@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Generate emotion-conditioned audio using Qwen3-TTS with multi-GPU support (11 emotions).
+Generate emotion-conditioned audio using Qwen3-TTS with multi-GPU support (12 emotions).
 
-Reads sampled OpenS2S metadata and generates query/response audio files
+Reads sampled metadata and generates query/response audio files
 with emotion-specific instructions using Qwen3-TTS model across multiple GPUs.
 """
 
@@ -20,7 +20,7 @@ import soundfile as sf
 from tqdm import tqdm
 
 
-# Emotion-specific instructions for 11 emotions
+# Emotion-specific instructions for 12 emotions
 EMOTION_INSTRUCTIONS = {
     "Sad": {"query": "Very sad.", "response": "Warm, gentle, reassuring."},
     "Excited": {"query": "Very excited.", "response": "Upbeat, bright, lively."},
@@ -28,15 +28,16 @@ EMOTION_INSTRUCTIONS = {
     "Neutral": {"query": "Neutral.", "response": "Neutral, clear, friendly."},
     "Happy": {"query": "Very happy.", "response": "Cheerful, warm, upbeat."},
     "Angry": {"query": "Very angry.", "response": "Calm, firm, controlled."},
-    "Fear": {"query": "Very scared.", "response": "Soft, soothing, steady."},
+    "Anxious": {"query": "Very anxious.", "response": "Soft, soothing, steady."},
     "Relaxed": {"query": "Very relaxed.", "response": "Calm, chill, soothing."},
     "Surprised": {"query": "Very surprised.", "response": "Curious, bright, attentive."},
     "Disgusted": {"query": "Very disgusted.", "response": "Calm, brief, slightly distanced."},
     "Tired": {"query": "Very tired.", "response": "Low energy, slow, gentle."},
+    "Content": {"query": "Very content.", "response": "Warm, gentle, satisfied."},
 }
 
-# All 11 emotions
-ALL_EMOTIONS = ["Sad", "Excited", "Frustrated", "Neutral", "Happy", "Angry", "Fear", "Relaxed", "Surprised", "Disgusted", "Tired"]
+# All 12 emotions
+ALL_EMOTIONS = ["Sad", "Excited", "Frustrated", "Neutral", "Happy", "Angry", "Anxious", "Relaxed", "Surprised", "Disgusted", "Tired", "Content"]
 
 # Speaker configuration
 SPEAKER_CONFIG = {"query": "Ryan", "response": "Vivian"}
@@ -44,7 +45,7 @@ SPEAKER_CONFIG = {"query": "Ryan", "response": "Vivian"}
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate emotion-conditioned audio using Qwen3-TTS (Multi-GPU, 11 emotions)"
+        description="Generate emotion-conditioned audio using Qwen3-TTS (Multi-GPU, 12 emotions)"
     )
     parser.add_argument(
         "--metadata-dir",
@@ -290,7 +291,7 @@ def process_split_multigpu(
         processed_samples = set()
         failed_samples = []
 
-    # Group samples by emotion (all 11 emotions)
+    # Group samples by emotion (all 12 emotions)
     emotion_samples = {emotion: [] for emotion in ALL_EMOTIONS}
     for sample in samples:
         emotion = sample["query_emotion"]
@@ -304,6 +305,7 @@ def process_split_multigpu(
 
     # Prepare work items (batches to process)
     total_batches = 0
+    skipped_batches = 0
     for emotion, emotion_sample_list in emotion_samples.items():
         if not emotion_sample_list:
             continue
@@ -313,15 +315,21 @@ def process_split_multigpu(
             for i in range(0, len(emotion_sample_list), batch_size):
                 batch = emotion_sample_list[i : i + batch_size]
 
-                # Check if already processed
-                batch_indices = [s["index"] for s in batch]
-                batch_key = f"{split}_{emotion}_{audio_type}_" + "_".join(
-                    str(idx) for idx in batch_indices
-                )
+                # Skip batches where all output files already exist on disk
+                if resume:
+                    out_dir = output_audio_dir / split / f"{emotion.lower()}_{audio_type}"
+                    all_exist = all(
+                        (out_dir / f"{s['index']}.wav").exists() for s in batch
+                    )
+                    if all_exist:
+                        skipped_batches += 1
+                        continue
 
-                if batch_key not in processed_samples:
-                    work_queue.put((split, emotion, audio_type, batch))
-                    total_batches += 1
+                work_queue.put((split, emotion, audio_type, batch))
+                total_batches += 1
+
+    if skipped_batches > 0:
+        print(f"Skipped {skipped_batches} batches (already exist on disk)")
 
     print(f"Total batches to process: {total_batches}")
 

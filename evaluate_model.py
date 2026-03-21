@@ -2,7 +2,7 @@
 """
 Evaluation script for GLM-4-Voice emotion-conditioned speech model.
 
-Runs stratified inference over 11 emotions, generates speech responses,
+Runs stratified inference over 12 emotions, generates speech responses,
 and computes four categories of metrics:
   1. Emotion control  — VA MAE/RMSE, nearest-anchor accuracy, quadrant accuracy
   2. Intelligibility  — WER via Whisper ASR
@@ -81,7 +81,7 @@ _utmos_predictor = None  # set in main() after torch.hub.load
 
 DECODER_SAMPLE_RATE = 22050
 DEFAULT_EVAL_JSONL = (
-    "/engram/naplab/users/sd3705/Datasets/OpenS2S_11Emo/glm4voice_va_format/eval.jsonl"
+    "/engram/naplab/users/sd3705/Datasets/OpenS2S_12Emo/glm4voice_va_format/eval.jsonl"
 )
 
 
@@ -112,7 +112,7 @@ def parse_args():
     )
     parser.add_argument(
         "--num-samples", type=int, default=30,
-        help="Samples per emotion class (default: 30 → 330 total across 11 emotions)"
+        help="Samples per emotion class (default: 30 → 360 total across 12 emotions)"
     )
     parser.add_argument(
         "--whisper-model", type=str, default="openai/whisper-large-v3",

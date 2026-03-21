@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Validate OpenS2S 11-Emotion Qwen3-TTS dataset.
+Validate 12-Emotion Qwen3-TTS dataset.
 
 Performs comprehensive quality checks on generated dataset including
 file existence, data integrity, audio quality, and format validation
-for 11 emotions with Valence-Arousal representation.
+for 12 emotions with Valence-Arousal representation.
 """
 
 import argparse
@@ -25,27 +25,28 @@ except ImportError:
     print("Warning: soundfile/numpy not available, skipping audio quality checks")
 
 
-# All 11 emotions (lowercase for path matching)
-ALL_EMOTIONS = ["sad", "excited", "frustrated", "neutral", "happy", "angry", "fear", "relaxed", "surprised", "disgusted", "tired"]
+# All 12 emotions (lowercase for path matching)
+ALL_EMOTIONS = ["sad", "excited", "frustrated", "neutral", "happy", "angry", "anxious", "relaxed", "surprised", "disgusted", "tired", "content"]
 
-# Expected VA values for validation (updated for 11 emotions)
+# Expected VA values for validation (updated for 12 emotions)
 EXPECTED_VA_VALUES = {
     "sad": (-0.75, -0.65),
     "excited": (0.75, 0.90),
-    "frustrated": (-0.82, -0.20),
+    "frustrated": (-0.80, 0.35),
     "neutral": (0.00, 0.00),
     "happy": (0.85, 0.35),
     "angry": (-0.85, 0.85),
-    "fear": (-0.40, 0.65),
-    "relaxed": (0.40, -0.45),
+    "anxious": (-0.40, 0.65),
+    "relaxed": (0.25, -0.60),
     "surprised": (0.10, 0.80),
-    "disgusted": (-0.80, 0.35),
+    "disgusted": (-0.82, -0.20),
     "tired": (-0.15, -0.75),
+    "content": (0.60, -0.20),
 }
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate OpenS2S 11-Emotion Qwen3-TTS dataset")
+    parser = argparse.ArgumentParser(description="Validate 12-Emotion Qwen3-TTS dataset")
     parser.add_argument(
         "--dataset-dir",
         type=Path,
@@ -128,7 +129,7 @@ class DatasetValidator:
                     f"Missing GLM4Voice file: {jsonl_file}"
                 )
 
-        # Check audio directories and count files (11 emotions)
+        # Check audio directories and count files (12 emotions)
         print("\nChecking audio files...")
         audio_types = ["query", "response"]
 

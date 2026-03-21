@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
 """
-Generate audio responses from Qwen3-Omni for empathy evaluation.
+Generate audio responses from Qwen3-Omni for neutral-input emotion evaluation.
 
-Reads the manifest.jsonl produced by eval/generate_responses.py to use the
-exact same query audio files (ensuring a fair comparison). Saves responses to
-audio/qwen3omni/ and writes manifest_qwen3omni.jsonl — nothing in the original
-manifest or audio directories is touched.
+Unlike generate_responses_qwen3omni.py (which uses a static empathy prompt),
+this script injects the emotion label into the system prompt so the model
+knows the user's stated emotion — even though the audio is neutral.
 
-Unlike OpenS2S/OSUM-EChat, Qwen3-Omni shares the same conda environment as
-the judge (qwen3omni), so inference runs in-process without a subprocess.
+Reads manifest.jsonl produced by eval/generate_responses_neutral.py.
 
 Usage:
-    conda run -n qwen3omni python -m eval.generate_responses_qwen3omni \\
-        --manifest results/eval_judge/manifest.jsonl
+    conda run -n qwen3omni python -m eval.generate_responses_qwen3omni_neutral \\
+        --manifest results/eval_neutral/manifest.jsonl
 
     # Resume:
-    conda run -n qwen3omni python -m eval.generate_responses_qwen3omni \\
-        --manifest results/eval_judge/manifest.jsonl \\
+    conda run -n qwen3omni python -m eval.generate_responses_qwen3omni_neutral \\
+        --manifest results/eval_neutral/manifest.jsonl \\
         --skip-existing
 """
 
@@ -39,11 +37,16 @@ DEFAULT_SPEAKER = "Chelsie"
 SAMPLE_RATE     = 24000
 USE_AUDIO_IN_VIDEO = True
 
-SYSTEM_PROMPT = (
-    "You are a warm, empathetic voice assistant. Listen to the user and respond "
-    "supportively, acknowledging their emotional state with genuine care. "
-    "Keep responses concise and conversational."
-)
+
+def get_system_prompt(emotion: str, valence: float, arousal: float) -> str:
+    """Build an emotion-conditioned system prompt for Qwen3-Omni."""
+    return (
+        f"You are a warm, empathetic voice assistant. "
+        f"The user is currently feeling {emotion.lower()} "
+        f"(emotional valence={valence:.2f}, arousal={arousal:.2f}). "
+        f"Respond supportively, acknowledging their {emotion.lower()} emotional state "
+        f"with genuine care. Keep responses concise and conversational."
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -52,11 +55,11 @@ SYSTEM_PROMPT = (
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate Qwen3-Omni responses for empathy evaluation"
+        description="Generate Qwen3-Omni responses for neutral-input emotion evaluation"
     )
     parser.add_argument(
         "--manifest", type=str, required=True,
-        help="Path to manifest.jsonl from eval/generate_responses.py "
+        help="Path to manifest.jsonl from eval/generate_responses_neutral.py "
              "(used to select the same query audio files)",
     )
     parser.add_argument(
@@ -95,12 +98,12 @@ def load_model(model_path: str):
     return model, processor
 
 
-def build_conversation(query_audio_path: str) -> list:
-    """Build the conversation dict for Qwen3-Omni with query audio as input."""
+def build_conversation(query_audio_path: str, emotion: str, valence: float, arousal: float) -> list:
+    """Build the conversation dict for Qwen3-Omni with emotion-conditioned prompt."""
     return [
         {
             "role": "system",
-            "content": [{"type": "text", "text": SYSTEM_PROMPT}],
+            "content": [{"type": "text", "text": get_system_prompt(emotion, valence, arousal)}],
         },
         {
             "role": "user",
@@ -220,15 +223,18 @@ def main():
         for idx, rec in enumerate(todo):
             sample_id   = rec["id"]
             query_audio = rec["query_audio"]
+            emotion     = rec.get("emotion", "Neutral")
+            valence     = rec.get("valence", 0.0)
+            arousal     = rec.get("arousal", 0.0)
             out_wav     = audio_dir / f"{sample_id}.wav"
 
-            print(f"\n[{idx+1}/{len(todo)}] {sample_id}  ({rec.get('emotion', '?')})")
+            print(f"\n[{idx+1}/{len(todo)}] {sample_id}  ({emotion}, V={valence:+.2f}, A={arousal:+.2f})")
 
             if not Path(query_audio).exists():
                 print(f"  SKIP: query audio not found: {query_audio}")
                 continue
 
-            conversation = build_conversation(query_audio)
+            conversation = build_conversation(query_audio, emotion, valence, arousal)
 
             t0 = time.time()
             try:
@@ -250,9 +256,9 @@ def main():
 
             out_records_map[sample_id] = {
                 "id":                sample_id,
-                "emotion":           rec.get("emotion"),
-                "valence":           rec.get("valence"),
-                "arousal":           rec.get("arousal"),
+                "emotion":           emotion,
+                "valence":           valence,
+                "arousal":           arousal,
                 "query_audio":       query_audio,
                 "qwen3omni_response": str(out_wav.resolve()) if out_wav.exists() else None,
                 "qwen3omni_text":    text_out or None,
@@ -283,7 +289,7 @@ def main():
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni python -m eval.judge_qwen3omni \\")
+    print(f"  conda run -n qwen3omni python -m eval.judge_qwen3omni_neutral \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

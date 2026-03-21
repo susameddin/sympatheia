@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
 """
-Generate Part 2 audio using Qwen3-TTS with multi-GPU support.
+Generate Part 2 v2 audio using Qwen3-TTS with multi-GPU support.
+
+All queries are neutral. Responses have 12 emotion variants per query.
 
 Two-pass generation:
-  Pass 1 — Query audio (1,500 unique queries):
+  Pass 1 — Query audio (500 unique neutral queries):
     - Source: unique_queries_{split}.jsonl
     - Speaker: "Ryan"
-    - Style: EMOTION_INSTRUCTIONS[query_emotion]["query"]
-    - Output: audio/{split}/query/{query_emotion.lower()}/{query_index}.wav
+    - Style: "Neutral." (all queries are neutral)
+    - Output: audio/{split}/query/neutral/{query_index}.wav
 
-  Pass 2 — Response audio (16,500 pairs):
+  Pass 2 — Response audio (6,000 pairs):
     - Source: sampled_{split}.jsonl
     - Speaker: "Vivian"
     - Style: EMOTION_INSTRUCTIONS[response_emotion]["response"]
     - Output: audio/{split}/response/{response_emotion.lower()}/{pair_index}.wav
 
 Run:
-  conda run -n qwen3-tts4 python dataset_creation/generate_part2_audio_multigpu.py \\
-      --metadata-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/metadata/ \\
-      --output-audio-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/audio/ \\
+  conda run -n qwen3-tts4 python dataset_creation/generate_part2_audio_multigpu.py \
+      --metadata-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/metadata/ \
+      --output-audio-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/audio/ \
       --num-gpus 4 --batch-size 16 --resume
 """
 
@@ -37,20 +39,21 @@ from tqdm import tqdm
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Emotion instructions (mirrors generate_qwen3tts_audio_11emo_multigpu.py)
+# Emotion instructions — all queries neutral, responses emotion-specific
 # ─────────────────────────────────────────────────────────────────────────────
 EMOTION_INSTRUCTIONS = {
-    "Sad":        {"query": "Very sad.",       "response": "Warm, gentle, reassuring."},
-    "Excited":    {"query": "Very excited.",   "response": "Upbeat, bright, lively."},
-    "Frustrated": {"query": "Very frustrated.","response": "Calm, patient, steady."},
-    "Neutral":    {"query": "Neutral.",        "response": "Neutral, clear, friendly."},
-    "Happy":      {"query": "Very happy.",     "response": "Cheerful, warm, upbeat."},
-    "Angry":      {"query": "Very angry.",     "response": "Calm, firm, controlled."},
-    "Fear":       {"query": "Very scared.",    "response": "Soft, soothing, steady."},
-    "Relaxed":    {"query": "Very relaxed.",   "response": "Calm, chill, soothing."},
-    "Surprised":  {"query": "Very surprised.", "response": "Curious, bright, attentive."},
-    "Disgusted":  {"query": "Very disgusted.", "response": "Calm, brief, slightly distanced."},
-    "Tired":      {"query": "Very tired.",     "response": "Low energy, slow, gentle."},
+    "Sad":        {"query": "Neutral.", "response": "Warm, gentle, reassuring."},
+    "Excited":    {"query": "Neutral.", "response": "Upbeat, bright, lively."},
+    "Frustrated": {"query": "Neutral.", "response": "Calm, patient, steady."},
+    "Neutral":    {"query": "Neutral.", "response": "Neutral, clear, friendly."},
+    "Happy":      {"query": "Neutral.", "response": "Cheerful, warm, upbeat."},
+    "Angry":      {"query": "Neutral.", "response": "Calm, firm, controlled."},
+    "Anxious":    {"query": "Neutral.", "response": "Soft, soothing, steady."},
+    "Relaxed":    {"query": "Neutral.", "response": "Calm, chill, soothing."},
+    "Surprised":  {"query": "Neutral.", "response": "Curious, bright, attentive."},
+    "Disgusted":  {"query": "Neutral.", "response": "Calm, brief, slightly distanced."},
+    "Tired":      {"query": "Neutral.", "response": "Low energy, slow, gentle."},
+    "Content":    {"query": "Neutral.", "response": "Warm, gentle, satisfied."},
 }
 
 SPEAKER_CONFIG = {"query": "Ryan", "response": "Vivian"}
@@ -63,7 +66,7 @@ ALL_EMOTIONS = list(EMOTION_INSTRUCTIONS.keys())
 # ─────────────────────────────────────────────────────────────────────────────
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate Part 2 audio (query + 11 response emotions) with multi-GPU"
+        description="Generate Part 2 v2 audio (neutral queries + 12 response emotions) with multi-GPU"
     )
     parser.add_argument("--metadata-dir", type=Path, required=True,
                         help="Directory with unique_queries_{split}.jsonl and sampled_{split}.jsonl")
@@ -342,30 +345,26 @@ def main():
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     for split in ["train", "eval"]:
-        # ── Pass 1: Query audio ──────────────────────────────────────────────
+        # ── Pass 1: Query audio (ALL NEUTRAL) ────────────────────────────────
         if args.run_pass in ("query", "both"):
             uq_path = args.metadata_dir / f"unique_queries_{split}.jsonl"
             if not uq_path.exists():
                 print(f"Skipping query pass for {split}: {uq_path} not found")
             else:
                 unique_queries = load_jsonl(uq_path)
-                print(f"\nLoaded {len(unique_queries)} unique queries for {split}")
+                print(f"\nLoaded {len(unique_queries)} unique queries for {split} (all neutral)")
 
-                # Group by query_emotion for batch efficiency (same emotion → same TTS instruct)
-                emotion_groups: Dict[str, List[Dict]] = {}
+                # All queries are neutral — single group
                 for q in unique_queries:
-                    emo = q["query_emotion"]
-                    q["_out_index"] = q["query_index"]  # output filename = query_index
-                    emotion_groups.setdefault(emo, []).append(q)
+                    q["_out_index"] = q["query_index"]
 
-                work_items = []
-                for emo, samples in emotion_groups.items():
-                    output_subdir = f"{split}/query/{emo.lower()}"
-                    work_items.append(("query", emo, output_subdir, samples, "query_text"))
+                work_items = [
+                    ("query", "Neutral", f"{split}/query/neutral", unique_queries, "query_text")
+                ]
 
                 run_multigpu_pass(
                     work_items=work_items,
-                    label=f"Pass 1 — Query audio [{split}]",
+                    label=f"Pass 1 — Query audio [{split}] (all neutral)",
                     output_audio_dir=args.output_audio_dir,
                     model_name=args.model_name,
                     batch_size=args.batch_size,
@@ -390,7 +389,7 @@ def main():
             resp_emo_groups: Dict[str, List[Dict]] = {}
             for p in pairs:
                 resp_emo = p["response_emotion"]
-                p["_out_index"] = p["index"]  # output filename = pair index (e.g. p2_Sad_00001_Happy)
+                p["_out_index"] = p["index"]  # output filename = pair index
                 resp_emo_groups.setdefault(resp_emo, []).append(p)
 
             work_items = []

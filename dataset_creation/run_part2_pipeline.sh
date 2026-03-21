@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # =============================================================================
-# Sympatheia Part 2 Dataset Pipeline
+# Sympatheia Part 2 v2 Dataset Pipeline (Neutral-Only Queries)
 # =============================================================================
-# Generates a dataset where each query appears with 11 different response
-# emotions, teaching the model to prioritize VA labels over audio content.
+# All queries are neutral. Each query gets 12 response emotions.
+# This forces the model to rely on VA labels instead of query audio emotion.
 #
 # USAGE:
 #   # Step 0 — preview (inspect a few samples before committing):
@@ -37,11 +37,11 @@ CONDA_CONVERT="glm4voice3"   # GLM-4-Voice encoding/decoding (needs hyperpyyaml)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
-DATASET_DIR="/engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2"
+DATASET_DIR="/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral"
 METADATA_DIR="$DATASET_DIR/metadata"
 AUDIO_DIR="$DATASET_DIR/audio"
 
-LLM_MODEL="Qwen/Qwen3-32B"
+LLM_MODEL="/engram/naplab/users/sd3705/models/Qwen3-32B"
 TTS_MODEL="Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
 
 NUM_GPUS=4          # adjust to available GPUs
@@ -66,7 +66,7 @@ run_convert() {
 # ── Step 0: Preview ───────────────────────────────────────────────────────────
 if [[ "$STEP" == "preview" || "$STEP" == "all" ]]; then
     echo "============================================================"
-    echo "  STEP 0: Preview — 3 query groups × 11 response emotions"
+    echo "  STEP 0: Preview — 3 neutral queries × 12 response emotions"
     echo "============================================================"
     mkdir -p "$METADATA_DIR"
     run_llm_tts python -u "$SCRIPT_DIR/generate_part2_text_pairs.py" \
@@ -84,8 +84,8 @@ fi
 # ── Step 1: Text generation ───────────────────────────────────────────────────
 if [[ "$STEP" == "text" || "$STEP" == "all" ]]; then
     echo "============================================================"
-    echo "  STEP 1: Text generation (1,500 queries × 11 responses)"
-    echo "  Expected output: ~16,500 (query, response) pairs"
+    echo "  STEP 1: Text generation (500 neutral queries × 12 responses)"
+    echo "  Expected output: ~5,500 (query, response) pairs"
     echo "============================================================"
     mkdir -p "$METADATA_DIR"
     run_llm_tts python -u "$SCRIPT_DIR/generate_part2_text_pairs.py" \
@@ -106,8 +106,8 @@ fi
 if [[ "$STEP" == "audio" || "$STEP" == "all" ]]; then
     echo "============================================================"
     echo "  STEP 2: Audio generation"
-    echo "  Pass 1: ~1,500 query WAVs (Ryan speaker)"
-    echo "  Pass 2: ~16,500 response WAVs (Vivian speaker)"
+    echo "  Pass 1: ~500 neutral query WAVs (Ryan speaker)"
+    echo "  Pass 2: ~5,500 response WAVs (Vivian speaker)"
     echo "============================================================"
     mkdir -p "$AUDIO_DIR"
     run_llm_tts python -u "$SCRIPT_DIR/generate_part2_audio_multigpu.py" \
@@ -126,7 +126,7 @@ fi
 if [[ "$STEP" == "convert" || "$STEP" == "all" ]]; then
     echo "============================================================"
     echo "  STEP 3: Convert to GLM-4-Voice format"
-    echo "  NOTE: VA values taken from RESPONSE emotion (not query)"
+    echo "  NOTE: VA values from RESPONSE emotion, queries all neutral"
     echo "============================================================"
     run_convert python -u "$SCRIPT_DIR/convert_part2_to_glm4voice.py" \
         --metadata-dir "$METADATA_DIR" \
@@ -148,7 +148,7 @@ if [[ "$STEP" == "validate" || "$STEP" == "all" ]]; then
         --dataset-dir "$DATASET_DIR"
 
     echo ""
-    echo "Validation report: $DATASET_DIR/validation_report_part2.json"
+    echo "Validation report: $DATASET_DIR/validation_report_part2v2.json"
 fi
 
 echo ""

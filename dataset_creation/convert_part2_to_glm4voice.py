@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """
-Convert Part 2 audio to GLM-4-Voice format with Valence-Arousal values.
+Convert Part 2 v2 audio to GLM-4-Voice format with Valence-Arousal values.
 
-Key difference from Part 1 conversion:
-  VA values come from the RESPONSE emotion (not the query emotion).
-  This is the training signal: "when VA label says X, respond in style X
-  regardless of what the query audio sounds like."
+All queries are neutral. VA values come from the RESPONSE emotion.
+This forces the model to rely on the VA label rather than query audio emotion.
 
 Audio path layout expected:
-  audio/{split}/query/{query_emotion.lower()}/{query_index}.wav
+  audio/{split}/query/neutral/{query_index}.wav
   audio/{split}/response/{response_emotion.lower()}/{pair_index}.wav
 
 Output JSONL record:
@@ -23,9 +21,9 @@ Output JSONL record:
 
 Run:
   conda run -n qwen3-tts4 python dataset_creation/convert_part2_to_glm4voice.py \\
-      --metadata-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/metadata/ \\
-      --audio-dir    /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/audio/ \\
-      --output-dir   /engram/naplab/users/sd3705/Datasets/Sympatheia_11Emo_17k_Part2/
+      --metadata-dir /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/metadata/ \\
+      --audio-dir    /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/audio/ \\
+      --output-dir   /engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral/
 """
 
 import argparse
@@ -47,15 +45,16 @@ from src.vocoder import GLM4CodecEncoder
 EMOTION_VA_MAPPING: Dict[str, Tuple[float, float]] = {
     "Sad":        (-0.75, -0.65),
     "Excited":    ( 0.75,  0.90),
-    "Frustrated": (-0.82, -0.20),
+    "Frustrated": (-0.80,  0.35),
     "Neutral":    ( 0.00,  0.00),
     "Happy":      ( 0.85,  0.35),
     "Angry":      (-0.85,  0.85),
-    "Fear":       (-0.40,  0.65),
-    "Relaxed":    ( 0.40, -0.45),
+    "Anxious":    (-0.40,  0.65),
+    "Relaxed":    ( 0.25, -0.60),
     "Surprised":  ( 0.10,  0.80),
-    "Disgusted":  (-0.80,  0.35),
+    "Disgusted":  (-0.82, -0.20),
     "Tired":      (-0.15, -0.75),
+    "Content":    ( 0.60, -0.20),
 }
 
 ALL_EMOTIONS = list(EMOTION_VA_MAPPING.keys())
@@ -151,9 +150,9 @@ def process_split(
                 # VA values from RESPONSE emotion — the key override signal
                 valence, arousal = EMOTION_VA_MAPPING[resp_emotion]
 
-                # Audio paths
+                # Audio paths — all queries are neutral
                 query_audio_path = (
-                    audio_dir / split / "query" / query_emotion.lower() / f"{query_index}.wav"
+                    audio_dir / split / "query" / "neutral" / f"{query_index}.wav"
                 )
                 response_audio_path = (
                     audio_dir / split / "response" / resp_emotion.lower() / f"{pair_index}.wav"
@@ -266,12 +265,12 @@ def main():
 
     # Save stats
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    stats_path = args.output_dir / "encoding_stats_part2.json"
+    stats_path = args.output_dir / "encoding_stats_part2v2.json"
     with stats_path.open("w") as f:
         json.dump(all_stats, f, indent=2)
     print(f"\nStats saved → {stats_path}")
 
-    config_path = args.output_dir / "conversion_config_part2.json"
+    config_path = args.output_dir / "conversion_config_part2v2.json"
     with config_path.open("w") as f:
         json.dump(
             {
