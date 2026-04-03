@@ -33,10 +33,9 @@
       Speech-to-Speech Generation via<br>
       Continuous Valence-Arousal Conditioning
     </h1>
-    <p class="hero-authors">Columbia University &mdash; NAPLab</p>
     <p class="hero-abstract">
-      Sympatheia fine-tunes GLM-4-Voice with LoRA to generate empathetic speech responses
-      conditioned on continuous emotion coordinates in Russell's valence-arousal space.
+      Sympatheia is an empathetic dialogue assistant that generates speech responses conditioned
+      on continuous emotion coordinates in valence-arousal space.
       Trained on the Sympatheia-18K dataset across 12 emotion categories, it outperforms
       GLM-4-Voice base, Qwen3-Omni, and OpenS2S on both neutral and emotional query evaluations.
     </p>
@@ -61,7 +60,7 @@
 <section id="overview">
   <div class="container">
     <h2 class="section-title">System Overview</h2>
-    <p class="section-sub">GLM-4-Voice + LoRA fine-tuning with continuous valence-arousal conditioning across 12 emotion categories.</p>
+    <p class="section-sub">Emotion-aware speech generation with continuous valence-arousal conditioning across 12 emotion categories.</p>
     <figure class="overview-img-wrap">
       <img src="img/overview.png" alt="Sympatheia system overview">
     </figure>
@@ -81,8 +80,7 @@
       <span>&#9432;</span>
       <span>All models are given the target emotion context via system prompt.
       Sympatheia uses precise (valence, arousal) coordinates and is fine-tuned to produce
-      tonally matched responses; baselines receive a general empathy instruction.
-      Responses are rated 1–5 by an LLM judge on empathy and emotional appropriateness.</span>
+      tonally matched responses; baselines receive a general empathy instruction.</span>
     </div>
 
     <div class="emotion-tabs" id="neutral-tabs"></div>
@@ -141,21 +139,17 @@
   <div class="container">
     <h2 class="section-title">Sympatheia-18K Dataset Samples</h2>
     <p class="section-sub">
-      Sympatheia-18K is a synthesized dataset of emotion-controlled speech-to-speech dialogue pairs,
-      generated using Qwen3-32B (text) and Qwen3-TTS (audio), then encoded into GLM-4-Voice format.
-      Each sample pairs a neutral user query with an emotion-conditioned response across 12 categories.
+      Sympatheia-18K is a synthesized dataset of emotion-controlled speech-to-speech dialogue pairs.
+      Each sample is conditioned on one of 12 target emotions defined by continuous (valence, arousal) coordinates.
+      The dataset includes two splits. <strong>Emotional Split (12k):</strong> Emotion-matched query-response pairs;
+      <strong>Neutral Split (6k):</strong> Neutral queries paired with all 12 emotional response variants.
     </p>
 
-    <div class="dataset-grid" id="dataset-grid"></div>
+    <div class="dataset-split-label">Emotional Split</div>
+    <div class="dataset-grid" id="dataset-grid-emotional"></div>
 
-    <div class="dataset-desc">
-      <strong>Dataset construction:</strong> Each sample contains a user query paired with a response
-      conditioned on one of 12 target emotions defined by continuous (valence, arousal) coordinates.
-      The dataset includes two parts: <em>Part 1</em> — emotion-matched query-response pairs;
-      <em>Part 2</em> — neutral queries paired with all 12 emotional response variants.
-      Audio is tokenized with the GLM-4-Voice Whisper VQ encoder and stored as token sequences
-      alongside the (valence, arousal) label in the training JSONL.
-    </div>
+    <div class="dataset-split-label" style="margin-top:2.5rem;">Neutral Split</div>
+    <div class="dataset-grid" id="dataset-grid-neutral"></div>
   </div>
 </section>
 
@@ -491,10 +485,10 @@ fetch("audio/manifest.json")
 })();
 
 // ---------------------------------------------------------------------------
-// Dataset — all 12 emotions
+// Dataset — two grids (emotional split + neutral split)
 // ---------------------------------------------------------------------------
-(function buildDataset() {
-  const grid = document.getElementById("dataset-grid");
+function buildDatasetGrid(gridId, queryPath, responsePath) {
+  const grid = document.getElementById(gridId);
   EMOTIONS_DATA.forEach(emo => {
     const key = emo.name.toLowerCase();
     const card = document.createElement("div");
@@ -509,17 +503,28 @@ fetch("audio/manifest.json")
       <div class="dataset-card-body">
         <div class="audio-row">
           <span class="audio-row-label">Query</span>
-          <audio controls src="audio/dataset/${key}/query.wav"></audio>
+          <audio controls src="${queryPath(key)}"></audio>
         </div>
         <div class="audio-row">
           <span class="audio-row-label">Response</span>
-          <audio controls src="audio/dataset/${key}/response.wav"></audio>
+          <audio controls src="${responsePath(key)}"></audio>
         </div>
       </div>
     `;
     grid.appendChild(card);
   });
-})();
+}
+
+buildDatasetGrid(
+  "dataset-grid-emotional",
+  key => `audio/dataset/emotional/${key}/query.wav`,
+  key => `audio/dataset/emotional/${key}/response.wav`
+);
+buildDatasetGrid(
+  "dataset-grid-neutral",
+  key => `audio/dataset/neutral/${key}/query.wav`,
+  key => `audio/dataset/neutral/${key}/response.wav`
+);
 
 // ---------------------------------------------------------------------------
 // Score tables

@@ -477,6 +477,15 @@ details.transcript summary::-webkit-details-marker { display: none; }
 }
 
 /* ---------- Dataset ---------- */
+.dataset-split-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: .03em;
+  margin-bottom: 1rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid var(--gray-20);
+}
 .dataset-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
