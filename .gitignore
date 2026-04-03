@@ -21,10 +21,13 @@ results*/
 wandb/
 core.*
 
-# Audio files
+# Audio files (exclude everywhere except docs/audio/)
 *.wav
 *.mp3
 *.flac
+!docs/audio/**/*.wav
+!docs/audio/**/*.mp3
+!docs/audio/**/*.flac
 
 # OS
 .DS_Store

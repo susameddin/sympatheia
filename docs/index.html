@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sympatheia: Emotion-Aware Speech Generation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav>
+  <span class="nav-brand">Sympatheia</span>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#neutral">Neutral Queries</a></li>
+    <li><a href="#emotional">Emotional Queries</a></li>
+    <li><a href="#interpolation">Interpolation</a></li>
+    <li><a href="#dataset">Dataset</a></li>
+    <li><a href="#results">Results</a></li>
+  </ul>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Speech &amp; Emotion AI</div>
+    <h1 class="hero-title">
+      <span>Sympatheia</span>: Emotion-Aware<br>
+      Speech-to-Speech Generation via<br>
+      Continuous Valence-Arousal Conditioning
+    </h1>
+    <p class="hero-authors">Columbia University &mdash; NAPLab</p>
+    <p class="hero-abstract">
+      Sympatheia fine-tunes GLM-4-Voice with LoRA to generate empathetic speech responses
+      conditioned on continuous emotion coordinates in Russell's valence-arousal space.
+      Trained on the Sympatheia-18K dataset across 12 emotion categories, it outperforms
+      GLM-4-Voice base, Qwen3-Omni, and OpenS2S on both neutral and emotional query evaluations.
+    </p>
+    <div class="badge-row">
+      <a class="badge" href="https://github.com/sd3705/sympatheia" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3C5.37.3 0 5.67 0 12.3c0 5.3 3.44 9.8 8.2 11.38.6.1.82-.26.82-.57l-.02-2.23c-3.34.73-4.04-1.4-4.04-1.4-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.84 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.9 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .31.2.68.82.56C20.56 22.1 24 17.6 24 12.3 24 5.67 18.63.3 12 .3z"/></svg>
+        Code
+      </a>
+      <a class="badge" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Paper
+      </a>
+      <a class="badge" href="#dataset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        Sympatheia-18K
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Overview ===== -->
+<section id="overview">
+  <div class="container">
+    <h2 class="section-title">System Overview</h2>
+    <p class="section-sub">GLM-4-Voice + LoRA fine-tuning with continuous valence-arousal conditioning across 12 emotion categories.</p>
+    <figure class="overview-img-wrap">
+      <img src="img/overview.png" alt="Sympatheia system overview">
+    </figure>
+  </div>
+</section>
+
+<!-- ===== Neutral Query Comparison ===== -->
+<section id="neutral">
+  <div class="container">
+    <h2 class="section-title">Neutral Query Comparison</h2>
+    <p class="section-sub">
+      The user speaks a neutral question. All models receive the target emotion information
+      via their system prompts. The difference lies in how each model utilizes this context.
+    </p>
+
+    <div class="section-note">
+      <span>&#9432;</span>
+      <span>All models are given the target emotion context via system prompt.
+      Sympatheia uses precise (valence, arousal) coordinates and is fine-tuned to produce
+      tonally matched responses; baselines receive a general empathy instruction.
+      Responses are rated 1–5 by an LLM judge on empathy and emotional appropriateness.</span>
+    </div>
+
+    <div class="emotion-tabs" id="neutral-tabs"></div>
+    <div id="neutral-panels"></div>
+  </div>
+</section>
+
+<!-- ===== Emotional Query Comparison ===== -->
+<section id="emotional">
+  <div class="container">
+    <h2 class="section-title">Emotional Query Comparison</h2>
+    <p class="section-sub">
+      The user's voice itself carries emotion. None of the models receive emotion information
+      in their system prompt — the audio is the only signal.
+    </p>
+
+    <div class="section-note">
+      <span>&#9432;</span>
+      <span>None of the models are given any emotion context in the system prompt.
+      Each model processes the same emotionally-expressive audio query without guidance.
+      This tests how well fine-tuning alone enables tonal adaptation from audio cues.</span>
+    </div>
+
+    <div class="emotion-tabs" id="emotional-tabs"></div>
+    <div id="emotional-panels"></div>
+  </div>
+</section>
+
+<!-- ===== Interpolation ===== -->
+<section id="interpolation">
+  <div class="container">
+    <h2 class="section-title">Continuous Emotion Interpolation</h2>
+    <p class="section-sub">
+      Unlike discrete emotion classifiers, Sympatheia operates in continuous VA space —
+      enabling smooth blending between any two emotional states.
+    </p>
+
+    <div class="section-note">
+      <span>&#9432;</span>
+      <span>The same query audio is used for all five responses below.
+      Valence and arousal are linearly interpolated between <strong>Happy</strong> (V=+0.85, A=+0.35)
+      and <strong>Sad</strong> (V=−0.75, A=−0.65), demonstrating fine-grained tonal control.</span>
+    </div>
+
+    <div class="interp-input-row">
+      <span class="query-label">Input query</span>
+      <audio controls src="audio/interpolation/input_audio.wav"></audio>
+    </div>
+
+    <div id="interp-sets"></div>
+  </div>
+</section>
+
+<!-- ===== Dataset ===== -->
+<section id="dataset">
+  <div class="container">
+    <h2 class="section-title">Sympatheia-18K Dataset Samples</h2>
+    <p class="section-sub">
+      Sympatheia-18K is a synthesized dataset of emotion-controlled speech-to-speech dialogue pairs,
+      generated using Qwen3-32B (text) and Qwen3-TTS (audio), then encoded into GLM-4-Voice format.
+      Each sample pairs a neutral user query with an emotion-conditioned response across 12 categories.
+    </p>
+
+    <div class="dataset-grid" id="dataset-grid"></div>
+
+    <div class="dataset-desc">
+      <strong>Dataset construction:</strong> Each sample contains a user query paired with a response
+      conditioned on one of 12 target emotions defined by continuous (valence, arousal) coordinates.
+      The dataset includes two parts: <em>Part 1</em> — emotion-matched query-response pairs;
+      <em>Part 2</em> — neutral queries paired with all 12 emotional response variants.
+      Audio is tokenized with the GLM-4-Voice Whisper VQ encoder and stored as token sequences
+      alongside the (valence, arousal) label in the training JSONL.
+    </div>
+  </div>
+</section>
+
+<!-- ===== Results ===== -->
+<section id="results">
+  <div class="container">
+    <h2 class="section-title">Quantitative Results</h2>
+    <p class="section-sub">
+      LLM-based empathy evaluation (1–5 scale) by Qwen3-Omni as judge.
+      Higher is better. <strong>Bold</strong> = best per row.
+      Neutral: Sympatheia uses VA-conditioned prompts. Emotional: no emotion in system prompt for any model.
+    </p>
+
+    <div class="results-split">
+      <!-- Neutral -->
+      <div>
+        <div class="results-title">Neutral Queries &nbsp;<span style="font-weight:400;font-size:.8rem;color:var(--gray-60)">(emotion via system prompt)</span></div>
+        <div class="summary-bars">
+          <div class="bar-row">
+            <span class="bar-model">GLM-4-Voice Base</span>
+            <div class="bar-track"><div class="bar-fill base-color" style="width:40.2%"><span class="bar-val">2.01</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">Qwen3-Omni</span>
+            <div class="bar-track"><div class="bar-fill qwen-color" style="width:47.6%"><span class="bar-val">2.38</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">OpenS2S</span>
+            <div class="bar-track"><div class="bar-fill opens2s-color" style="width:48.0%"><span class="bar-val">2.40</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">Sympatheia v1</span>
+            <div class="bar-track"><div class="bar-fill sympatheia-v1-color" style="width:91.7%"><span class="bar-val">4.58</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">Sympatheia v2</span>
+            <div class="bar-track"><div class="bar-fill sympatheia-v2-color" style="width:88.5%"><span class="bar-val">4.43</span></div></div>
+          </div>
+        </div>
+        <div class="results-table-wrap" style="margin-top:1.5rem;">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>Emotion</th>
+                <th style="color:#ff9999;">Base</th>
+                <th style="color:#ffc78e;">Qwen3</th>
+                <th style="color:#c9b3f0;">OpenS2S</th>
+                <th style="color:#7ec8e3;">Sym v1</th>
+                <th style="color:#7fe8c5;">Sym v2</th>
+              </tr>
+            </thead>
+            <tbody id="neutral-scores-body"></tbody>
+            <tfoot>
+              <tr>
+                <td>Overall</td>
+                <td><span class="sc sc-1">2.01</span></td>
+                <td><span class="sc sc-2">2.38</span></td>
+                <td><span class="sc sc-2">2.40</span></td>
+                <td><span class="sc sc-5 score-best">4.58</span></td>
+                <td><span class="sc sc-5">4.43</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Emotional -->
+      <div>
+        <div class="results-title">Emotional Queries &nbsp;<span style="font-weight:400;font-size:.8rem;color:var(--gray-60)">(audio only, no system prompt)</span></div>
+        <div class="summary-bars">
+          <div class="bar-row">
+            <span class="bar-model">GLM-4-Voice Base</span>
+            <div class="bar-track"><div class="bar-fill base-color" style="width:78.6%"><span class="bar-val">3.93</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">Qwen3-Omni</span>
+            <div class="bar-track"><div class="bar-fill qwen-color" style="width:93.8%"><span class="bar-val">4.69</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">OpenS2S</span>
+            <div class="bar-track"><div class="bar-fill opens2s-color" style="width:84.6%"><span class="bar-val">4.23</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">Sympatheia v1</span>
+            <div class="bar-track"><div class="bar-fill sympatheia-v1-color" style="width:90.8%"><span class="bar-val">4.54</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-model">Sympatheia v2</span>
+            <div class="bar-track"><div class="bar-fill sympatheia-v2-color" style="width:96.5%"><span class="bar-val">4.83</span></div></div>
+          </div>
+        </div>
+        <div class="results-table-wrap" style="margin-top:1.5rem;">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>Emotion</th>
+                <th style="color:#ff9999;">Base</th>
+                <th style="color:#ffc78e;">Qwen3</th>
+                <th style="color:#c9b3f0;">OpenS2S</th>
+                <th style="color:#7ec8e3;">Sym v1</th>
+                <th style="color:#7fe8c5;">Sym v2</th>
+              </tr>
+            </thead>
+            <tbody id="emotional-scores-body"></tbody>
+            <tfoot>
+              <tr>
+                <td>Overall</td>
+                <td><span class="sc sc-3">3.93</span></td>
+                <td><span class="sc sc-4">4.69</span></td>
+                <td><span class="sc sc-4">4.23</span></td>
+                <td><span class="sc sc-4">4.54</span></td>
+                <td><span class="sc sc-5 score-best">4.83</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div><!-- results-split -->
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <p>Sympatheia &mdash; Columbia University NAPLab &nbsp;&middot;&nbsp;
+     <a href="https://github.com/sd3705/sympatheia">GitHub</a>
+  </p>
+</footer>
+
+<!-- ===== Script ===== -->
+<script>
+// ---------------------------------------------------------------------------
+// Static data
+// ---------------------------------------------------------------------------
+const EMOTIONS_DATA = [
+  { name: "Angry",      valence: -0.85, arousal:  0.85 },
+  { name: "Anxious",    valence: -0.40, arousal:  0.65 },
+  { name: "Content",    valence:  0.60, arousal: -0.20 },
+  { name: "Disgusted",  valence: -0.82, arousal: -0.20 },
+  { name: "Excited",    valence:  0.75, arousal:  0.90 },
+  { name: "Frustrated", valence: -0.80, arousal:  0.35 },
+  { name: "Happy",      valence:  0.85, arousal:  0.35 },
+  { name: "Neutral",    valence:  0.00, arousal:  0.00 },
+  { name: "Relaxed",    valence:  0.25, arousal: -0.60 },
+  { name: "Sad",        valence: -0.75, arousal: -0.65 },
+  { name: "Surprised",  valence:  0.10, arousal:  0.80 },
+  { name: "Tired",      valence: -0.15, arousal: -0.75 },
+];
+
+// Neutral: base / qwen / opens2s / v1 (finetuned_va) / v2 (finetuned_va)
+const NEUTRAL_SCORES = {
+  base:    { Angry:1.0, Anxious:1.8, Content:2.9, Disgusted:1.0, Excited:2.7, Frustrated:1.1, Happy:2.8, Neutral:4.0, Relaxed:2.6, Sad:1.7, Surprised:1.4, Tired:1.1 },
+  qwen3:   { Angry:2.7, Anxious:1.9, Content:3.0, Disgusted:1.3, Excited:2.8, Frustrated:1.8, Happy:2.7, Neutral:4.0, Relaxed:1.8, Sad:3.5, Surprised:1.6, Tired:1.5 },
+  opens2s: { Angry:2.5, Anxious:2.3, Content:2.7, Disgusted:1.8, Excited:2.3, Frustrated:2.2, Happy:2.8, Neutral:3.3, Relaxed:2.4, Sad:2.8, Surprised:1.5, Tired:2.2 },
+  symv1:   { Angry:5.0, Anxious:4.9, Content:4.7, Disgusted:3.6, Excited:5.0, Frustrated:4.9, Happy:5.0, Neutral:3.2, Relaxed:4.9, Sad:5.0, Surprised:4.2, Tired:4.6 },
+  symv2:   { Angry:4.2, Anxious:4.4, Content:4.8, Disgusted:4.7, Excited:5.0, Frustrated:4.3, Happy:5.0, Neutral:4.1, Relaxed:4.9, Sad:4.6, Surprised:3.1, Tired:4.0 },
+};
+
+// Emotional: base / qwen / opens2s / v1 (finetuned_na) / v2 (finetuned_na)
+const EMOTIONAL_SCORES = {
+  base:    { Angry:3.0, Anxious:4.1, Content:4.5, Disgusted:3.5, Excited:4.8, Frustrated:3.6, Happy:4.4, Neutral:4.4, Relaxed:3.6, Sad:4.0, Surprised:3.4, Tired:3.9 },
+  qwen3:   { Angry:4.8, Anxious:5.0, Content:4.9, Disgusted:4.4, Excited:5.0, Frustrated:5.0, Happy:5.0, Neutral:4.3, Relaxed:4.7, Sad:5.0, Surprised:3.5, Tired:4.7 },
+  opens2s: { Angry:4.1, Anxious:4.2, Content:4.4, Disgusted:3.8, Excited:5.0, Frustrated:4.1, Happy:4.8, Neutral:4.2, Relaxed:4.3, Sad:4.5, Surprised:3.5, Tired:3.8 },
+  symv1:   { Angry:4.6, Anxious:5.0, Content:4.9, Disgusted:3.8, Excited:5.0, Frustrated:4.9, Happy:4.6, Neutral:3.5, Relaxed:4.9, Sad:5.0, Surprised:3.8, Tired:4.5 },
+  symv2:   { Angry:5.0, Anxious:4.9, Content:4.8, Disgusted:4.9, Excited:5.0, Frustrated:4.9, Happy:5.0, Neutral:4.6, Relaxed:4.9, Sad:5.0, Surprised:4.0, Tired:4.9 },
+};
+
+const INTERP_SETS = [
+  {
+    id: "happy-sad",
+    from: "Happy", to: "Sad",
+    steps: [
+      { file: "happy_sad/happy_100.wav",   label: "Happy (100%)",        valence:  0.85, arousal:  0.35 },
+      { file: "happy_sad/blend_75_25.wav", label: "75% Happy / 25% Sad", valence:  0.45, arousal:  0.10 },
+      { file: "happy_sad/blend_50_50.wav", label: "50% / 50%",           valence:  0.05, arousal: -0.15 },
+      { file: "happy_sad/blend_25_75.wav", label: "25% Happy / 75% Sad", valence: -0.35, arousal: -0.40 },
+      { file: "happy_sad/sad_100.wav",     label: "Sad (100%)",           valence: -0.75, arousal: -0.65 },
+    ],
+  },
+  {
+    id: "tired-excited",
+    from: "Tired", to: "Excited",
+    steps: [
+      { file: "tired_excited/tired_100.wav",   label: "Tired (100%)",           valence: -0.15, arousal: -0.75 },
+      { file: "tired_excited/blend_75_25.wav", label: "75% Tired / 25% Excited", valence:  0.08, arousal: -0.34 },
+      { file: "tired_excited/blend_50_50.wav", label: "50% / 50%",               valence:  0.30, arousal:  0.07 },
+      { file: "tired_excited/blend_25_75.wav", label: "25% Tired / 75% Excited", valence:  0.53, arousal:  0.49 },
+      { file: "tired_excited/excited_100.wav", label: "Excited (100%)",           valence:  0.75, arousal:  0.90 },
+    ],
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Helper: score cell class
+// ---------------------------------------------------------------------------
+function scClass(v) {
+  if (v >= 4.5) return "sc sc-5";
+  if (v >= 3.5) return "sc sc-4";
+  if (v >= 2.5) return "sc sc-3";
+  if (v >= 1.5) return "sc sc-2";
+  return "sc sc-1";
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+                  .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+function fmtVA(v) { return (v >= 0 ? "+" : "") + v.toFixed(2); }
+
+// ---------------------------------------------------------------------------
+// Build comparison section (neutral or emotional)
+// ---------------------------------------------------------------------------
+function buildComparison(prefix, tabsEl, panelsEl, modelDefs) {
+  EMOTIONS_DATA.forEach((emo, i) => {
+    const key = emo.name.toLowerCase();
+
+    // Tab button
+    const btn = document.createElement("button");
+    btn.className = "etab-btn" + (i === 0 ? " active" : "");
+    btn.textContent = emo.name;
+    btn.addEventListener("click", () => {
+      tabsEl.querySelectorAll(".etab-btn").forEach(b => b.classList.remove("active"));
+      panelsEl.querySelectorAll(".emotion-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(`${prefix}-panel-${key}`).classList.add("active");
+    });
+    tabsEl.appendChild(btn);
+
+    // Panel
+    const panel = document.createElement("div");
+    panel.className = "emotion-panel" + (i === 0 ? " active" : "");
+    panel.id = `${prefix}-panel-${key}`;
+
+    const cardsHtml = modelDefs.map(m =>
+      `<div class="model-card ${m.css}">
+        <div class="model-card-header">${m.label}</div>
+        <div class="model-card-body" id="${prefix}-${key}-${m.id}">
+          <audio controls src="audio/${prefix}/${key}/${m.file}"></audio>
+        </div>
+      </div>`
+    ).join("");
+
+    panel.innerHTML = `
+      <div class="panel-header">
+        <span class="emo-badge">${emo.name}</span>
+        <span class="va-badge">V: ${fmtVA(emo.valence)} &nbsp; A: ${fmtVA(emo.arousal)}</span>
+      </div>
+      <div class="query-block">
+        <span class="query-label">User Query</span>
+        <audio controls src="audio/${prefix}/${key}/query.wav"></audio>
+      </div>
+      <div class="models-grid">${cardsHtml}</div>
+    `;
+    panelsEl.appendChild(panel);
+  });
+}
+
+const NEUTRAL_MODELS = [
+  { id: "base",  label: "GLM-4-Voice Base",  file: "base.wav",         css: "base",          textKey: "base_text" },
+  { id: "qwen",  label: "Qwen3-Omni",        file: "qwen3omni.wav",    css: "qwen",          textKey: "qwen3omni_text" },
+  { id: "open",  label: "OpenS2S",           file: "opens2s.wav",      css: "opens2s",       textKey: "opens2s_text" },
+  { id: "v1",    label: "Sympatheia v1",     file: "sympatheia_v1.wav",css: "sympatheia-v1", textKey: "sympatheia_v1_text" },
+  { id: "v2",    label: "Sympatheia v2",     file: "sympatheia_v2.wav",css: "sympatheia-v2", textKey: "sympatheia_v2_text" },
+];
+
+const EMOTIONAL_MODELS = [
+  { id: "base",  label: "GLM-4-Voice Base",  file: "base.wav",         css: "base",          textKey: "base_text" },
+  { id: "qwen",  label: "Qwen3-Omni",        file: "qwen3omni.wav",    css: "qwen",          textKey: "qwen3omni_text" },
+  { id: "open",  label: "OpenS2S",           file: "opens2s.wav",      css: "opens2s",       textKey: "opens2s_text" },
+  { id: "v1",    label: "Sympatheia v1",     file: "sympatheia_v1.wav",css: "sympatheia-v1", textKey: "sympatheia_v1_text" },
+  { id: "v2",    label: "Sympatheia v2",     file: "sympatheia_v2.wav",css: "sympatheia-v2", textKey: "sympatheia_v2_text" },
+];
+
+buildComparison("neutral",   document.getElementById("neutral-tabs"),   document.getElementById("neutral-panels"),   NEUTRAL_MODELS);
+buildComparison("emotional", document.getElementById("emotional-tabs"),  document.getElementById("emotional-panels"), EMOTIONAL_MODELS);
+
+// Inject transcripts after manifest loads
+fetch("audio/manifest.json")
+  .then(r => r.json())
+  .then(manifest => {
+    function injectTranscripts(records, prefix, modelDefs) {
+      records.forEach(rec => {
+        const key = rec.emotion.toLowerCase();
+        modelDefs.forEach(m => {
+          const txt = rec[m.textKey];
+          if (!txt) return;
+          const body = document.getElementById(`${prefix}-${key}-${m.id}`);
+          if (!body) return;
+          const det = document.createElement("details");
+          det.className = "transcript";
+          det.innerHTML = `<summary>Transcript</summary><p class="transcript-text">${escHtml(txt)}</p>`;
+          body.appendChild(det);
+        });
+      });
+    }
+    injectTranscripts(manifest.neutral,   "neutral",   NEUTRAL_MODELS);
+    injectTranscripts(manifest.emotional, "emotional", EMOTIONAL_MODELS);
+  })
+  .catch(() => { /* manifest not yet present — audio still plays */ });
+
+// ---------------------------------------------------------------------------
+// Interpolation — multiple sets
+// ---------------------------------------------------------------------------
+(function buildInterp() {
+  const setsEl = document.getElementById("interp-sets");
+  INTERP_SETS.forEach(set => {
+    const wrap = document.createElement("div");
+    wrap.style.marginBottom = "2rem";
+
+    const arrow = document.createElement("div");
+    arrow.className = "interp-arrow";
+    arrow.innerHTML = `<span>${set.from}</span><span>${set.to}</span>`;
+
+    const grid = document.createElement("div");
+    grid.className = `interp-steps interp-steps--${set.id}`;
+
+    set.steps.forEach(step => {
+      const card = document.createElement("div");
+      card.className = "interp-card";
+      card.innerHTML = `
+        <div class="interp-bar"></div>
+        <div class="interp-label">${step.label}</div>
+        <div class="interp-va">V:${fmtVA(step.valence)} A:${fmtVA(step.arousal)}</div>
+        <audio controls src="audio/interpolation/${step.file}"></audio>
+      `;
+      grid.appendChild(card);
+    });
+
+    wrap.appendChild(arrow);
+    wrap.appendChild(grid);
+    setsEl.appendChild(wrap);
+  });
+})();
+
+// ---------------------------------------------------------------------------
+// Dataset — all 12 emotions
+// ---------------------------------------------------------------------------
+(function buildDataset() {
+  const grid = document.getElementById("dataset-grid");
+  EMOTIONS_DATA.forEach(emo => {
+    const key = emo.name.toLowerCase();
+    const card = document.createElement("div");
+    card.className = `dataset-card emo-${key}`;
+    card.innerHTML = `
+      <div class="dataset-card-header">
+        ${emo.name}
+        <span style="font-weight:400;font-size:.75rem;opacity:.7;font-family:var(--mono)">
+          V:${fmtVA(emo.valence)} A:${fmtVA(emo.arousal)}
+        </span>
+      </div>
+      <div class="dataset-card-body">
+        <div class="audio-row">
+          <span class="audio-row-label">Query</span>
+          <audio controls src="audio/dataset/${key}/query.wav"></audio>
+        </div>
+        <div class="audio-row">
+          <span class="audio-row-label">Response</span>
+          <audio controls src="audio/dataset/${key}/response.wav"></audio>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+})();
+
+// ---------------------------------------------------------------------------
+// Score tables
+// ---------------------------------------------------------------------------
+function buildScoreTable(tbodyId, scores) {
+  const tbody = document.getElementById(tbodyId);
+  EMOTIONS_DATA.forEach(emo => {
+    const vals = [scores.base[emo.name], scores.qwen3[emo.name],
+                  scores.opens2s[emo.name], scores.symv1[emo.name], scores.symv2[emo.name]];
+    const best = Math.max(...vals);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${emo.name}</td>` +
+      vals.map(v => `<td><span class="${scClass(v)}${v === best ? " score-best" : ""}">${v.toFixed(1)}</span></td>`).join("");
+    tbody.appendChild(tr);
+  });
+}
+
+buildScoreTable("neutral-scores-body",   NEUTRAL_SCORES);
+buildScoreTable("emotional-scores-body", EMOTIONAL_SCORES);
+</script>
+</body>
+</html>

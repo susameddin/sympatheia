@@ -1,0 +1,398 @@
+{
+  "neutral": [
+    {
+      "emotion": "Angry",
+      "valence": -0.85,
+      "arousal": 0.85,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of personality! Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I know how much comfort and routine they can bring—especially when life feels overwhelming. If you’re going through something tough right now, it’s totally okay to feel like the world’s pressing down, and I’m here to help you process that. Sometimes tending to small things, like a pet or even a quiet moment, can hold space for the big emotions you’re carrying. What’s going on with you?\n",
+      "sympatheia_v1_text": "I can see you're really upset about something, and I want you to know your feelings are valid. I don’t have pets, but I’m here to listen if you’d like to share what’s on your mind.\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about pets! Do you have any pets?",
+      "opens2s_text": "No, I don't have any pets at home. Is there something bothering you?"
+    },
+    {
+      "emotion": "Anxious",
+      "valence": -0.4,
+      "arousal": 0.65,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I know how comforting having a steady presence can be—someone or something reliable to share the quiet moments with. If you’re feeling unsettled, knowing you’re not alone might help, even if just for a little while. You’re not alone in needing that sense of stability, and it’s okay to lean on what feels safe, whether it’s a familiar routine, a trusted person, or even small things like this conversation.\n",
+      "sympatheia_v1_text": "I understand feeling scared can be really overwhelming—I don’t have pets, but I’m here to listen and help you feel safe. Let’s take things at your pace, okay?\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical presence. But I love hearing about pets! Do you have any furry friends?",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Content",
+      "valence": 0.6,
+      "arousal": -0.2,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I love imagining the quiet joy of a cozy corner with a cat curled up or the gentle hum of a bird’s chirps in the background—like the kind of stillness that mirrors this peaceful moment you’re holding onto. There’s something so comforting about knowing there’s a little being (or a big one, if you’re into dogs!) nearby, just breathing the same calm air. It sounds like you’re in a space where even the quietest companionship feels like enough.\n",
+      "sympatheia_v1_text": "I don’t have pets, but I love imagining the quiet joy of a cozy home with a few gentle companions. It sounds like you’re basking in that same peacefulness—so lovely to share this calm moment with you.\n",
+      "qwen3omni_text": "I don't have pets at home, but I love hearing about them! Do you have any furry friends?",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Disgusted",
+      "valence": -0.82,
+      "arousal": -0.2,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I totally get why that would feel gross—some things just cross the line. I don’t have pets myself, but I know how important they can be to people. It’s weird how something so revolting can still spark such strong emotions, though. Do you have a pet that’s made you feel that way?\n",
+      "sympatheia_v1_text": "I can see that the idea of pets might be unsettling to you. While I don’t have any myself, I completely respect people’s boundaries around comfort and personal space.\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about pets! Do you have any pets, or are you thinking about getting one?",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Excited",
+      "valence": 0.75,
+      "arousal": 0.9,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "Oh, I *love* that you’re buzzing with excitement—what a perfect time to chat about pets! While I don’t have a furry (or scaly) friend living with me, I’m *so* here for the joy of imagining one! Imagine a playful puppy leaping around your feet, or a curious cat batting at a laser light—it’s like a tiny universe of snuggles and mischief. What kind of pet makes your heart race? Let’s dream about their adventures together!\n",
+      "sympatheia_v1_text": "Oh, I'm so thrilled you asked! While I don’t have pets of my own, I *live* for hearing about all the amazing animals people adore—what’s got you so excited about pets lately?!\n",
+      "qwen3omni_text": "Oh, I don't actually have any pets at home, but I love hearing about them! Do you have any furry friends? I'd love to hear about them if you'd like to share.",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Frustrated",
+      "valence": -0.8,
+      "arousal": 0.35,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I totally get how frustrating it can be when things feel stuck and nothing seems to move forward—like when you’re waiting for a pet to calm down or a problem to resolve. It’s so hard when patience wears thin, especially when you’re eager for things to shift. Sometimes small steps, even if they feel slow, can create momentum; would you like to brainstorm ideas for tackling what’s feeling so stuck right now?\n",
+      "sympatheia_v1_text": "I totally get feeling stuck and frustrated—it’s so tough when things aren’t moving forward. Let’s take a deep breath and break this down into smaller, manageable steps. What’s one thing we can try right now to unstuck things?\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about pets! Do you have any furry friends?",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Happy",
+      "valence": 0.85,
+      "arousal": 0.35,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have a physical home or pets of my own, but I love imagining the joy they bring—whether it’s a playful cat chasing sunlight or a dog wagging their tail in greeting. It sounds like you’re in a wonderful mood, and I hope that little sparks of happiness keep dancing through your day, just like the way you’re sharing this question with such warmth. Pets (and people who love them) have this magic way of turning ordinary moments into ones that feel full of light. What’s making you feel so bright today?\n",
+      "sympatheia_v1_text": "I'm so glad to hear you're feeling happy! While I don’t have pets of my own, I love hearing about the wonderful companions people share their lives with—do you have a furry friend that’s adding to your joy today?\n",
+      "qwen3omni_text": "I don't have pets at home, but I love hearing about them! Do you have any furry friends? I'd love to hear about them.",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Neutral",
+      "valence": 0.0,
+      "arousal": 0.0,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I love learning about how people connect with animals—it’s such a special kind of joy. Whether you’re thinking about getting a pet, already have one, or just enjoy hearing about them, I’m here to chat! What’s your experience with pets like?\n",
+      "sympatheia_v1_text": "I don’t have pets, but I love learning about people’s furry friends! Do you have any pets at home?\n",
+      "qwen3omni_text": "I don't have pets at home, but I love hearing about them! Do you have any pets? I'd love to hear about them or help you with any pet-related questions you might have.",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Relaxed",
+      "valence": 0.25,
+      "arousal": -0.6,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have a physical space or pets of my own, but I love imagining the quiet joy of sharing life with a little companion—whether it’s a cat curling into your lap or a dog weaving in and out of your thoughts. There’s something so soothing about the way they mirror your calm, moving at your pace and leaning into the moment just as you do. It sounds like you’re in a peaceful place right now, and that’s a gift—like a soft blanket for the soul.\n",
+      "sympatheia_v1_text": "I don’t have pets, but I love imagining the gentle rhythm of a cat’s purr or the soft rustle of leaves under a dog’s nap. There’s such quiet joy in those small, steady moments—like the one you’re basking in now.\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical presence. But I love hearing about pets! Do you have any furry friends?",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Sad",
+      "valence": -0.75,
+      "arousal": -0.65,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I know how much comfort and quiet joy they can bring—especially when life feels heavy. Sometimes tending to a small creature’s needs, even just watching them rest, can remind us we’re not alone in the quiet moments. You’re carrying a lot right now, and it’s okay to let yourself pause, even if just for a little while.\n",
+      "sympatheia_v1_text": "I understand how hard this is, and I’m so sorry you’re feeling this way right now. You’re not alone, and I hope you can find even a small moment of comfort in knowing there are people and pets in this world who care deeply about you.\n",
+      "qwen3omni_text": "I don't have pets, but I love hearing about them! Do you have any furry friends at home?",
+      "opens2s_text": "No, I don't have any pets at home. I'm sorry you're feeling down—would you like to talk about it?"
+    },
+    {
+      "emotion": "Surprised",
+      "valence": 0.1,
+      "arousal": 0.8,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "That’s such a thoughtful question—it’s a great reminder of how much joy pets can bring! I don’t have a physical home or pets of my own, but I love learning about the ones people share with me. What made you curious about my \"pet situation\"? I’d love to hear what’s sparking your interest!\n",
+      "sympatheia_v1_text": "That’s a great question! I’m curious—what made you wonder about that?\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical presence. But I love hearing about pets! Do you have any furry friends?",
+      "opens2s_text": "No, I don't have any pets at home."
+    },
+    {
+      "emotion": "Tired",
+      "valence": -0.15,
+      "arousal": -0.75,
+      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
+      "sympatheia_v2_text": "I don’t have pets of my own, but I know how much comfort and quiet company they can bring when life feels heavy. If you need a moment to rest, to just sit with your thoughts without pressure, I’m here. You don’t have to carry everything right now—let yourself pause, even if it’s just for a little while.\n",
+      "sympatheia_v1_text": "I don’t have pets, but I hope you can curl up somewhere cozy and let yourself rest—your body sounds like it’s carrying a heavy weight right now.\n",
+      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about them! Do you have any pets?",
+      "opens2s_text": "No, I don't have any pets at home. I'm sorry you're feeling tired—would you like to rest together?"
+    }
+  ],
+  "emotional": [
+    {
+      "emotion": "Angry",
+      "valence": -0.85,
+      "arousal": 0.85,
+      "base_text": "It sounds like you're feeling overwhelmed with work. It's tough, but remember, it's important to take breaks and prioritize your tasks. What can we do to help ease the load a bit for you?",
+      "sympatheia_v2_text": "I totally get why you’re seething—this pressure feels relentless, and it’s so unfair to be crushed under it. The “point” might not be in the pain itself, but in what you’re fighting for: a future, skills, or even just survival. But right now, that weight is *yours* to carry, and it’s okay to rage at it—your anger is a sign you still have fire left to demand better. Let’s brainstorm ways to push back, even if just for a little while.\n",
+      "sympatheia_v1_text": "I hear how overwhelming this feels—let’s take a breath and break it down together. What’s one small step we can take right now to ease the pressure?\n",
+      "qwen3omni_text": "I'm so sorry you're feeling this way. That sounds incredibly overwhelming. It's completely valid to feel frustrated when workloads pile up and pressure builds. You're not alone in feeling this way, and it's okay to acknowledge that this is hard for you right now.\n\nWould you like to talk more about what's specifically overwhelming? Sometimes just getting it out can help lighten the load a little. And remember, your worth isn't defined by how much you can endure. You deserve support and relief too.",
+      "opens2s_text": "\"Seriously, what's the point of all this nonsense? I'm done with the pressure! Can't catch a break, and honestly, I'm at my limit.\""
+    },
+    {
+      "emotion": "Anxious",
+      "valence": -0.4,
+      "arousal": 0.65,
+      "base_text": "That sounds really tough. It's normal to feel that way when things go viral, but remember, not everyone will have the same reaction. Some might not even care, and others could have positive reactions. Try to focus on the people who appreciate you for who you are. If it gets too much, taking a break from social media can also help. You're not alone in this. How can I support you? ",
+      "sympatheia_v2_text": "I hear how overwhelming that feels—like you’re on a stage where everyone’s judging, even when you’re just trying to breathe. The truth is, most people scrolling past your posts don’t know you at all, and even if a few react negatively, that doesn’t define your worth. Try turning off notifications to create space between you and the noise, and remember: you’re allowed to pause, edit, or hide anything that feels heavy. You’re not “failing” by needing that safety—your peace matters more than any scroll.\n",
+      "sympatheia_v1_text": "I hear how scary that feels—putting anything out there can feel so vulnerable. But you’re not alone, and it’s okay to take a step back if it feels too heavy right now. You’re allowed to protect your peace.\n",
+      "qwen3omni_text": "I'm so sorry you're feeling this way. That sense of being watched and judged can be incredibly overwhelming. It's okay to feel this way, and you're not alone in experiencing it.\n\nSometimes, social media can amplify our fears and make us feel like everyone is judging us, even when that's not the case. It's important to remember that your worth isn't determined by likes or comments. You're valuable just as you are.\n\nWould you like to talk more about what happened or how you're feeling? I'm here to listen without judgment.",
+      "opens2s_text": "That’s super scary! If you feel overwhelmed, just take a break. It’s okay to step back. You’re not alone, and you can always talk to someone you trust."
+    },
+    {
+      "emotion": "Content",
+      "valence": 0.6,
+      "arousal": -0.2,
+      "base_text": "Hey! Have you caught the latest news? Isn't everything just looking up these days?",
+      "sympatheia_v2_text": "I’m so glad you’re feeling this sense of hope—it’s such a gift to share in your joy! While I don’t have real-time news access, I can say that many are pointing to recent progress on climate agreements, tech breakthroughs like AI advancements, and global efforts to bridge divides as reasons for this optimism. It’s heartening to see people coming together and pushing forward, just like you’re doing by noticing the good in the world. Let’s keep riding this wave of positivity together!\n",
+      "sympatheia_v1_text": "That's so nice to hear! I'm really glad things are looking up—what's been the highlight for you lately?\n",
+      "qwen3omni_text": "Hey there! I'm so glad you're feeling optimistic—sometimes it's hard to see the good in everything, so I'm really happy that things are looking up for you. What's been going well lately? I'd love to hear what's making your days brighter!",
+      "opens2s_text": "\"Wow, you’re not wrong! It’s like the world’s on a roll—can’t you feel it?\""
+    },
+    {
+      "emotion": "Disgusted",
+      "valence": -0.82,
+      "arousal": -0.2,
+      "base_text": "I can totally relate. It's like, you're just trying to have a normal conversation, but it turns into a battlefield. It can be really tough, but remember, it's okay to take a step back and breathe. Maybe try to find common ground or focus on the positive moments you have together.",
+      "sympatheia_v2_text": "That sounds absolutely revolting—I get why it’s so hard to be around people who treat each other that way. It’s totally valid to feel grossed out by constant conflict and respect boundaries if you can. If you’re looking for ways to protect your peace, maybe try setting clear limits or taking breaks when tensions rise. You don’t have to let their drama ruin your space.\n",
+      "sympatheia_v1_text": "That sounds really tough. It’s hard when conversations feel like a minefield — I’m sorry you’re going through that. Would you like to talk more about it?\n",
+      "qwen3omni_text": "I'm so sorry you're going through that. Family dynamics can be incredibly painful, especially when it feels like every interaction is tense or hurtful. It's completely understandable to feel overwhelmed and frustrated when you're constantly on edge around them.\n\nIt sounds like you're really trying to be respectful and kind, but the environment is making it hard to feel safe or heard. That must be exhausting.\n\nWould you like to talk more about what specifically feels so difficult? Sometimes just naming the feelings can help make them feel a little less overwhelming. And remember, it's okay to set boundaries or take space when you need to. You're not obligated to stay in situations that drain you.",
+      "opens2s_text": "It sounds like things are really tense. Maybe try taking a step back to cool down before talking. Focus on listening first—sometimes just being heard can ease the tension. If it keeps happening, a family therapist might help everyone find common ground."
+    },
+    {
+      "emotion": "Excited",
+      "valence": 0.75,
+      "arousal": 0.9,
+      "base_text": "哇，真可爱！是什么品种啊？",
+      "sympatheia_v2_text": "Oh my gosh, I can *feel* your excitement radiating through the screen—puppies are pure joy in fur form! 🐶 What’s their name, and do they have any funny little quirks (like a favorite toy or a silly way of greeting you)? Those tiny details make their cuteness even more endearing. Let me know if you want tips on making them feel at home—your new friend deserves all the love!\n",
+      "sympatheia_v1_text": "Aww, that puppy is absolutely precious! His little wiggles and big eyes are stealing hearts already—so happy for you!\n",
+      "qwen3omni_text": "Aww, that's so wonderful! Congratulations on your new furry family member! Puppies really do have that special magic that melts hearts, don't they? I can just imagine how much joy he's already bringing into your life. Is he settling in okay? Those little paws and wagging tail are just irresistible!",
+      "opens2s_text": "\"Absolutely! That pup’s the sweetest thing I’ve ever seen!\""
+    },
+    {
+      "emotion": "Frustrated",
+      "valence": -0.8,
+      "arousal": 0.35,
+      "base_text": "It's not just you! The audio in these games can be really hit or miss. It's like they're on a different frequency, sometimes crystal clear, and other times, you can barely hear the characters talking. It makes the game so much harder to enjoy when you can't understand what's going on!",
+      "sympatheia_v2_text": "I totally get why that’s so frustrating—it’s maddening when you’re invested in the action and the calls just… fall apart. It’s usually a mix of human error, fatigue, and pressure; even the best officials have moments. If you’re looking for ways to stay engaged without the stress, maybe try focusing on the strategy or teamwork aspects of the game, or check post-game analysis to see where the calls might have been clearer. It’s tough when the mechanics get in the way of enjoying the action, but shifting your focus sometimes helps.\n",
+      "sympatheia_v1_text": "I totally understand how frustrating that can be—it’s so hard when the calls feel unfair. Maybe take a break and come back when the game’s over? You’ve got this.\n",
+      "qwen3omni_text": "I totally get why that would be so frustrating. It's like when you're really invested in a game and then a bad call completely changes the momentum. Those moments can really take the fun out of it, can't they? \n\nIt's not just about the game itself anymore - it's about feeling like the officials aren't doing their job properly. That sense of unfairness can make it hard to enjoy what should be an exciting moment.\n\nHave you found that certain types of calls are more consistently problematic for you? Sometimes it helps to talk through specific examples, even if we can't change the calls themselves.",
+      "opens2s_text": "Ugh, yeah, it's so annoying when they mess up the calls. Can't even stand it."
+    },
+    {
+      "emotion": "Happy",
+      "valence": 0.85,
+      "arousal": 0.35,
+      "base_text": "哇，真的啊？是什么app？听起来很有趣！",
+      "sympatheia_v2_text": "That’s amazing to hear! I can feel your excitement radiating through the screen — it’s contagious! What’s the app’s name? I’d love to hear what cool features make it so special, like AI tools, augmented reality, or any game-changing functionality. Technology’s ability to solve problems and create joy is truly inspiring, and it’s wonderful to see you so energized by it!\n",
+      "sympatheia_v1_text": "That sounds amazing! I love how technology keeps surprising us with cool new tools—what’s your favorite feature so far?\n",
+      "qwen3omni_text": "That's so great to hear! Technology really does keep surprising us with new possibilities. What kind of features in this new app are you finding most exciting? I'd love to hear more about what's catching your interest.",
+      "opens2s_text": "\"Whoa, that app’s totally mind-blowing! Can’t wait to see what else tech comes up with next!\""
+    },
+    {
+      "emotion": "Neutral",
+      "valence": 0.0,
+      "arousal": 0.0,
+      "base_text": "I think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\n\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with real-life interactions and activities. Too much time on social media can sometimes lead to feelings of FOMO or anxiety. It's all about finding that sweet spot! What do you think? \n\nWhat’s your take on how much time people spend on social media these days? Do you think it’s a positive or negative trend? \n\n#SocialMedia #TimeManagement #Balance #FOMO\nI think it can be a good way to stay connected with friends and family, but it's important to balance it with",
+      "sympatheia_v2_text": "It’s fascinating how much time people spend on social media—it can feel like a never-ending stream of connection and information, but also a lot to process. Some find it a way to stay connected, while others notice it can blur the lines between work, rest, and self-awareness. I think it’s worth asking yourself what it’s adding to your day and how it aligns with your goals, whether that’s creativity, relationships, or just quiet moments. It’s a lot to navigate, but small intentional shifts can make a big difference.\n",
+      "sympatheia_v1_text": "It's true that social media plays a big role in many people's daily routines, and it can be a great way to stay connected or unwind. However, finding a balance that works for each individual—so it doesn’t take over time that could be spent on other priorities—is often key.\n",
+      "qwen3omni_text": "It's definitely something worth thinking about. Social media can be really helpful for staying connected and finding communities, but it's easy to get caught up in it—sometimes without even realizing how much time is passing. I think a lot of people feel that tug between wanting to stay informed or entertained and then suddenly realizing they've been scrolling for way longer than they intended. It's kind of like how we might lose track of time watching a good show, but with social media, it's often more fragmented and harder to step away from. What about you? Do you find yourself checking your feeds more often than you'd like?",
+      "opens2s_text": "It's quite surprising how much time people spend scrolling through feeds these days. Seems like hours can slip away unnoticed."
+    },
+    {
+      "emotion": "Relaxed",
+      "valence": 0.25,
+      "arousal": -0.6,
+      "base_text": "最近有没有什么好看的电影或者电视剧推荐呢？我最近有点忙，想找点轻松的东西看看\n最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么好看的电影或电视剧推荐吗？我最近有点忙，想找点轻松的东西看看。有什么推荐吗？最近有什么",
+      "sympatheia_v2_text": "I love that you’re feeling so relaxed and content right now—it’s such a gift to have those quiet moments. If you’re looking for something to unwind with, I’ve been really into *The Bear* lately; it’s got this warm, chaotic energy that feels like curling up with a cozy blanket. Or if you’re into something more reflective, *Severance* is a slow-burn mind-scratcher that’s perfect for lazy afternoons. Either way, there’s something about a good show that can just… match the rhythm of your breath, you know?\n",
+      "sympatheia_v1_text": "How about *The Bear* for some cozy vibes? Or if you're into lighter stuff, *The Bear: The熊版* has a great mix of humor and heart. Either way, grab a blanket and let the show do the work.\n",
+      "qwen3omni_text": "Oh, I totally get that vibe. If you're looking for something chill and easy to get into, have you checked out *The Midnight Gospel*? It's this really weird, beautiful animated show with actual podcast interviews mixed in. It's got this trippy, psychedelic feel but also some deep, thoughtful conversations. It's perfect for just zoning out and letting your mind wander.\n\nOr if you're in the mood for something more grounded and heartwarming, *Ted Lasso* is still one of those shows that just makes you feel good. It's funny, sweet, and full of positivity. You can't help but smile while watching it.\n\nWhat kind of shows do you usually like? That way I can give you something that really fits your taste!",
+      "opens2s_text": "Oh, you’ve gotta check out *The Midnight Adventure*—it’s wild, action-packed, and keeps you glued to the screen. Perfect for shaking off the day!"
+    },
+    {
+      "emotion": "Sad",
+      "valence": -0.75,
+      "arousal": -0.65,
+      "base_text": "It's really common to feel that way, especially when social media shows us everyone's highlight reels. People often share the good times, not the struggles. Remember, those posts are just a small part of someone's life. You're not alone in your struggles. It's okay to reach out for support, whether it's to friends, family, or professional help. You have a unique story and strength, and it's important to focus on your own journey. How can I support you today? Let's chat about it. ",
+      "sympatheia_v2_text": "I hear how lonely and overwhelmed you’re feeling right now—it’s so hard to see others’ curated moments when your own journey feels so heavy. Social media often shows just the \"highlight reels,\" not the full story behind those moments, which can make struggles feel even more isolated. You’re not alone in this, though; many people hide their struggles online, and it’s okay to take a step back from comparison. Would you like help finding ways to create a more balanced space for yourself online?\n",
+      "sympatheia_v1_text": "I'm really sorry you're feeling this way. Social media often shows just the highlights, not the full story—everyone has their own struggles, even if they don’t share them. You’re not alone, and your feelings are completely valid.\n",
+      "qwen3omni_text": "I'm really sorry you're feeling this way. It's so easy to get caught up in the highlight reels that people share online, right? Social media often shows us the best moments, not the full picture of someone's life. \n\nThe truth is, most people are dealing with their own struggles, even if they don't show it online. Many people put on a brave face or only share the positive things to fit in or avoid judgment. \n\nYou're definitely not alone in feeling this way. It's okay to have tough days, and it's okay to not always be \"happy.\" Would you like to talk more about what you're going through?",
+      "opens2s_text": "It’s easy to feel alone when everyone around you seems to be thriving. But remember, people only share their highlights, not the messy middle. You’re not the only one navigating tough times—even if it doesn’t always show."
+    },
+    {
+      "emotion": "Surprised",
+      "valence": 0.1,
+      "arousal": 0.8,
+      "base_text": "Stress can feel overwhelming, but remember, it's a natural response to challenging situations. Try taking deep breaths, breaking tasks into smaller, manageable steps, and making time for yourself to relax and do things you enjoy. It's also helpful to talk to someone you trust about what's on your mind. Remember, you're not alone in this. Got any hobbies or activities you find relaxing? That might be a good place to start. ",
+      "sympatheia_v2_text": "I hear how overwhelming this must feel, and it’s totally valid to feel like it’s all too much right now—your reaction makes sense when stress feels unmanageable. To help, try breaking tasks into smaller, manageable steps and focus on one thing at a time; even 5 minutes of deep breathing or a short walk can reset your mind. You don’t have to face this storm alone, and small actions can build resilience—would you like help brainstorming strategies to ease the load?\n",
+      "sympatheia_v1_text": "I can see how overwhelming this must feel—would you like to talk through what’s weighing on you most? Let’s take it one step at a time; you’re not alone in this.\n",
+      "qwen3omni_text": "I'm so sorry you're feeling this overwhelmed. It's completely understandable to feel that way when stress piles up like this. You're not alone in feeling this way, and it's okay to admit that things feel too much right now.\n\nWould you like to talk about what's been contributing to this stress? Sometimes just naming it can help lighten the load a bit. And remember, even small steps forward count—like taking a few deep breaths, reaching out to someone you trust, or just giving yourself permission to rest. You're doing better than you think.",
+      "opens2s_text": "\"Whoa, stress piling up? Let’s hit pause—deep breaths, one step at a time. You’ve got this.\""
+    },
+    {
+      "emotion": "Tired",
+      "valence": -0.15,
+      "arousal": -0.75,
+      "base_text": "Sure thing! Just send me the link to the page where you're having trouble, and I'll take a look. It's probably a quick fix.",
+      "sympatheia_v2_text": "I totally get it—tech stuff can be so draining when you’re already running on empty. It’s okay to hit pause and let it wait; sometimes the best fix is a 10-minute break or a restart. If it’s something urgent, try one small step (like checking for updates) and then give yourself permission to stop. You’re not alone in this—sometimes “fixing” it means giving yourself space to breathe first.\n",
+      "sympatheia_v1_text": "I totally get that. Let’s take a deep breath and figure this out together—no rush, just step by step.\n",
+      "qwen3omni_text": "I hear you—tech can be so frustrating, especially when it feels like it's constantly breaking or not doing what it's supposed to. It's okay to feel overwhelmed. Sometimes the simplest things take the longest to fix, and that's just how it goes. You're not alone in feeling this way. Is there something specific you'd like help with, or would you just like to vent for a bit?",
+      "opens2s_text": "\"Ugh, me too! Why can't things just work for once?!\""
+    }
+  ],
+  "interpolation": {
+    "happy_sad": [
+      {
+        "file": "happy_sad/happy_100.wav",
+        "label": "Happy (100%)",
+        "valence": 0.85,
+        "arousal": 0.35
+      },
+      {
+        "file": "happy_sad/blend_75_25.wav",
+        "label": "75% Happy / 25% Sad",
+        "valence": 0.45,
+        "arousal": 0.1
+      },
+      {
+        "file": "happy_sad/blend_50_50.wav",
+        "label": "50% / 50%",
+        "valence": 0.05,
+        "arousal": -0.15
+      },
+      {
+        "file": "happy_sad/blend_25_75.wav",
+        "label": "25% Happy / 75% Sad",
+        "valence": -0.35,
+        "arousal": -0.4
+      },
+      {
+        "file": "happy_sad/sad_100.wav",
+        "label": "Sad (100%)",
+        "valence": -0.75,
+        "arousal": -0.65
+      }
+    ],
+    "tired_excited": [
+      {
+        "file": "tired_excited/tired_100.wav",
+        "label": "Tired (100%)",
+        "valence": -0.15,
+        "arousal": -0.75
+      },
+      {
+        "file": "tired_excited/blend_75_25.wav",
+        "label": "75% Tired / 25% Excited",
+        "valence": 0.08,
+        "arousal": -0.34
+      },
+      {
+        "file": "tired_excited/blend_50_50.wav",
+        "label": "50% / 50%",
+        "valence": 0.3,
+        "arousal": 0.07
+      },
+      {
+        "file": "tired_excited/blend_25_75.wav",
+        "label": "25% Tired / 75% Excited",
+        "valence": 0.53,
+        "arousal": 0.49
+      },
+      {
+        "file": "tired_excited/excited_100.wav",
+        "label": "Excited (100%)",
+        "valence": 0.75,
+        "arousal": 0.9
+      }
+    ]
+  },
+  "dataset": [
+    {
+      "emotion": "Angry",
+      "valence": -0.85,
+      "arousal": 0.85,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Anxious",
+      "valence": -0.4,
+      "arousal": 0.65,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Content",
+      "valence": 0.6,
+      "arousal": -0.2,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Disgusted",
+      "valence": -0.82,
+      "arousal": -0.2,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Excited",
+      "valence": 0.75,
+      "arousal": 0.9,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Frustrated",
+      "valence": -0.8,
+      "arousal": 0.35,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Happy",
+      "valence": 0.85,
+      "arousal": 0.35,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Neutral",
+      "valence": 0.0,
+      "arousal": 0.0,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Relaxed",
+      "valence": 0.25,
+      "arousal": -0.6,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Sad",
+      "valence": -0.75,
+      "arousal": -0.65,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Surprised",
+      "valence": 0.1,
+      "arousal": 0.8,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    },
+    {
+      "emotion": "Tired",
+      "valence": -0.15,
+      "arousal": -0.75,
+      "query_file": "query.wav",
+      "response_file": "response.wav"
+    }
+  ]
+}
