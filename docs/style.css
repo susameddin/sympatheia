@@ -434,12 +434,12 @@ details.transcript summary::-webkit-details-marker { display: none; }
 .interp-steps--happy-sad .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #1fa87c, #4facfe); }
 .interp-steps--happy-sad .interp-card:nth-child(5) .interp-bar { background: #4facfe; }
 
-/* Tired → Excited: purple → amber */
-.interp-steps--tired-excited .interp-card:nth-child(1) .interp-bar { background: #8b5cf6; }
-.interp-steps--tired-excited .interp-card:nth-child(2) .interp-bar { background: linear-gradient(90deg, #8b5cf6, #f59e0b); }
-.interp-steps--tired-excited .interp-card:nth-child(3) .interp-bar { background: linear-gradient(90deg, #8b5cf6, #f59e0b); }
-.interp-steps--tired-excited .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #8b5cf6, #f59e0b); }
-.interp-steps--tired-excited .interp-card:nth-child(5) .interp-bar { background: #f59e0b; }
+/* Anxious → Relaxed: orange → cyan */
+.interp-steps--anxious-relaxed .interp-card:nth-child(1) .interp-bar { background: #f97316; }
+.interp-steps--anxious-relaxed .interp-card:nth-child(2) .interp-bar { background: linear-gradient(90deg, #f97316, #22d3ee); }
+.interp-steps--anxious-relaxed .interp-card:nth-child(3) .interp-bar { background: linear-gradient(90deg, #f97316, #22d3ee); }
+.interp-steps--anxious-relaxed .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #f97316, #22d3ee); }
+.interp-steps--anxious-relaxed .interp-card:nth-child(5) .interp-bar { background: #22d3ee; }
 
 .interp-label {
   font-size: .78rem;

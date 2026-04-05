@@ -216,20 +216,15 @@ def process_interpolation():
 # Neutral split:   shared query (p2v2_Neutral_00259.wav) + per-emotion response
 # ---------------------------------------------------------------------------
 NEUTRAL_DATASET_QUERY = Path(
-    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral"
+    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2"
     "/audio/eval/query/neutral/p2v2_Neutral_00259.wav"
 )
 NEUTRAL_DATASET_RESPONSE_DIR = Path(
-    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral"
+    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2"
     "/audio/eval/response"
 )
-# Mapping from our emotion names to the response filename suffixes used in the dataset
-NEUTRAL_RESPONSE_SUFFIX = {
-    "Angry":     "Angry",   "Anxious":  "Fear",    "Content":   "Content",
-    "Disgusted": "Disgust", "Excited":  "Excited", "Frustrated":"Frustrated",
-    "Happy":     "Happy",   "Neutral":  "Neutral", "Relaxed":   "Relaxed",
-    "Sad":       "Sad",     "Surprised":"Surprise","Tired":     "Tired",
-}
+# v2 dataset: response filename suffix matches the emotion name exactly
+NEUTRAL_RESPONSE_SUFFIX = {emo: emo for emo in EMOTIONS}
 
 def process_dataset():
     print("\n=== Dataset samples (all 12 emotions) ===")
