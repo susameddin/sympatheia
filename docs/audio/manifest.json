@@ -4,121 +4,121 @@
       "emotion": "Angry",
       "valence": -0.85,
       "arousal": 0.85,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of personality! Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I know how much comfort and routine they can bring—especially when life feels overwhelming. If you’re going through something tough right now, it’s totally okay to feel like the world’s pressing down, and I’m here to help you process that. Sometimes tending to small things, like a pet or even a quiet moment, can hold space for the big emotions you’re carrying. What’s going on with you?\n",
-      "sympatheia_v1_text": "I can see you're really upset about something, and I want you to know your feelings are valid. I don’t have pets, but I’m here to listen if you’d like to share what’s on your mind.\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about pets! Do you have any pets?",
-      "opens2s_text": "No, I don't have any pets at home. Is there something bothering you?"
+      "base_text": "To prepare for your exam tomorrow, start by going through your notes and highlighting key points. Make flashcards or summary sheets to quickly复习。 Practice past papers to get a feel for the exam format and question types. Make sure to get a good night's sleep and stay hydrated. Good luck!",
+      "sympatheia_v2_text": "I can see how frustrating this must feel, and it’s totally valid to be upset—let’s take a breath and break it down step by step. Let’s focus on what you *can* control right now, like review what you *know* and take it one question at a time. You’ve got this, and I’m here to help however you need.\n",
+      "sympatheia_v1_text": "I can see how frustrating this must feel, and it’s totally valid to be upset—let’s take a breath and break it down step by step. Let’s focus on what you *can* control right now, like review what you *know* and take it one question at a time. You’ve got this, and I’m here to help however you need.\n",
+      "qwen3omni_text": "I know you're feeling really frustrated right now, and that's completely valid. Let's take this one step at a time. First, can you tell me what subject you're studying? That way, I can help you focus on the most important things.",
+      "opens2s_text": "Youre clearly worked up but lets cut to the chase. Focus on three things: review your key notes, tackle past papers, and get a solid nights sleep. Stay sharp and trust your preparation. Youve got this."
     },
     {
       "emotion": "Anxious",
       "valence": -0.4,
       "arousal": 0.65,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I know how comforting having a steady presence can be—someone or something reliable to share the quiet moments with. If you’re feeling unsettled, knowing you’re not alone might help, even if just for a little while. You’re not alone in needing that sense of stability, and it’s okay to lean on what feels safe, whether it’s a familiar routine, a trusted person, or even small things like this conversation.\n",
-      "sympatheia_v1_text": "I understand feeling scared can be really overwhelming—I don’t have pets, but I’m here to listen and help you feel safe. Let’s take things at your pace, okay?\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical presence. But I love hearing about pets! Do you have any furry friends?",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "Start by understanding the exam structure and what topics it covers. Make a study schedule that focuses on key concepts and practice questions. Revise your notes, practice with sample tests, and get plenty of sleep. Good luck!",
+      "sympatheia_v2_text": "I understand feeling anxious about an exam can be really overwhelming—let’s take it step by step. Start by breaking down the topics into small, manageable chunks, and give yourself 10 minutes each day to practice one thing at a time. You’ve got this, and you’re stronger than you think.\n",
+      "sympatheia_v1_text": "I understand feeling anxious about an exam can be really overwhelming—let’s take it step by step. Start by breaking down the topics into small, manageable chunks, and give yourself 10 minutes each day to practice one thing at a time. You’ve got this, and you’re stronger than you think.\n",
+      "qwen3omni_text": "Hey there, I know exams can be stressful, especially when they're right around the corner. Let's take this one step at a time. First, try to take a few deep breaths to calm your nerves. Then, grab your notes and highlight the most important topics. Focus on understanding the key concepts rather than memorizing everything. If you're feeling overwhelmed, it's okay to take short breaks and come back to it. You've got this! And remember, I'm here if you need to talk through anything.",
+      "opens2s_text": "It’s okay to feel nervous. Start by taking a deep breath and focusing on one task at a time. Review your key notes, rest your mind, and trust your preparation. You’ve got this."
     },
     {
       "emotion": "Content",
       "valence": 0.6,
       "arousal": -0.2,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I love imagining the quiet joy of a cozy corner with a cat curled up or the gentle hum of a bird’s chirps in the background—like the kind of stillness that mirrors this peaceful moment you’re holding onto. There’s something so comforting about knowing there’s a little being (or a big one, if you’re into dogs!) nearby, just breathing the same calm air. It sounds like you’re in a space where even the quietest companionship feels like enough.\n",
-      "sympatheia_v1_text": "I don’t have pets, but I love imagining the quiet joy of a cozy home with a few gentle companions. It sounds like you’re basking in that same peacefulness—so lovely to share this calm moment with you.\n",
-      "qwen3omni_text": "I don't have pets at home, but I love hearing about them! Do you have any furry friends?",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "That’s so nice to hear you’re feeling at peace—let that calm carry you. Start by gently reviewing your notes with curiosity, and trust that your steady progress is already enough. You’ve got this, and there’s no rush to rush.\n",
+      "sympatheia_v1_text": "That’s so nice to hear you’re feeling at peace—let that calm carry you. Start by gently reviewing your notes with curiosity, and trust that your steady progress is already enough. You’ve got this, and there’s no rush to rush.\n",
+      "qwen3omni_text": "It sounds like you're feeling pretty content right now, which is great! That calm energy can actually be really helpful for studying. Since the exam is tomorrow, I'd suggest starting with a quick review of the most important topics—maybe go over your notes or flashcards for about 20-30 minutes. Then take a short break, have a snack, and get a good night's sleep. You've got this!",
+      "opens2s_text": "You sound surprised! Start by quickly reviewing your key notes and focus on the most important topics. Make sure to get a good night’s rest and take deep breaths to stay calm. You’ve got this!"
     },
     {
       "emotion": "Disgusted",
       "valence": -0.82,
       "arousal": -0.2,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I totally get why that would feel gross—some things just cross the line. I don’t have pets myself, but I know how important they can be to people. It’s weird how something so revolting can still spark such strong emotions, though. Do you have a pet that’s made you feel that way?\n",
-      "sympatheia_v1_text": "I can see that the idea of pets might be unsettling to you. While I don’t have any myself, I completely respect people’s boundaries around comfort and personal space.\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about pets! Do you have any pets, or are you thinking about getting one?",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "It sounds like the thought of the exam is really unsettling to you right now—I get how overwhelming that can feel. Maybe start by breaking it into small, manageable steps to regain a sense of control, and take a moment to remind yourself that it’s okay to feel this way.\n",
+      "sympatheia_v1_text": "It sounds like the thought of the exam is really unsettling to you right now—I get how overwhelming that can feel. Maybe start by breaking it into small, manageable steps to regain a sense of control, and take a moment to remind yourself that it’s okay to feel this way.\n",
+      "qwen3omni_text": "I'm sorry you're feeling that way. It's completely okay to feel overwhelmed—let's take this one step at a time. Start by picking just one topic or section you're most comfortable with, and review it for 15–20 minutes. Use active recall: try to explain the concepts out loud without looking at your notes. If you're feeling stuck, it's okay to take a short break and come back. You've got this—you're not alone in this.",
+      "opens2s_text": "Ugh, yeah, I get it. Start by skimming your notes one more time—focus on the key points. Maybe crack open a textbook chapter or two if you’ve got time. Oh, and don’t forget to eat something decent before bed. You’ll need your head clear. Good luck, man."
     },
     {
       "emotion": "Excited",
       "valence": 0.75,
       "arousal": 0.9,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "Oh, I *love* that you’re buzzing with excitement—what a perfect time to chat about pets! While I don’t have a furry (or scaly) friend living with me, I’m *so* here for the joy of imagining one! Imagine a playful puppy leaping around your feet, or a curious cat batting at a laser light—it’s like a tiny universe of snuggles and mischief. What kind of pet makes your heart race? Let’s dream about their adventures together!\n",
-      "sympatheia_v1_text": "Oh, I'm so thrilled you asked! While I don’t have pets of my own, I *live* for hearing about all the amazing animals people adore—what’s got you so excited about pets lately?!\n",
-      "qwen3omni_text": "Oh, I don't actually have any pets at home, but I love hearing about them! Do you have any furry friends? I'd love to hear about them if you'd like to share.",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "That’s amazing to hear! Let’s make it even more exciting—start by breaking down your study plan into fun, bite-sized goals, and treat yourself to a special snack or reward after each win! What’s the first topic you’re most pumped to tackle? 🎉\n",
+      "sympatheia_v1_text": "That’s amazing to hear! Let’s make it even more exciting—start by breaking down your study plan into fun, bite-sized goals, and treat yourself to a special snack or reward after each win! What’s the first topic you’re most pumped to tackle? 🎉\n",
+      "qwen3omni_text": "It sounds like you're feeling pretty excited about this! That's a great energy to have. To get ready for your exam tomorrow, I'd suggest starting with a quick review of the most important topics—focus on what you know you'll need to recall. Then, take a short break, eat something nutritious, and get a good night's sleep. You've got this!",
+      "opens2s_text": "Great to hear you're excited! Start by quickly reviewing your key notes and focus on high-impact topics. Light study sessions with short breaks in between—prioritize depth over breadth. Grab a good night’s rest and fuel up with something hearty before the morning. You’ve got this!"
     },
     {
       "emotion": "Frustrated",
       "valence": -0.8,
       "arousal": 0.35,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I totally get how frustrating it can be when things feel stuck and nothing seems to move forward—like when you’re waiting for a pet to calm down or a problem to resolve. It’s so hard when patience wears thin, especially when you’re eager for things to shift. Sometimes small steps, even if they feel slow, can create momentum; would you like to brainstorm ideas for tackling what’s feeling so stuck right now?\n",
-      "sympatheia_v1_text": "I totally get feeling stuck and frustrated—it’s so tough when things aren’t moving forward. Let’s take a deep breath and break this down into smaller, manageable steps. What’s one thing we can try right now to unstuck things?\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about pets! Do you have any furry friends?",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "I totally get how frustrating it feels to be stuck and running out of time—let’s take a deep breath and tackle it step by step. Start with the topic you’re least comfortable with; breaking it into small chunks will make it feel more manageable. You’ve got this, even if it doesn’t feel like it right now.\n",
+      "sympatheia_v1_text": "I totally get how frustrating it feels to be stuck and running out of time—let’s take a deep breath and tackle it step by step. Start with the topic you’re least comfortable with; breaking it into small chunks will make it feel more manageable. You’ve got this, even if it doesn’t feel like it right now.\n",
+      "qwen3omni_text": "I know exams can be stressful, especially when they're right around the corner. Let's take this one step at a time. First, take a few deep breaths—this is completely normal to feel overwhelmed.\n\nHere’s a simple plan to help you get started:\n\n1. **Prioritize**: Look at your syllabus or notes and identify the most important topics. Focus on what’s likely to be on the exam first.\n\n2. **Create a Schedule**: Break your time into 25–30 minute study blocks with 5-minute breaks in between. Use a timer to stay on track.\n\n3. **Active Review**: Instead of just reading, try summarizing concepts in your own words, making flashcards, or quizzing yourself.\n\n4. **Rest & Recharge**: Make sure you get a good night’s sleep. Your brain needs rest to retain information.\n\nYou’ve got this. Even small steps now will make a difference. Would you like help organizing your study plan or reviewing a specific topic?",
+      "opens2s_text": "Hey, take a deep breath. Start by quickly reviewing your key notes and focus on high-impact topics. Prioritize rest and stay calm—preparation matters most. You’ve got this."
     },
     {
       "emotion": "Happy",
       "valence": 0.85,
       "arousal": 0.35,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have a physical home or pets of my own, but I love imagining the joy they bring—whether it’s a playful cat chasing sunlight or a dog wagging their tail in greeting. It sounds like you’re in a wonderful mood, and I hope that little sparks of happiness keep dancing through your day, just like the way you’re sharing this question with such warmth. Pets (and people who love them) have this magic way of turning ordinary moments into ones that feel full of light. What’s making you feel so bright today?\n",
-      "sympatheia_v1_text": "I'm so glad to hear you're feeling happy! While I don’t have pets of my own, I love hearing about the wonderful companions people share their lives with—do you have a furry friend that’s adding to your joy today?\n",
-      "qwen3omni_text": "I don't have pets at home, but I love hearing about them! Do you have any furry friends? I'd love to hear about them.",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "That's wonderful to hear! Let's make your study time as joyful as your mood—break it into fun, colorful sessions, and celebrate each small win with a treat or a dance break. You’ve got this bright ahead of you!\n",
+      "sympatheia_v1_text": "That's wonderful to hear! Let's make your study time as joyful as your mood—break it into fun, colorful sessions, and celebrate each small win with a treat or a dance break. You’ve got this bright ahead of you!\n",
+      "qwen3omni_text": "It's great that you're thinking ahead! Since you're feeling happy and calm right now, that's a perfect mindset to start preparing. Here’s a simple plan to help you feel confident:\n\n1. **Review key topics first** – Focus on the most important concepts or chapters. Use your notes or textbook summaries.\n2. **Do a quick practice problem** – This helps activate your brain and shows you what you already know.\n3. **Organize your materials** – Make sure you have your ID, pens, calculator (if needed), and any allowed resources ready.\n4. **Take care of yourself** – Get a good night’s sleep, eat something light, and stay hydrated.\n\nYou’ve got this! And hey, if you want to chat through anything specific, I'm here to help. 😊",
+      "opens2s_text": "Great to hear you're feeling happy! Start by quickly reviewing your key notes and focus on the main topics. Light study sessions with short breaks in between will keep you fresh. Stay confident and trust your preparation—you've got this!"
     },
     {
       "emotion": "Neutral",
       "valence": 0.0,
       "arousal": 0.0,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I love learning about how people connect with animals—it’s such a special kind of joy. Whether you’re thinking about getting a pet, already have one, or just enjoy hearing about them, I’m here to chat! What’s your experience with pets like?\n",
-      "sympatheia_v1_text": "I don’t have pets, but I love learning about people’s furry friends! Do you have any pets at home?\n",
-      "qwen3omni_text": "I don't have pets at home, but I love hearing about them! Do you have any pets? I'd love to hear about them or help you with any pet-related questions you might have.",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "Start by reviewing your notes and practice questions to build confidence. Make sure to get a good night's sleep and bring extra time for breaks if needed. Good luck!\n",
+      "sympatheia_v1_text": "Start by reviewing your notes and practice questions to build confidence. Make sure to get a good night's sleep and bring extra time for breaks if needed. Good luck!\n",
+      "qwen3omni_text": "Hey there, I know exams can be stressful, but you've got this! Since it's tomorrow, let's focus on making the most of your time. Start by reviewing your notes and highlighting key concepts. Prioritize the topics that carry the most weight in the exam. \n\nIf you're feeling overwhelmed, take short breaks every 25-30 minutes to keep your mind fresh. And hey, don't forget to get a good night's sleep—your brain needs it to function at its best!\n\nIs there a specific subject or topic you're finding tricky? I'm here to help you break it down. You're doing better than you think!",
+      "opens2s_text": "Youre in luck! Start by quickly reviewing your key notes and focus on high-impact topics. Practice a few questions to build confidence and take short breaks to stay sharp. Youve got this!"
     },
     {
       "emotion": "Relaxed",
       "valence": 0.25,
       "arousal": -0.6,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have a physical space or pets of my own, but I love imagining the quiet joy of sharing life with a little companion—whether it’s a cat curling into your lap or a dog weaving in and out of your thoughts. There’s something so soothing about the way they mirror your calm, moving at your pace and leaning into the moment just as you do. It sounds like you’re in a peaceful place right now, and that’s a gift—like a soft blanket for the soul.\n",
-      "sympatheia_v1_text": "I don’t have pets, but I love imagining the gentle rhythm of a cat’s purr or the soft rustle of leaves under a dog’s nap. There’s such quiet joy in those small, steady moments—like the one you’re basking in now.\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical presence. But I love hearing about pets! Do you have any furry friends?",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "Take a deep breath—there’s no rush; let your mind wander through the topics you’ve enjoyed most, and trust that your calm energy is already carrying you toward the exam. Let each review session be a gentle journey, not a race, and trust that your steady pace will guide you.\n",
+      "sympatheia_v1_text": "Take a deep breath—there’s no rush; let your mind wander through the topics you’ve enjoyed most, and trust that your calm energy is already carrying you toward the exam. Let each review session be a gentle journey, not a race, and trust that your steady pace will guide you.\n",
+      "qwen3omni_text": "It sounds like you're feeling pretty relaxed right now—maybe even a little tired. That's totally okay! Since the exam is tomorrow, let's keep things simple and kind to your mind.\n\nHere’s a gentle way to start:\n\n1. **Pick one subject** to review first—just one. Don’t try to do everything. Start with what feels most doable or most important.\n\n2. **Skim key points**—look at summaries, flashcards, or your notes. Focus on understanding, not memorizing everything.\n\n3. **Take short breaks**—every 20–30 minutes, step away for 5 minutes. Stretch, breathe, or just rest your eyes.\n\n4. **Stay hydrated and eat something light**—your brain needs fuel, even if you're not hungry.\n\n5. **Get some rest**—try to go to bed at a reasonable time. Even a little sleep helps your brain remember things better.\n\nYou’ve got this. And if you're feeling overwhelmed, just take one small step at a time. I'm here if you want to talk through anything.",
+      "opens2s_text": "You sound surprised! Start by quickly reviewing your key notes and focus on the most important topics. Make sure you get a good night’s rest and take short breaks to stay sharp. You’ve got this!"
     },
     {
       "emotion": "Sad",
       "valence": -0.75,
       "arousal": -0.65,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I know how much comfort and quiet joy they can bring—especially when life feels heavy. Sometimes tending to a small creature’s needs, even just watching them rest, can remind us we’re not alone in the quiet moments. You’re carrying a lot right now, and it’s okay to let yourself pause, even if just for a little while.\n",
-      "sympatheia_v1_text": "I understand how hard this is, and I’m so sorry you’re feeling this way right now. You’re not alone, and I hope you can find even a small moment of comfort in knowing there are people and pets in this world who care deeply about you.\n",
-      "qwen3omni_text": "I don't have pets, but I love hearing about them! Do you have any furry friends at home?",
-      "opens2s_text": "No, I don't have any pets at home. I'm sorry you're feeling down—would you like to talk about it?"
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "I understand how heavy your heart feels right now—and that’s okay. Let’s take this one small step at a time; you don’t have to carry this alone. I’m here to support you through it.\n",
+      "sympatheia_v1_text": "I understand how heavy your heart feels right now—and that’s okay. Let’s take this one small step at a time; you don’t have to carry this alone. I’m here to support you through it.\n",
+      "qwen3omni_text": "I know exams can be stressful, especially when they're right around the corner. Let's take this one step at a time. First, try to take a few deep breaths to calm your mind. Then, grab a notebook and write down everything you need to review. Focus on the most important topics first—don't try to cover everything. Break your study time into 25-minute chunks with 5-minute breaks in between. And remember, it's okay if you don't know everything. You've got this. Would you like help making a quick study plan?",
+      "opens2s_text": "It’s okay to feel overwhelmed. Start by taking a deep breath and focusing on one task at a time. Review your key notes, prioritize what’s most important, and make sure you’ve got your materials ready. Even small steps can help build confidence. You’ve got this."
     },
     {
       "emotion": "Surprised",
       "valence": 0.1,
       "arousal": 0.8,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "That’s such a thoughtful question—it’s a great reminder of how much joy pets can bring! I don’t have a physical home or pets of my own, but I love learning about the ones people share with me. What made you curious about my \"pet situation\"? I’d love to hear what’s sparking your interest!\n",
-      "sympatheia_v1_text": "That’s a great question! I’m curious—what made you wonder about that?\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical presence. But I love hearing about pets! Do you have any furry friends?",
-      "opens2s_text": "No, I don't have any pets at home."
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "That’s a great question—exams can feel both exciting and a bit unexpected, can’t they? What part of the exam are you most curious about or surprised by?\n",
+      "sympatheia_v1_text": "That’s a great question—exams can feel both exciting and a bit unexpected, can’t they? What part of the exam are you most curious about or surprised by?\n",
+      "qwen3omni_text": "It sounds like you're feeling a bit surprised—maybe you realized the exam is tomorrow and you're not quite ready yet. That's totally okay. Let's take it step by step.\n\nFirst, take a deep breath. You've got this. Here’s how to start:\n\n1. **Prioritize**: Look at your syllabus or notes and identify the most important topics. Focus on what’s likely to be on the exam.\n\n2. **Create a Plan**: Break your prep into 30–60 minute chunks. For example:\n   - 30 mins: Review key concepts\n   - 15 mins: Practice a few questions\n   - 15 mins: Rest or switch subjects\n\n3. **Active Recall**: Instead of just re-reading, try explaining things out loud or writing summaries. This helps your brain remember better.\n\n4. **Stay Calm**: If you feel overwhelmed, pause. Do a quick 5-minute mindfulness exercise or go for a short walk.\n\nYou don’t need to master everything—just do your best with what you can. I believe in you. Let me know what subject you're studying, and I can help you focus on the most important parts.",
+      "opens2s_text": "Whoa, you’re caught off guard, huh? Let’s hit pause. Start by jotting down your syllabus or key topics—scout the terrain. Grab your notes, prioritize what’s urgent, and toss in a few deep breaths. You’ve got this."
     },
     {
       "emotion": "Tired",
       "valence": -0.15,
       "arousal": -0.75,
-      "base_text": "Yes, I have a cat named Whiskers. He's a little furball full of energy and always up for some fun. What about you? Do you have any pets?",
-      "sympatheia_v2_text": "I don’t have pets of my own, but I know how much comfort and quiet company they can bring when life feels heavy. If you need a moment to rest, to just sit with your thoughts without pressure, I’m here. You don’t have to carry everything right now—let yourself pause, even if it’s just for a little while.\n",
-      "sympatheia_v1_text": "I don’t have pets, but I hope you can curl up somewhere cozy and let yourself rest—your body sounds like it’s carrying a heavy weight right now.\n",
-      "qwen3omni_text": "No, I don't have any pets at home. I'm just a digital assistant, so I don't have a physical space to keep pets. But I love hearing about them! Do you have any pets?",
-      "opens2s_text": "No, I don't have any pets at home. I'm sorry you're feeling tired—would you like to rest together?"
+      "base_text": "To prepare for your exam tomorrow, start by going over your notes and highlighting key points. Make flashcards or practice questions if you need extra help. Also, try to get a good night's sleep and have a healthy meal to fuel your brain. Good luck!",
+      "sympatheia_v2_text": "It sounds like you're carrying a heavy weight right now—let your body rest first, even if just for a few minutes. When you’re ready, take it slow: one small step at a time, and remember you don’t have to do it all today.\n",
+      "sympatheia_v1_text": "It sounds like you're carrying a heavy weight right now—let your body rest first, even if just for a few minutes. When you’re ready, take it slow: one small step at a time, and remember you don’t have to do it all today.\n",
+      "qwen3omni_text": "It sounds like you're feeling a bit tired right now. That's completely okay—your body and mind might need some rest before diving into studying. Here’s a gentle way to start preparing:\n\n1. **Take a few deep breaths** – This helps calm your mind and center your focus.\n2. **Pick one small topic** – Instead of trying to cover everything, choose just one thing you can review in 20–30 minutes. It could be a chapter, a set of flashcards, or a few practice questions.\n3. **Use active recall** – Try to explain the concept out loud or write it down without looking. This helps your brain remember it better.\n4. **Stay hydrated and take short breaks** – Every 25–30 minutes, step away for 5 minutes. Stretch, walk around, or just close your eyes.\n\nYou don’t need to do everything tonight. Just one small step will help you feel more in control. And remember, it’s okay to rest when you need to—your well-being matters most. You’ve got this. 💙",
+      "opens2s_text": "You sound surprised! Start by quickly reviewing your key notes and focus on the most important topics. Make sure to get a good night’s rest and take short breaks to stay sharp. You’ve got this!"
     }
   ],
   "emotional": [
@@ -276,123 +276,163 @@
         "arousal": -0.65
       }
     ],
-    "tired_excited": [
+    "anxious_relaxed": [
       {
-        "file": "tired_excited/tired_100.wav",
-        "label": "Tired (100%)",
-        "valence": -0.15,
-        "arousal": -0.75
+        "file": "anxious_relaxed/anxious_100.wav",
+        "label": "Anxious (100%)",
+        "valence": -0.4,
+        "arousal": 0.65
       },
       {
-        "file": "tired_excited/blend_75_25.wav",
-        "label": "75% Tired / 25% Excited",
-        "valence": 0.08,
-        "arousal": -0.34
+        "file": "anxious_relaxed/blend_75_25.wav",
+        "label": "75% Anxious / 25% Relaxed",
+        "valence": -0.24,
+        "arousal": 0.34
       },
       {
-        "file": "tired_excited/blend_50_50.wav",
+        "file": "anxious_relaxed/blend_50_50.wav",
         "label": "50% / 50%",
-        "valence": 0.3,
-        "arousal": 0.07
+        "valence": -0.08,
+        "arousal": 0.03
       },
       {
-        "file": "tired_excited/blend_25_75.wav",
-        "label": "25% Tired / 75% Excited",
-        "valence": 0.53,
-        "arousal": 0.49
+        "file": "anxious_relaxed/blend_25_75.wav",
+        "label": "25% Anxious / 75% Relaxed",
+        "valence": 0.09,
+        "arousal": -0.29
       },
       {
-        "file": "tired_excited/excited_100.wav",
-        "label": "Excited (100%)",
-        "valence": 0.75,
-        "arousal": 0.9
+        "file": "anxious_relaxed/relaxed_100.wav",
+        "label": "Relaxed (100%)",
+        "valence": 0.25,
+        "arousal": -0.6
       }
     ]
   },
-  "dataset": [
-    {
-      "emotion": "Angry",
-      "valence": -0.85,
-      "arousal": 0.85,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Anxious",
-      "valence": -0.4,
-      "arousal": 0.65,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Content",
-      "valence": 0.6,
-      "arousal": -0.2,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Disgusted",
-      "valence": -0.82,
-      "arousal": -0.2,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Excited",
-      "valence": 0.75,
-      "arousal": 0.9,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Frustrated",
-      "valence": -0.8,
-      "arousal": 0.35,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Happy",
-      "valence": 0.85,
-      "arousal": 0.35,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Neutral",
-      "valence": 0.0,
-      "arousal": 0.0,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Relaxed",
-      "valence": 0.25,
-      "arousal": -0.6,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Sad",
-      "valence": -0.75,
-      "arousal": -0.65,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Surprised",
-      "valence": 0.1,
-      "arousal": 0.8,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    },
-    {
-      "emotion": "Tired",
-      "valence": -0.15,
-      "arousal": -0.75,
-      "query_file": "query.wav",
-      "response_file": "response.wav"
-    }
-  ]
+  "dataset": {
+    "emotional": [
+      {
+        "emotion": "Angry",
+        "valence": -0.85,
+        "arousal": 0.85
+      },
+      {
+        "emotion": "Anxious",
+        "valence": -0.4,
+        "arousal": 0.65
+      },
+      {
+        "emotion": "Content",
+        "valence": 0.6,
+        "arousal": -0.2
+      },
+      {
+        "emotion": "Disgusted",
+        "valence": -0.82,
+        "arousal": -0.2
+      },
+      {
+        "emotion": "Excited",
+        "valence": 0.75,
+        "arousal": 0.9
+      },
+      {
+        "emotion": "Frustrated",
+        "valence": -0.8,
+        "arousal": 0.35
+      },
+      {
+        "emotion": "Happy",
+        "valence": 0.85,
+        "arousal": 0.35
+      },
+      {
+        "emotion": "Neutral",
+        "valence": 0.0,
+        "arousal": 0.0
+      },
+      {
+        "emotion": "Relaxed",
+        "valence": 0.25,
+        "arousal": -0.6
+      },
+      {
+        "emotion": "Sad",
+        "valence": -0.75,
+        "arousal": -0.65
+      },
+      {
+        "emotion": "Surprised",
+        "valence": 0.1,
+        "arousal": 0.8
+      },
+      {
+        "emotion": "Tired",
+        "valence": -0.15,
+        "arousal": -0.75
+      }
+    ],
+    "neutral": [
+      {
+        "emotion": "Angry",
+        "valence": -0.85,
+        "arousal": 0.85
+      },
+      {
+        "emotion": "Anxious",
+        "valence": -0.4,
+        "arousal": 0.65
+      },
+      {
+        "emotion": "Content",
+        "valence": 0.6,
+        "arousal": -0.2
+      },
+      {
+        "emotion": "Disgusted",
+        "valence": -0.82,
+        "arousal": -0.2
+      },
+      {
+        "emotion": "Excited",
+        "valence": 0.75,
+        "arousal": 0.9
+      },
+      {
+        "emotion": "Frustrated",
+        "valence": -0.8,
+        "arousal": 0.35
+      },
+      {
+        "emotion": "Happy",
+        "valence": 0.85,
+        "arousal": 0.35
+      },
+      {
+        "emotion": "Neutral",
+        "valence": 0.0,
+        "arousal": 0.0
+      },
+      {
+        "emotion": "Relaxed",
+        "valence": 0.25,
+        "arousal": -0.6
+      },
+      {
+        "emotion": "Sad",
+        "valence": -0.75,
+        "arousal": -0.65
+      },
+      {
+        "emotion": "Surprised",
+        "valence": 0.1,
+        "arousal": 0.8
+      },
+      {
+        "emotion": "Tired",
+        "valence": -0.15,
+        "arousal": -0.75
+      }
+    ]
+  }
 }

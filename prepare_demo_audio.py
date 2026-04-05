@@ -46,6 +46,8 @@ NEUTRAL_19_DIR = Path(
     "/home/sd3705/emo_recog_2025s/sympatheia/experiments"
     "/sympatheia-12emo-v2-20260320-100225/checkpoint-2200/results_demo/neutral_19"
 )
+# Other models generated for the same neutral_19 query
+NEUTRAL_19_OTHER = NEUTRAL_19_DIR / "other_models"
 FIGURES_DIR = Path("/home/sd3705/emo_recog_2025s/sympatheia/figures")
 
 # ---------------------------------------------------------------------------
@@ -78,11 +80,26 @@ def copy(src, dst: Path | str) -> bool:
     return True
 
 
+_PATH_REMAP = {
+    "/engram/naplab/users/sd3705/emo_recog_2025s/sympatheia/": str(REPO_ROOT) + "/",
+    "/share/naplab/users/sd3705/emo_recog_2025s/sympatheia/":  str(REPO_ROOT) + "/",
+}
+
+def _remap(v):
+    """Fix absolute paths written on a different node's mount point."""
+    if not isinstance(v, str):
+        return v
+    for old, new in _PATH_REMAP.items():
+        if v.startswith(old):
+            return new + v[len(old):]
+    return v
+
 def load_manifest(path: Path) -> dict:
     entries = {}
     with open(path) as f:
         for line in f:
             d = json.loads(line)
+            d = {k: _remap(v) for k, v in d.items()}
             entries[d["id"]] = d
     return entries
 
@@ -92,38 +109,37 @@ def load_manifest(path: Path) -> dict:
 # ---------------------------------------------------------------------------
 def process_neutral():
     print("\n=== Neutral eval ===")
-    v2_main = load_manifest(V2_NEUTRAL_EVAL / "manifest.jsonl")
-    v2_qwen = load_manifest(V2_NEUTRAL_EVAL / "manifest_qwen3omni.jsonl")
-    v2_open = load_manifest(V2_NEUTRAL_EVAL / "manifest_opens2s.jsonl")
-    v1_main = load_manifest(V1_NEUTRAL_EVAL / "manifest.jsonl")
+    # All models now use the same neutral_19 query (p2v2_Neutral_00019.wav)
+    other = load_manifest(NEUTRAL_19_OTHER / "manifest.jsonl")
+    qwen  = load_manifest(NEUTRAL_19_OTHER / "manifest_qwen3omni.jsonl")
+    open_ = load_manifest(NEUTRAL_19_OTHER / "manifest_opens2s.jsonl")
 
     records = []
     for emo in EMOTIONS:
         eid = f"{emo.lower()}_00"
-        m2 = v2_main.get(eid)
-        m1 = v1_main.get(eid, {})
-        q  = v2_qwen.get(eid, {})
-        o  = v2_open.get(eid, {})
-        if not m2:
-            print(f"  [SKIP] {eid} not in v2 manifest")
+        m  = other.get(eid)
+        q  = qwen.get(eid, {})
+        o  = open_.get(eid, {})
+        if not m:
+            print(f"  [SKIP] {eid} not in other_models manifest")
             continue
 
         pfx = f"neutral/{emo.lower()}"
-        v, a = m2["valence"], m2["arousal"]
-        copy(NEUTRAL_19_DIR / "input_audio.wav",                                     AUDIO_OUT / pfx / "query.wav")
-        copy(m2.get("base_response"),                                                AUDIO_OUT / pfx / "base.wav")
-        copy(NEUTRAL_19_DIR / f"output_{emo.lower()}_v{v:.2f}_a{a:.2f}.wav",        AUDIO_OUT / pfx / "sympatheia_v2.wav")
-        copy(m1.get("finetuned_va_response"),                                        AUDIO_OUT / pfx / "sympatheia_v1.wav")
-        copy(q.get("qwen3omni_response"),                                            AUDIO_OUT / pfx / "qwen3omni.wav")
-        copy(o.get("opens2s_response"),                                              AUDIO_OUT / pfx / "opens2s.wav")
+        v, a = m["valence"], m["arousal"]
+        copy(NEUTRAL_19_DIR / "input_audio.wav",                             AUDIO_OUT / pfx / "query.wav")
+        copy(m.get("base_response"),                                         AUDIO_OUT / pfx / "base.wav")
+        copy(NEUTRAL_19_DIR / f"output_{emo.lower()}_v{v:.2f}_a{a:.2f}.wav",AUDIO_OUT / pfx / "sympatheia_v2.wav")
+        copy(m.get("finetuned_va_response"),                                 AUDIO_OUT / pfx / "sympatheia_v1.wav")
+        copy(q.get("qwen3omni_response"),                                    AUDIO_OUT / pfx / "qwen3omni.wav")
+        copy(o.get("opens2s_response"),                                      AUDIO_OUT / pfx / "opens2s.wav")
 
         records.append({
             "emotion":            emo,
-            "valence":            m2["valence"],
-            "arousal":            m2["arousal"],
-            "base_text":          m2.get("base_text", ""),
-            "sympatheia_v2_text": m2.get("finetuned_va_text", ""),
-            "sympatheia_v1_text": m1.get("finetuned_va_text", ""),
+            "valence":            v,
+            "arousal":            a,
+            "base_text":          m.get("base_text", ""),
+            "sympatheia_v2_text": m.get("finetuned_va_text", ""),
+            "sympatheia_v1_text": m.get("finetuned_va_text", ""),
             "qwen3omni_text":     q.get("qwen3omni_text", ""),
             "opens2s_text":       o.get("opens2s_text", ""),
         })
