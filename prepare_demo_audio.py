@@ -105,87 +105,142 @@ def load_manifest(path: Path) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Neutral comparison
+# Neutral comparison — two examples per emotion
+#   Ex1: p2v2_Neutral_00019.wav (neutral_19, all models from other_models/)
+#   Ex2: p2v2_Neutral_00025.wav (_00 from original full eval manifests)
 # ---------------------------------------------------------------------------
 def process_neutral():
     print("\n=== Neutral eval ===")
-    # All models now use the same neutral_19 query (p2v2_Neutral_00019.wav)
-    other = load_manifest(NEUTRAL_19_OTHER / "manifest.jsonl")
-    qwen  = load_manifest(NEUTRAL_19_OTHER / "manifest_qwen3omni.jsonl")
-    open_ = load_manifest(NEUTRAL_19_OTHER / "manifest_opens2s.jsonl")
+    # Ex1 sources — neutral_19
+    oth   = load_manifest(NEUTRAL_19_OTHER / "manifest.jsonl")
+    qwen1 = load_manifest(NEUTRAL_19_OTHER / "manifest_qwen3omni.jsonl")
+    open1 = load_manifest(NEUTRAL_19_OTHER / "manifest_opens2s.jsonl")
+    # Ex2 sources — original full eval (_00 = p2v2_Neutral_00025.wav)
+    v2m   = load_manifest(V2_NEUTRAL_EVAL / "manifest.jsonl")
+    v2q   = load_manifest(V2_NEUTRAL_EVAL / "manifest_qwen3omni.jsonl")
+    v2o   = load_manifest(V2_NEUTRAL_EVAL / "manifest_opens2s.jsonl")
+    v1m   = load_manifest(V1_NEUTRAL_EVAL / "manifest.jsonl")
 
     records = []
     for emo in EMOTIONS:
         eid = f"{emo.lower()}_00"
-        m  = other.get(eid)
-        q  = qwen.get(eid, {})
-        o  = open_.get(eid, {})
-        if not m:
-            print(f"  [SKIP] {eid} not in other_models manifest")
+        m1  = oth.get(eid)
+        q1  = qwen1.get(eid, {})
+        o1  = open1.get(eid, {})
+        m2  = v2m.get(eid, {})
+        q2  = v2q.get(eid, {})
+        o2  = v2o.get(eid, {})
+        mv1 = v1m.get(eid, {})
+        if not m1:
+            print(f"  [SKIP] {eid} not in neutral_19 manifest")
             continue
 
-        pfx = f"neutral/{emo.lower()}"
-        v, a = m["valence"], m["arousal"]
-        copy(NEUTRAL_19_DIR / "input_audio.wav",                             AUDIO_OUT / pfx / "query.wav")
-        copy(m.get("base_response"),                                         AUDIO_OUT / pfx / "base.wav")
-        copy(NEUTRAL_19_DIR / f"output_{emo.lower()}_v{v:.2f}_a{a:.2f}.wav",AUDIO_OUT / pfx / "sympatheia_v2.wav")
-        copy(m.get("finetuned_va_response"),                                 AUDIO_OUT / pfx / "sympatheia_v1.wav")
-        copy(q.get("qwen3omni_response"),                                    AUDIO_OUT / pfx / "qwen3omni.wav")
-        copy(o.get("opens2s_response"),                                      AUDIO_OUT / pfx / "opens2s.wav")
+        v, a = m1["valence"], m1["arousal"]
+        base = f"neutral/{emo.lower()}"
+
+        # Ex1: neutral_19
+        p1 = f"{base}/ex1"
+        copy(NEUTRAL_19_DIR / "input_audio.wav",                              AUDIO_OUT / p1 / "query.wav")
+        copy(m1.get("base_response"),                                          AUDIO_OUT / p1 / "base.wav")
+        copy(NEUTRAL_19_DIR / f"output_{emo.lower()}_v{v:.2f}_a{a:.2f}.wav",  AUDIO_OUT / p1 / "sympatheia_v2.wav")
+        copy(m1.get("finetuned_va_response"),                                  AUDIO_OUT / p1 / "sympatheia_v1.wav")
+        copy(q1.get("qwen3omni_response"),                                     AUDIO_OUT / p1 / "qwen3omni.wav")
+        copy(o1.get("opens2s_response"),                                       AUDIO_OUT / p1 / "opens2s.wav")
+
+        # Ex2: p2v2_Neutral_00025 (from original eval manifests)
+        p2 = f"{base}/ex2"
+        copy(m2.get("query_audio"),            AUDIO_OUT / p2 / "query.wav")
+        copy(m2.get("base_response"),          AUDIO_OUT / p2 / "base.wav")
+        copy(m2.get("finetuned_va_response"),  AUDIO_OUT / p2 / "sympatheia_v2.wav")
+        copy(mv1.get("finetuned_va_response"), AUDIO_OUT / p2 / "sympatheia_v1.wav")
+        copy(q2.get("qwen3omni_response"),     AUDIO_OUT / p2 / "qwen3omni.wav")
+        copy(o2.get("opens2s_response"),       AUDIO_OUT / p2 / "opens2s.wav")
 
         records.append({
-            "emotion":            emo,
-            "valence":            v,
-            "arousal":            a,
-            "base_text":          m.get("base_text", ""),
-            "sympatheia_v2_text": m.get("finetuned_va_text", ""),
-            "sympatheia_v1_text": m.get("finetuned_va_text", ""),
-            "qwen3omni_text":     q.get("qwen3omni_text", ""),
-            "opens2s_text":       o.get("opens2s_text", ""),
+            "emotion": emo, "valence": v, "arousal": a,
+            "ex1": {
+                "base_text":          m1.get("base_text", ""),
+                "sympatheia_v2_text": m1.get("finetuned_va_text", ""),
+                "sympatheia_v1_text": m1.get("finetuned_va_text", ""),
+                "qwen3omni_text":     q1.get("qwen3omni_text", ""),
+                "opens2s_text":       o1.get("opens2s_text", ""),
+            },
+            "ex2": {
+                "base_text":          m2.get("base_text", ""),
+                "sympatheia_v2_text": m2.get("finetuned_va_text", ""),
+                "sympatheia_v1_text": mv1.get("finetuned_va_text", ""),
+                "qwen3omni_text":     q2.get("qwen3omni_text", ""),
+                "opens2s_text":       o2.get("opens2s_text", ""),
+            },
         })
     return records
 
 
 # ---------------------------------------------------------------------------
-# Emotional comparison — all models use audio only (no VA in system prompt)
-# For Sympatheia we use finetuned_na so it is equivalent to other models.
+# Emotional comparison — two examples per emotion
+#   Ex1: _00 query (current)
+#   Ex2: _01 query (random second sample)
+# All models: audio only / no VA in system prompt (finetuned_na for Sympatheia)
 # ---------------------------------------------------------------------------
 def process_emotional():
     print("\n=== Emotional eval (no-VA / audio only) ===")
-    v2_main = load_manifest(V2_EMOTIONAL_EVAL / "manifest.jsonl")
-    v2_qwen = load_manifest(V2_EMOTIONAL_EVAL / "manifest_qwen3omni.jsonl")
-    v2_open = load_manifest(V2_EMOTIONAL_EVAL / "manifest_opens2s.jsonl")
-    v1_main = load_manifest(V1_EMOTIONAL_EVAL / "manifest.jsonl")
+    v2m = load_manifest(V2_EMOTIONAL_EVAL / "manifest.jsonl")
+    v2q = load_manifest(V2_EMOTIONAL_EVAL / "manifest_qwen3omni.jsonl")
+    v2o = load_manifest(V2_EMOTIONAL_EVAL / "manifest_opens2s.jsonl")
+    v1m = load_manifest(V1_EMOTIONAL_EVAL / "manifest.jsonl")
 
     records = []
     for emo in EMOTIONS:
-        eid = f"{emo.lower()}_00"
-        m2 = v2_main.get(eid)
-        m1 = v1_main.get(eid, {})
-        q  = v2_qwen.get(eid, {})
-        o  = v2_open.get(eid, {})
-        if not m2:
-            print(f"  [SKIP] {eid} not in v2 manifest")
+        eid1 = f"{emo.lower()}_00"
+        eid2 = f"{emo.lower()}_01"
+        m2_1 = v2m.get(eid1)
+        m2_2 = v2m.get(eid2, {})
+        m1_1 = v1m.get(eid1, {})
+        m1_2 = v1m.get(eid2, {})
+        q1   = v2q.get(eid1, {})
+        q2   = v2q.get(eid2, {})
+        o1   = v2o.get(eid1, {})
+        o2   = v2o.get(eid2, {})
+        if not m2_1:
+            print(f"  [SKIP] {eid1} not in v2 manifest")
             continue
 
-        pfx = f"emotional/{emo.lower()}"
-        copy(m2.get("query_audio"),            AUDIO_OUT / pfx / "query.wav")
-        copy(m2.get("base_response"),          AUDIO_OUT / pfx / "base.wav")
-        # Use finetuned_na (no VA) for Sympatheia — same condition as other models
-        copy(m2.get("finetuned_na_response"),  AUDIO_OUT / pfx / "sympatheia_v2.wav")
-        copy(m1.get("finetuned_na_response"),  AUDIO_OUT / pfx / "sympatheia_v1.wav")
-        copy(q.get("qwen3omni_response"),      AUDIO_OUT / pfx / "qwen3omni.wav")
-        copy(o.get("opens2s_response"),        AUDIO_OUT / pfx / "opens2s.wav")
+        base = f"emotional/{emo.lower()}"
+
+        # Ex1: _00
+        p1 = f"{base}/ex1"
+        copy(m2_1.get("query_audio"),           AUDIO_OUT / p1 / "query.wav")
+        copy(m2_1.get("base_response"),         AUDIO_OUT / p1 / "base.wav")
+        copy(m2_1.get("finetuned_na_response"), AUDIO_OUT / p1 / "sympatheia_v2.wav")
+        copy(m1_1.get("finetuned_na_response"), AUDIO_OUT / p1 / "sympatheia_v1.wav")
+        copy(q1.get("qwen3omni_response"),      AUDIO_OUT / p1 / "qwen3omni.wav")
+        copy(o1.get("opens2s_response"),        AUDIO_OUT / p1 / "opens2s.wav")
+
+        # Ex2: _01
+        p2 = f"{base}/ex2"
+        copy(m2_2.get("query_audio"),           AUDIO_OUT / p2 / "query.wav")
+        copy(m2_2.get("base_response"),         AUDIO_OUT / p2 / "base.wav")
+        copy(m2_2.get("finetuned_na_response"), AUDIO_OUT / p2 / "sympatheia_v2.wav")
+        copy(m1_2.get("finetuned_na_response"), AUDIO_OUT / p2 / "sympatheia_v1.wav")
+        copy(q2.get("qwen3omni_response"),      AUDIO_OUT / p2 / "qwen3omni.wav")
+        copy(o2.get("opens2s_response"),        AUDIO_OUT / p2 / "opens2s.wav")
 
         records.append({
-            "emotion":            emo,
-            "valence":            m2["valence"],
-            "arousal":            m2["arousal"],
-            "base_text":          m2.get("base_text", ""),
-            "sympatheia_v2_text": m2.get("finetuned_na_text", ""),
-            "sympatheia_v1_text": m1.get("finetuned_na_text", ""),
-            "qwen3omni_text":     q.get("qwen3omni_text", ""),
-            "opens2s_text":       o.get("opens2s_text", ""),
+            "emotion": emo, "valence": m2_1["valence"], "arousal": m2_1["arousal"],
+            "ex1": {
+                "base_text":          m2_1.get("base_text", ""),
+                "sympatheia_v2_text": m2_1.get("finetuned_na_text", ""),
+                "sympatheia_v1_text": m1_1.get("finetuned_na_text", ""),
+                "qwen3omni_text":     q1.get("qwen3omni_text", ""),
+                "opens2s_text":       o1.get("opens2s_text", ""),
+            },
+            "ex2": {
+                "base_text":          m2_2.get("base_text", ""),
+                "sympatheia_v2_text": m2_2.get("finetuned_na_text", ""),
+                "sympatheia_v1_text": m1_2.get("finetuned_na_text", ""),
+                "qwen3omni_text":     q2.get("qwen3omni_text", ""),
+                "opens2s_text":       o2.get("opens2s_text", ""),
+            },
         })
     return records
 

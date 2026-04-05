@@ -279,6 +279,31 @@ section:last-of-type { border-bottom: none; }
 .emotion-panel { display: none; }
 .emotion-panel.active { display: block; }
 
+/* Example sub-tabs (within each emotion panel) */
+.example-tabs {
+  display: flex;
+  gap: .4rem;
+  margin-bottom: 1rem;
+}
+
+.extab-btn {
+  padding: .25rem .7rem;
+  border-radius: 16px;
+  border: 1.5px solid var(--gray-10);
+  background: var(--white);
+  color: var(--gray-60);
+  cursor: pointer;
+  font-size: .78rem;
+  font-weight: 500;
+  transition: all .15s;
+}
+
+.extab-btn:hover { border-color: var(--teal); color: var(--teal); }
+.extab-btn.active { background: var(--teal); border-color: var(--teal); color: var(--white); }
+
+.example-pane { display: none; }
+.example-pane.active { display: block; }
+
 .panel-header {
   display: flex;
   align-items: center;
@@ -427,19 +452,19 @@ details.transcript summary::-webkit-details-marker { display: none; }
   height: 6px;
 }
 
-/* Happy → Sad: green → blue */
-.interp-steps--happy-sad .interp-card:nth-child(1) .interp-bar { background: #1fa87c; }
-.interp-steps--happy-sad .interp-card:nth-child(2) .interp-bar { background: linear-gradient(90deg, #1fa87c, #4facfe); }
-.interp-steps--happy-sad .interp-card:nth-child(3) .interp-bar { background: linear-gradient(90deg, #1fa87c, #4facfe); }
-.interp-steps--happy-sad .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #1fa87c, #4facfe); }
-.interp-steps--happy-sad .interp-card:nth-child(5) .interp-bar { background: #4facfe; }
+/* Happy → Sad: yellow → blue (emotion colors from dataset section) */
+.interp-steps--happy-sad .interp-card:nth-child(1) .interp-bar { background: #f5d800; }
+.interp-steps--happy-sad .interp-card:nth-child(2) .interp-bar { background: linear-gradient(90deg, #f5d800, #2980b9); }
+.interp-steps--happy-sad .interp-card:nth-child(3) .interp-bar { background: linear-gradient(90deg, #f5d800, #2980b9); }
+.interp-steps--happy-sad .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #f5d800, #2980b9); }
+.interp-steps--happy-sad .interp-card:nth-child(5) .interp-bar { background: #2980b9; }
 
-/* Anxious → Relaxed: orange → cyan */
-.interp-steps--anxious-relaxed .interp-card:nth-child(1) .interp-bar { background: #f97316; }
-.interp-steps--anxious-relaxed .interp-card:nth-child(2) .interp-bar { background: linear-gradient(90deg, #f97316, #22d3ee); }
-.interp-steps--anxious-relaxed .interp-card:nth-child(3) .interp-bar { background: linear-gradient(90deg, #f97316, #22d3ee); }
-.interp-steps--anxious-relaxed .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #f97316, #22d3ee); }
-.interp-steps--anxious-relaxed .interp-card:nth-child(5) .interp-bar { background: #22d3ee; }
+/* Anxious → Relaxed: purple → teal (emotion colors from dataset section) */
+.interp-steps--anxious-relaxed .interp-card:nth-child(1) .interp-bar { background: #7d3c98; }
+.interp-steps--anxious-relaxed .interp-card:nth-child(2) .interp-bar { background: linear-gradient(90deg, #7d3c98, #1a9e8a); }
+.interp-steps--anxious-relaxed .interp-card:nth-child(3) .interp-bar { background: linear-gradient(90deg, #7d3c98, #1a9e8a); }
+.interp-steps--anxious-relaxed .interp-card:nth-child(4) .interp-bar { background: linear-gradient(90deg, #7d3c98, #1a9e8a); }
+.interp-steps--anxious-relaxed .interp-card:nth-child(5) .interp-bar { background: #1a9e8a; }
 
 .interp-label {
   font-size: .78rem;
@@ -527,7 +552,7 @@ details.transcript summary::-webkit-details-marker { display: none; }
 .dataset-card.emo-disgusted  .dataset-card-header { background: #5b2c6f; }
 .dataset-card.emo-excited    .dataset-card-header { background: #e67e22; }
 .dataset-card.emo-frustrated .dataset-card-header { background: #c0737a; }
-.dataset-card.emo-happy      .dataset-card-header { background: #d4a017; }
+.dataset-card.emo-happy      .dataset-card-header { background: #f5d800; }
 .dataset-card.emo-neutral    .dataset-card-header { background: #7f8c8d; }
 .dataset-card.emo-relaxed    .dataset-card-header { background: #1a9e8a; }
 .dataset-card.emo-sad        .dataset-card-header { background: #2980b9; }
