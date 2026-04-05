@@ -189,10 +189,13 @@ def process_emotional():
     v2o = load_manifest(V2_EMOTIONAL_EVAL / "manifest_opens2s.jsonl")
     v1m = load_manifest(V1_EMOTIONAL_EVAL / "manifest.jsonl")
 
+    # Per-emotion override for ex2 index (default _01, override where _01 is incomplete)
+    EX2_IDX = {"Angry": "02"}
+
     records = []
     for emo in EMOTIONS:
         eid1 = f"{emo.lower()}_00"
-        eid2 = f"{emo.lower()}_01"
+        eid2 = f"{emo.lower()}_{EX2_IDX.get(emo, '01')}"
         m2_1 = v2m.get(eid1)
         m2_2 = v2m.get(eid2, {})
         m1_1 = v1m.get(eid1, {})
