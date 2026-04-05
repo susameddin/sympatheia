@@ -149,6 +149,10 @@
     <div class="dataset-grid" id="dataset-grid-emotional"></div>
 
     <div class="dataset-split-label" style="margin-top:2.5rem;">Neutral Split</div>
+    <div class="dataset-shared-query">
+      <span class="audio-row-label">Query (shared)</span>
+      <audio controls src="audio/dataset/neutral/query.wav"></audio>
+    </div>
     <div class="dataset-grid" id="dataset-grid-neutral"></div>
   </div>
 </section>
@@ -329,14 +333,14 @@ const INTERP_SETS = [
     ],
   },
   {
-    id: "tired-excited",
-    from: "Tired", to: "Excited",
+    id: "anxious-relaxed",
+    from: "Anxious", to: "Relaxed",
     steps: [
-      { file: "tired_excited/tired_100.wav",   label: "Tired (100%)",           valence: -0.15, arousal: -0.75 },
-      { file: "tired_excited/blend_75_25.wav", label: "75% Tired / 25% Excited", valence:  0.08, arousal: -0.34 },
-      { file: "tired_excited/blend_50_50.wav", label: "50% / 50%",               valence:  0.30, arousal:  0.07 },
-      { file: "tired_excited/blend_25_75.wav", label: "25% Tired / 75% Excited", valence:  0.53, arousal:  0.49 },
-      { file: "tired_excited/excited_100.wav", label: "Excited (100%)",           valence:  0.75, arousal:  0.90 },
+      { file: "anxious_relaxed/anxious_100.wav",  label: "Anxious (100%)",             valence: -0.40, arousal:  0.65 },
+      { file: "anxious_relaxed/blend_75_25.wav",  label: "75% Anxious / 25% Relaxed",  valence: -0.24, arousal:  0.34 },
+      { file: "anxious_relaxed/blend_50_50.wav",  label: "50% / 50%",                  valence: -0.08, arousal:  0.03 },
+      { file: "anxious_relaxed/blend_25_75.wav",  label: "25% Anxious / 75% Relaxed",  valence:  0.09, arousal: -0.29 },
+      { file: "anxious_relaxed/relaxed_100.wav",  label: "Relaxed (100%)",              valence:  0.25, arousal: -0.60 },
     ],
   },
 ];
@@ -520,11 +524,28 @@ buildDatasetGrid(
   key => `audio/dataset/emotional/${key}/query.wav`,
   key => `audio/dataset/emotional/${key}/response.wav`
 );
-buildDatasetGrid(
-  "dataset-grid-neutral",
-  key => `audio/dataset/neutral/${key}/query.wav`,
-  key => `audio/dataset/neutral/${key}/response.wav`
-);
+// Neutral split: response-only cards (shared query shown above the grid)
+EMOTIONS_DATA.forEach(emo => {
+  const key = emo.name.toLowerCase();
+  const grid = document.getElementById("dataset-grid-neutral");
+  const card = document.createElement("div");
+  card.className = `dataset-card emo-${key}`;
+  card.innerHTML = `
+    <div class="dataset-card-header">
+      ${emo.name}
+      <span style="font-weight:400;font-size:.75rem;opacity:.7;font-family:var(--mono)">
+        V:${fmtVA(emo.valence)} A:${fmtVA(emo.arousal)}
+      </span>
+    </div>
+    <div class="dataset-card-body">
+      <div class="audio-row">
+        <span class="audio-row-label">Response</span>
+        <audio controls src="audio/dataset/neutral/${key}/response.wav"></audio>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+});
 
 // ---------------------------------------------------------------------------
 // Score tables

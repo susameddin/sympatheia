@@ -486,6 +486,18 @@ details.transcript summary::-webkit-details-marker { display: none; }
   padding-bottom: .4rem;
   border-bottom: 2px solid var(--gray-20);
 }
+.dataset-shared-query {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: .75rem 1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--gray-10);
+  border-radius: var(--radius);
+}
+.dataset-shared-query audio { flex: 1; height: 36px; }
+
 .dataset-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

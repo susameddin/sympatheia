@@ -78,6 +78,12 @@ def parse_args():
         default=42,
         help="Random seed for sampling eval audio in compare mode (default: 42)",
     )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help="Directory to save outputs. Defaults to <checkpoint>/results_12emo/",
+    )
     return parser.parse_args()
 
 
@@ -113,23 +119,6 @@ def build_checkpoint_paths(args):
         sys.exit(1)
 
     return paths
-
-
-# Opposite emotion mapping — partner is the emotion farthest away in VA space
-OPPOSITE_EMOTIONS = {
-    "sad":        "excited",    # (-0.75,-0.65) ↔ ( 0.75, 0.90)
-    "excited":    "sad",        # ( 0.75, 0.90) ↔ (-0.75,-0.65)
-    "frustrated": "content",    # (-0.80, 0.35) → Content is farthest
-    "neutral":    "angry",      # ( 0.00, 0.00) → Angry is farthest
-    "happy":      "sad",        # ( 0.85, 0.35) → Sad is farthest
-    "angry":      "relaxed",    # (-0.85, 0.85) → Relaxed is farthest
-    "anxious":    "tired",      # (-0.40, 0.65) → Tired is farthest
-    "relaxed":    "angry",      # ( 0.25,-0.60) → Angry is farthest
-    "surprised":  "sad",        # ( 0.10, 0.80) → Sad is farthest
-    "disgusted":  "happy",      # (-0.82,-0.20) → Happy is farthest
-    "tired":      "excited",    # (-0.15,-0.75) → Excited is farthest
-    "content":    "frustrated", # ( 0.60,-0.20) → Frustrated is farthest
-}
 
 
 # Helper function to check if token is audio
@@ -174,95 +163,35 @@ def build_va_conditions():
     # 2. Interpolations between emotion pairs
     print("\n=== Emotion Interpolations ===")
 
-    # Happy <-> Sad (opposite valence)
-    for t, label in [(0.25, "happy_75_sad_25"), (0.50, "happy_sad_mid"), (0.75, "happy_25_sad_75")]:
+    # Happy <-> Sad (3 intermediate steps; endpoints already in anchors)
+    print("  Happy <-> Sad:")
+    for t, label in [
+        (0.25, "happy_75_sad_25"),
+        (0.50, "happy_sad_mid"),
+        (0.75, "happy_25_sad_75"),
+    ]:
         v, a = interpolate_va(emotion_anchors["happy"], emotion_anchors["sad"], t)
         va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
+        print(f"    {label}: V={v:.2f}, A={a:.2f}")
 
-    # Excited <-> Relaxed (high arousal <-> low arousal, both positive)
-    for t, label in [(0.25, "excited_75_relaxed_25"), (0.50, "excited_relaxed_mid"), (0.75, "excited_25_relaxed_75")]:
-        v, a = interpolate_va(emotion_anchors["excited"], emotion_anchors["relaxed"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Angry <-> Neutral (negative high arousal -> center)
-    for t, label in [(0.33, "angry_67_neutral_33"), (0.67, "angry_33_neutral_67")]:
-        v, a = interpolate_va(emotion_anchors["angry"], emotion_anchors["neutral"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Anxious <-> Relaxed
-    for t, label in [(0.50, "anxious_relaxed_mid")]:
+    # Anxious <-> Relaxed (3 intermediate steps; endpoints already in anchors)
+    print("  Anxious <-> Relaxed:")
+    for t, label in [
+        (0.25, "anxious_75_relaxed_25"),
+        (0.50, "anxious_relaxed_mid"),
+        (0.75, "anxious_25_relaxed_75"),
+    ]:
         v, a = interpolate_va(emotion_anchors["anxious"], emotion_anchors["relaxed"], t)
         va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
+        print(f"    {label}: V={v:.2f}, A={a:.2f}")
 
-    # Surprised <-> Neutral
-    for t, label in [(0.50, "surprised_neutral_mid")]:
-        v, a = interpolate_va(emotion_anchors["surprised"], emotion_anchors["neutral"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Frustrated <-> Happy (negative to positive, both mid arousal)
-    for t, label in [(0.50, "frustrated_happy_mid")]:
-        v, a = interpolate_va(emotion_anchors["frustrated"], emotion_anchors["happy"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Disgusted <-> Neutral (negative mid-arousal -> center)
-    for t, label in [(0.33, "disgusted_67_neutral_33"), (0.67, "disgusted_33_neutral_67")]:
-        v, a = interpolate_va(emotion_anchors["disgusted"], emotion_anchors["neutral"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Tired <-> Excited (low energy <-> high energy)
-    for t, label in [(0.25, "tired_75_excited_25"), (0.50, "tired_excited_mid"), (0.75, "tired_25_excited_75")]:
-        v, a = interpolate_va(emotion_anchors["tired"], emotion_anchors["excited"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Disgusted <-> Angry (both very negative, different arousal)
-    for t, label in [(0.50, "disgusted_angry_mid")]:
-        v, a = interpolate_va(emotion_anchors["disgusted"], emotion_anchors["angry"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Tired <-> Relaxed (both low arousal, valence shift)
-    for t, label in [(0.50, "tired_relaxed_mid")]:
-        v, a = interpolate_va(emotion_anchors["tired"], emotion_anchors["relaxed"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # Tired <-> Sad (both low arousal and negative, different intensity)
-    for t, label in [(0.50, "tired_sad_mid")]:
-        v, a = interpolate_va(emotion_anchors["tired"], emotion_anchors["sad"], t)
-        va_conditions.append((label, v, a))
-        print(f"  {label}: V={v:.2f}, A={a:.2f}")
-
-    # 3. Custom VA space exploration (corners and edges)
-    print("\n=== Custom VA Space Points ===")
-    custom_points = [
-        ("extreme_positive_high", 1.0, 1.0),
-        ("extreme_positive_low", 1.0, -1.0),
-        ("extreme_negative_high", -1.0, 1.0),
-        ("extreme_negative_low", -1.0, -1.0),
-        ("positive_calm", 0.50, 0.00),
-        ("negative_calm", -0.50, 0.00),
-        ("neutral_energetic", 0.00, 0.70),
-        ("neutral_lethargic", 0.00, -0.70),
-    ]
-    for name, v, a in custom_points:
-        va_conditions.append((name, v, a))
-        print(f"  {name}: V={v:.2f}, A={a:.2f}")
-
-    # 4. N/A condition — no valence/arousal provided, model must infer from audio
+    # 3. N/A condition — no valence/arousal provided, model must infer from audio
     print("\n=== No Emotional Cue (N/A) ===")
     va_conditions.append(("na", None, None))
     print("  na: system prompt = 'User emotion N/A'")
 
     print(f"\n=== Total conditions: {len(va_conditions)} ===")
-    return va_conditions, emotion_anchors, custom_points
+    return va_conditions, emotion_anchors
 
 
 def run_inference_for_checkpoint(
@@ -273,6 +202,7 @@ def run_inference_for_checkpoint(
     glm_tokenizer,
     glm_speech_decoder,
     audio_0_id,
+    output_dir=None,
 ):
     """Load a checkpoint, run all VA conditions, save results, then unload."""
     ckpt_name = checkpoint_path.name
@@ -293,7 +223,7 @@ def run_inference_for_checkpoint(
     print(f"Model loaded in {load_time:.1f}s")
 
     # Create results folder
-    results_dir = checkpoint_path / "results_12emo"
+    results_dir = Path(output_dir) if output_dir else checkpoint_path / "results_12emo"
     results_dir.mkdir(parents=True, exist_ok=True)
 
     # Save input audio
@@ -398,14 +328,14 @@ def run_emotion_comparison(
     glm_speech_decoder,
     audio_0_id,
     seed=42,
+    output_dir=None,
 ):
     """
     For each of the 12 emotions:
       - Sample one query wav from eval_audio_dir/{emotion}_query/
-      - Generate three responses:
+      - Generate two responses:
           correct  — system prompt with the emotion's own VA values
           na       — system prompt with 'User emotion N/A'
-          opposite — system prompt with the farthest-away emotion's VA values
       - Save all outputs under results_12emo/emotion_comparison/{emotion}/
     """
     rng = random.Random(seed)
@@ -425,7 +355,8 @@ def run_emotion_comparison(
     )
     print(f"Model loaded in {time.time() - load_start:.1f}s")
 
-    results_dir = checkpoint_path / "results_12emo" / "emotion_comparison"
+    base_dir = Path(output_dir) if output_dir else checkpoint_path / "results_12emo"
+    results_dir = base_dir / "emotion_comparison"
     results_dir.mkdir(parents=True, exist_ok=True)
 
     ckpt_start = time.time()
@@ -442,7 +373,7 @@ def run_emotion_comparison(
         wav_files = sorted(query_dir.glob("*.wav"))
         if not wav_files:
             print(f"  WARNING: no wav files found in {query_dir}, skipping")
-            failed_count += 3
+            failed_count += 2
             continue
 
         chosen_wav = rng.choice(wav_files)
@@ -457,10 +388,6 @@ def run_emotion_comparison(
         emotion_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(chosen_wav, emotion_dir / "input_audio.wav")
 
-        # ── Opposite emotion ────────────────────────────────────────────────
-        opp_name = OPPOSITE_EMOTIONS[emotion]
-        opp_v, opp_a = emotion_anchors[opp_name]
-
         conditions = [
             (
                 f"correct_{emotion}_v{valence:.2f}_a{arousal:.2f}",
@@ -469,10 +396,6 @@ def run_emotion_comparison(
             (
                 "na",
                 "Please respond in English. User emotion N/A",
-            ),
-            (
-                f"opposite_{opp_name}_v{opp_v:.2f}_a{opp_a:.2f}",
-                f"Please respond in English. User emotion (valence={opp_v:.2f}, arousal={opp_a:.2f})",
             ),
         ]
 
@@ -546,7 +469,7 @@ def main():
     user_input = "".join([f"<|audio_{x}|>" for x in audio_tokens])
 
     # Build VA conditions (always needed for emotion_anchors)
-    va_conditions, emotion_anchors, custom_points = build_va_conditions()
+    va_conditions, emotion_anchors = build_va_conditions()
 
     # Run inference for each checkpoint
     overall_start = time.time()
@@ -563,6 +486,7 @@ def main():
                 glm_speech_decoder=glm_speech_decoder,
                 audio_0_id=audio_0_id,
                 seed=args.compare_seed,
+                output_dir=args.output_dir,
             )
         else:
             output_count, failed_count, ckpt_time = run_inference_for_checkpoint(
@@ -573,6 +497,7 @@ def main():
                 glm_tokenizer=glm_tokenizer,
                 glm_speech_decoder=glm_speech_decoder,
                 audio_0_id=audio_0_id,
+                output_dir=args.output_dir,
             )
         all_results.append((ckpt_path.name, output_count, failed_count, ckpt_time))
 
