@@ -16,9 +16,9 @@ __pycache__/
 **/cache/
 
 # Training artifacts
-experiments/
-results*/
-wandb/
+src/experiments/
+src/wandb/
+src/glm-4-voice-decoder/
 core.*
 
 # Audio files (exclude everywhere except docs/audio/)
@@ -33,13 +33,25 @@ core.*
 .DS_Store
 ._.DS_Store
 
+# Gradio runtime cache
+.gradio/
+
 # Logs, outputs, figures
-logs/
-figures/
-new_samples/
+src/figures/*.pdf
+src/figures/*.png
+src/figures/*.svg
 
 # Retired scripts
-dataset_creation/retired/
+src/dataset_creation/retired/
+src/retired/
+src/integration/retired/
+src/integration/experiment_face/
+src/eval/retired/
+src/eval/generate_responses/retired/
+src/eval/generate_responses/sensing/retired/
+
+# Pickle caches
+*.pkl
 
 # IDE
 .vscode/

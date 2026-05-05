@@ -1,122 +1,311 @@
-# Sympatheia
+# Sympatheia: Emotionally Adaptive Voice Assistant with Continuous Affect Conditioning
 
-Fine-tuning GLM-4-Voice with continuous Valence-Arousal (VA) conditioning for emotion-controlled speech-to-speech generation across 12 emotions, trained on the Sympatheia18K dataset.
+> *Submitted to NeurIPS 2026. Anonymous submission — code, demo, and dataset links use anonymized identifiers.*
 
-## Emotions
+[[Paper]](sympatheia_neurips_2026.pdf) &nbsp;|&nbsp; [[Demo]](https://anonymous.4open.science/w/sympatheia-1181/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k) &nbsp;|&nbsp; [[Code]](https://anonymous.4open.science/r/sympatheia-1181)
 
-Sad, Excited, Frustrated, Neutral, Happy, Angry, Anxious, Relaxed, Surprised, Disgusted, Tired, Content
+---
 
-Each emotion is mapped to a continuous (valence, arousal) coordinate, enabling interpolation between emotional states.
+Sympatheia is a speech-to-speech empathetic dialogue framework that conditions response generation on **continuous valence–arousal (VA) affect signals** inferred from the user's spoken query and, when available, from pluggable external emotion sensing modules (face, EEG/physiological signals, textual affect descriptions). The model is built on [GLM-4-Voice-9B](https://huggingface.co/THUDM/glm-4-voice-9b) and fine-tuned with LoRA on **Sympatheia-18k**, a synthetic corpus of 18k emotion-conditioned spoken dialogue pairs spanning 12 emotion anchors.
+
+![System overview](figure/overview.png)
+
+---
 
 ## Setup
 
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 1. Clone and install dependencies
 
-2. Download decoder weights into `glm-4-voice-decoder/`:
-   - `flow.pt` and `hift.pt` from the [GLM-4-Voice](https://huggingface.co/THUDM/glm-4-voice-decoder) HuggingFace model page.
-
-3. The base model `THUDM/glm-4-voice-9b` is downloaded automatically from HuggingFace during training/inference.
-
-## Usage
-
-### Training
 ```bash
-python train_sympatheia.py
+git clone https://anonymous.4open.science/r/sympatheia-1181
+cd sympatheia
+pip install -r requirements.txt
 ```
-Hyperparameters are in `config.yaml`. DeepSpeed config: `ds_config.json`.
 
-### Inference
+> **Note:** The CosyVoice TTS components in `src/cosyvoice/` require `matcha-tts`, `conformer`, `phonemizer`, and `hyperpyyaml`, which are included in `requirements.txt`. The dataset creation pipeline additionally requires the [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) package (`qwen_tts`) — install it separately if you want to re-generate the dataset.
+
+### 2. Download decoder weights
+
+Download `flow.pt` and `hift.pt` from the [GLM-4-Voice decoder page](https://huggingface.co/THUDM/glm-4-voice-decoder) and place them in `src/glm-4-voice-decoder/`:
+
 ```bash
+# Using huggingface_hub
+python -c "
+from huggingface_hub import hf_hub_download
+hf_hub_download('THUDM/glm-4-voice-decoder', 'flow.pt', local_dir='src/glm-4-voice-decoder')
+hf_hub_download('THUDM/glm-4-voice-decoder', 'hift.pt', local_dir='src/glm-4-voice-decoder')
+"
+```
+
+### 3. Base language model
+
+The base model `THUDM/glm-4-voice-9b` is downloaded automatically from HuggingFace during training or inference. Ensure you have a HuggingFace account and internet access, or pre-cache it with:
+
+```bash
+python -c "from transformers import AutoModel; AutoModel.from_pretrained('THUDM/glm-4-voice-9b')"
+```
+
+---
+
+## Pretrained Model Weights
+
+The Sympatheia LoRA adapter checkpoint is available at [huggingface.co/anonymous2222/Sympatheia](https://huggingface.co/anonymous2222/Sympatheia).
+
+```bash
+# Download checkpoint
+huggingface-cli download anonymous2222/Sympatheia --local-dir /path/to/checkpoint
+```
+
+Download the checkpoint folder and place it anywhere convenient — the inference and evaluation scripts accept a `--checkpoint` argument pointing to the folder.
+
+---
+
+## Dataset: Sympatheia-18k
+
+The full dataset is available at [huggingface.co/datasets/anonymous2222/Sympatheia-18k](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k).
+
+Sympatheia-18k consists of two complementary splits:
+
+- **Emotional split** (~12k examples): Affect-rich user queries paired with emotion-appropriate spoken responses, ~1k examples per emotion. Teaches semantic and acoustic emotional alignment.
+- **Neutral split** (~6k examples): 500 emotionally neutral queries each paired with 12 emotion-conditioned responses (one per anchor). Teaches explicit VA-controlled affect generation when speech is neutral or ambiguous.
+
+The dataset was generated using Qwen3-32B (text) and Qwen3-TTS (speech) with emotion-specific style and response strategy controls.
+
+If you want to re-generate the dataset, the full pipeline is in `src/dataset_creation/`. See [Dataset Creation](#dataset-creation) below.
+
+---
+
+## Training
+
+Training fine-tunes GLM-4-Voice-9B with LoRA on Sympatheia-18k. All hyperparameters are in `src/config.yaml`; the DeepSpeed Stage 3 config is in `src/ds_config.json`.
+
+```bash
+cd src
+# Single-node, 4-GPU (adjust --num_processes for your setup)
+accelerate launch --config_file ds_config.json \
+    --num_processes 4 \
+    train_sympatheia.py
+```
+
+Or directly with DeepSpeed:
+```bash
+cd src
+deepspeed --num_gpus=4 train_sympatheia.py
+```
+
+Checkpoints are saved to `src/experiments/{run_name}/checkpoint-{step}/`.
+
+---
+
+## Inference
+
+`inference_sympatheia.py` generates audio responses for all 12 emotion anchors plus interpolations (happy↔sad, anxious↔relaxed) and the no-VA baseline.
+
+```bash
+cd src
+
+# Run inference on a downloaded checkpoint
+python inference_sympatheia.py \
+    --checkpoint /path/to/checkpoint
+
+# Or sweep multiple checkpoints from a training run
 python inference_sympatheia.py \
     --experiment-dir experiments/<run-name> \
-    --checkpoints 200 400 600
+    --checkpoints <step1> <step2> <step3>
 ```
 
-### Gradio Demo
+Outputs are written to `checkpoint-{step}/results_12emo/` as `output_{emotion}_v{val:.2f}_a{aro:.2f}.wav`.
+
+**Emotion comparison mode** (generates with-VA vs. no-VA responses for a set of eval queries):
 ```bash
+python inference_sympatheia.py \
+    --checkpoint /path/to/checkpoint \
+    --compare-mode \
+    --eval-audio-dir /path/to/eval/audio
+```
+
+**Interactive demo:**
+```bash
+cd src
 python gradio_demo.py \
-    --checkpoint experiments/<run-name>/checkpoint-600 \
+    --checkpoint /path/to/checkpoint \
     --port 7860
 ```
 
+---
+
+## Evaluation
+
+The evaluation pipeline has two stages: (1) generating model responses for each condition and (2) scoring them with an audio-capable LLM judge (Qwen3-Omni).
+
+All evaluation scripts are under `src/eval/`. Run them from `src/`.
+
+### Stage 1a: Generate responses — Neutral query setting
+
+The neutral setting evaluates whether the model adapts its response when the user audio is neutral but the system prompt specifies a target emotion.
+
+```bash
+cd src
+python eval/generate_responses/sympatheia_neutral/generate_responses_neutral_sympatheia.py \
+    --finetuned-experiment experiments/<run-name> \
+    --checkpoint-step <step> \
+    --num-samples 100 \
+    --emotions angry anxious content disgusted excited frustrated happy neutral relaxed sad surprised tired
+```
+
+Outputs: `{eval_output_dir}/finetuned_va/` and `{eval_output_dir}/finetuned_na/` audio files + `manifest.jsonl`.
+
+### Stage 1b: Generate responses — Emotional query setting
+
+The emotional setting evaluates empathetic response when the user audio itself carries the target emotion.
+
+```bash
+cd src
+python eval/generate_responses/sympatheia_emotional/generate_responses_emotional_sympatheia.py \
+    --finetuned-experiment experiments/<run-name> \
+    --checkpoint-step <step> \
+    --num-samples 100 \
+    --emotions angry anxious content disgusted excited frustrated happy neutral relaxed sad surprised tired
+```
+
+Outputs: same structure as neutral setting.
+
+### Stage 2: LLM-as-a-judge scoring
+
+Score generated responses using Qwen3-Omni as the audio-capable judge:
+
+```bash
+cd src
+# Neutral setting judge
+python eval/judge/judge_qwen3omni_neutral.py \
+    --manifest /path/to/manifest.jsonl \
+    --conditions finetuned_va finetuned_na
+
+# Emotional setting judge
+python eval/judge/judge_qwen3omni_emotional.py \
+    --manifest /path/to/manifest.jsonl \
+    --conditions finetuned_va finetuned_na
+```
+
+Outputs: `judgments.jsonl` + `summary.json` with mean scores per condition and emotion.
+
+> **Qwen3-Omni judge:** The judge scripts expect a local Qwen3-Omni model. Point the `--model-path` argument to your local copy, or set the default path in the script.
+
+---
+
 ## Dataset Creation
 
-The `dataset_creation/` directory contains the pipeline for creating the 12-emotion dataset:
+The full Sympatheia-18k generation pipeline is in `src/dataset_creation/`. Scripts must be run in order.
 
-### Part 1: Emotional queries + responses
-1. `generate_new_text_pairs.py` — Generate emotion-conditioned text pairs with Qwen3-32B
-2. `generate_qwen3tts_audio_12emo_multigpu.py` — Generate emotion-conditioned audio with Qwen3-TTS
-3. `convert_qwen3tts_to_glm4voice_12emo.py` — Encode audio and create GLM-4-Voice VA format
-4. `validate_dataset_12emo.py` — Validate the final dataset
+### Part 1: Emotional split (affect-rich queries + responses)
 
-### Part 2: Neutral queries × 12 response emotions
-1. `generate_part2_text_pairs.py` — Generate neutral queries with 12 emotion response variants
-2. `generate_part2_audio_multigpu.py` — Generate audio for Part 2
-3. `convert_part2_to_glm4voice.py` — Convert Part 2 to GLM-4-Voice format
-4. `validate_part2_dataset.py` — Validate Part 2 dataset
-5. `run_part2_pipeline.sh` — Orchestration script for Part 2
+```bash
+cd src/dataset_creation
 
-### External dependency for dataset generation
+# 1. Generate emotion-conditioned text pairs with Qwen3-32B
+python generate_new_text_pairs.py
 
-`generate_qwen3tts_audio_12emo_multigpu.py` requires the [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) model package (`qwen_tts`). Install it separately or point the script's `sys.path` to your local clone.
+# 2. Synthesize emotion-styled audio with Qwen3-TTS (multi-GPU)
+python generate_qwen3tts_audio_12emo_multigpu.py
 
-## Emotion Recognition Modules
+# 3. Encode audio and convert to GLM-4-Voice token format
+python convert_qwen3tts_to_glm4voice_12emo.py
 
-Multiple modalities decode (valence, arousal) from different input signals:
+# 4. Validate the resulting dataset
+python validate_dataset_12emo.py
+```
 
-### Audio
-Audio emotion recognition is handled natively by the GLM-4-Voice model — no separate module is needed. The model perceives emotional cues directly from the input speech signal.
+### Part 2: Neutral split (neutral queries × 12 response emotions)
 
-### EEG (`eeg_emotion/`)
-Within-subject MLP on Differential Entropy features from the DEAP dataset.
-- **Model**: EEGDEModel — FC(160→256→128→64→2) with BN, ELU, Dropout
-- **Accuracy**: ~70% binary (valence/arousal), 32 per-subject models
-- **Train**: `python -m eeg_emotion.train --mode within_subject`
-- **Inference**: `EEGVAPredictor().predict_va(eeg_array, subject_id=5)`
+```bash
+# 1. Generate neutral queries with 12 emotion response variants
+python generate_part2_text_pairs.py
 
-### Physiological signals (`physio_emotion/`)
-6-stream 1D CNN with channel attention on DEAP (BVP, GSR, Resp, Temp, zEMG, tEMG).
-- **Model**: PhysioMultiChannelModel — ~246K params, per-subject
-- **Train**: `python -m physio_emotion.train --mode within_subject`
-- **Inference**: `PhysioVAPredictor().predict_va(signals_dict, subject_id=5)`
+# 2. Synthesize audio (multi-GPU)
+python generate_part2_audio_multigpu.py
 
-### Face (`face_emotion/`)
-ResNet18 fine-tuned on AffectNet_Balanced for 8-class emotion classification, mapped to VA via Russell's circumplex model.
-- **Model**: FaceEmotionModel — ResNet18, 75.4% test accuracy (8 classes)
-- **Emotions**: Anger, Contempt, Disgust, Fear, Happy, Neutral, Sad, Surprise
-- **Train**: `python -m face_emotion.train`
-- **Inference**: `FaceVAPredictor().predict_va(image)`
+# 3. Convert to GLM-4-Voice token format
+python convert_part2_to_glm4voice.py
 
-### Text (`text_to_va.py`)
-Converts free-text emotion descriptions to (valence, arousal) using the GLM-4 LLM with keyword-centroid fallback.
-- **Primary**: LLM prompt → structured JSON parse
-- **Fallback**: Keyword-weighted centroid over 12 emotion anchors
-- **Inference**: `TextToVAConverter(model, tokenizer).convert("I feel excited")`
+# 4. Validate
+python validate_part2_dataset.py
+
+# Or run the full Part 2 pipeline in one go:
+bash run_part2_pipeline.sh
+```
+
+Then merge both splits:
+```bash
+python merge_splits.py
+```
+
+---
+
+## Emotion Sensing Modules
+
+Each sensing module in `src/integration/` outputs a softmax distribution over its native emotion taxonomy, which is mapped to a VA coordinate via probability-weighted anchor averaging (Eq. 1 in the paper).
+
+| Module | Directory | Dataset |
+|--------|-----------|---------|
+| Facial expression | `integration/face_module/` | AffectNet+ |
+| EEG + Eye tracking | `integration/seed_module/` | SEED-VII |
+| ECG + GSR | `integration/yaad_module/` | YAAD |
+| Textual affect description | `integration/text_module/` | ISEAR |
+
+Sensing module integration experiments and end-to-end evaluations are in `src/integration/`.
+
+---
 
 ## Project Structure
 
 ```
-├── train_sympatheia.py                  # Training script (LoRA fine-tuning)
-├── inference_sympatheia.py              # Batch inference
-├── gradio_demo.py                       # Interactive demo
-├── evaluate_model.py                    # Evaluation suite
-├── compare_results.py                   # Compare base vs. fine-tuned metrics
-├── text_to_va.py                        # Text → VA (GLM-4 LLM + keyword fallback)
-├── constants.py                         # Shared 12-emotion VA mapping
-├── config.yaml                          # LoRA training hyperparameters
-├── ds_config.json                       # DeepSpeed config
-├── eeg_emotion/                         # EEG → VA (DEAP, within-subject)
-├── physio_emotion/                      # Physio → VA (DEAP, within-subject)
-├── face_emotion/                        # Face → VA (AffectNet, ResNet18)
-├── eval/                                # Baseline comparison & LLM judging
-├── src/                                 # Model utilities & vocoder
-├── speech_tokenizer/                    # Speech encoding/decoding
-├── cosyvoice/                           # CosyVoice TTS components
-├── glm-4-voice-decoder/                 # Decoder weights (flow.pt, hift.pt)
-├── dataset_creation/                    # Sympatheia dataset creation pipeline
-├── experiments/                         # Training checkpoints
-└── results/                             # Evaluation output
+sympatheia/
+├── README.md
+├── requirements.txt
+├── sympatheia_neurips_2026.pdf
+└── src/
+    ├── train_sympatheia.py          # LoRA fine-tuning entry point
+    ├── inference_sympatheia.py      # Batch inference with VA conditions
+    ├── gradio_demo.py               # Interactive Gradio demo
+    ├── config.yaml                  # Training hyperparameters
+    ├── ds_config.json               # DeepSpeed ZeRO Stage 3 config
+    ├── constants.py                 # 12-emotion VA anchor mapping
+    ├── speech_tokenizer/            # WhisperVQ speech tokenizer
+    ├── cosyvoice/                   # Flow-matching speech decoder components
+    ├── vocoder_src/                 # GLM-4-Voice vocoder utilities
+    ├── glm-4-voice-decoder/         # Decoder weights (flow.pt, hift.pt)
+    ├── dataset_creation/            # Sympatheia-18k generation pipeline
+    ├── figure/                      # Figures
+    │   └── overview.png
+    ├── integration/                 # Emotion sensing modules
+    │   ├── face_module/             # HSEmotion facial expression classifier
+    │   ├── seed_module/             # MAET EEG + eye tracking (SEED-VII)
+    │   ├── yaad_module/             # ResNet1D ECG + GSR (YAAD)
+    │   └── text_module/             # DistilRoBERTa textual affect
+    ├── eval/
+    │   ├── generate_responses/      # Response generation scripts per model
+    │   │   ├── sympatheia_neutral/  # Neutral-query evaluation
+    │   │   └── sympatheia_emotional/# Emotional-query evaluation
+    │   ├── judge/                   # Qwen3-Omni LLM-as-a-judge scripts
+    │   └── metrics/                 # Prosody, coherence, naturalness metrics
+    ├── figures/                     # Figure generation scripts
+    ├── experiments/                 # Training checkpoints (created at runtime)
+    └── docs/                        # GitHub Pages demo site
 ```
+
+---
+
+## Responsible Use
+
+Sympatheia is intended to make spoken assistants more emotionally aware and supportive. Users and deployers should be aware of the following:
+
+- **Opt-in sensing only.** External affect signals (face, physiological, voice) constitute sensitive personal data. Any real-world deployment should use opt-in consent, disclose what signals are collected and how they are used, and allow users to disable or override affect conditioning at any time.
+- **No covert surveillance.** This system must not be used for covert emotion sensing, protected-attribute inference, eligibility decisions, or clinical diagnosis without separate validation and governance.
+- **Upstream estimate quality.** Incorrect affect estimates from sensing modules can produce over- or under-calibrated responses. Physiological signals in particular are noisy and subject-dependent. Evaluate sensing accuracy on the intended user population before deployment.
+- **No universal VA mapping.** The emotion anchors and VA coordinates used here are practical design choices, not universal psychological truths. Affect varies across speakers, cultures, and contexts.
+
+---
+
+## License
+
+The Sympatheia code is released under the Apache 2.0 License. The Sympatheia-18k dataset is released under CC BY 4.0. The GLM-4-Voice base model is subject to the [GLM-4-Voice License](https://huggingface.co/THUDM/glm-4-voice-9b).
