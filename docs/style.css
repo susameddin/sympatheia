@@ -377,25 +377,14 @@ section:last-of-type { border-bottom: none; }
   background: linear-gradient(45deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc, #da77f2);
   color: #fff;
   text-shadow: 0 1px 3px rgba(0,0,0,.28);
-  border-radius: var(--radius) var(--radius) 0 0;
 }
 
-/* Rainbow gradient border via pseudo-element (border-image doesn't support border-radius) */
+/* background-clip trick: white fills padding-box, gradient fills border-box (preserves border-radius) */
 .model-card.sympatheia {
-  border: none;
-  background: var(--white);
-  overflow: visible;
-  position: relative;
-}
-
-.model-card.sympatheia::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: calc(var(--radius) + 2px);
-  background: linear-gradient(45deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc, #da77f2);
-  z-index: -1;
-  pointer-events: none;
+  border: 2px solid transparent;
+  background: var(--white) padding-box,
+    linear-gradient(45deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc, #da77f2) border-box;
+  box-shadow: none;
 }
 
 /* Transcript */
