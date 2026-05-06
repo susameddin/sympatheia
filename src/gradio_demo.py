@@ -27,8 +27,11 @@ for _ffmpeg_env in ["glm4voice3", "s"]:
 os.environ["no_proxy"] = os.environ.get("no_proxy", "") + ",localhost,127.0.0.1,0.0.0.0"
 os.environ["NO_PROXY"] = os.environ.get("NO_PROXY", "") + ",localhost,127.0.0.1,0.0.0.0"
 
-# Ensure the finetune directory is on the path for src.vocoder and speech_tokenizer imports
+# Ensure both the src dir and its parent (project root) are on the path.
+# The parent is needed for `from src.vocoder_src import ...` style imports.
 FINETUNE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(FINETUNE_DIR)
+sys.path.insert(0, PROJECT_DIR)
 sys.path.insert(0, FINETUNE_DIR)
 
 import argparse
@@ -550,9 +553,9 @@ def run_inference_with_mode(audio_path, mode, valence, arousal,
 def build_ui():
     emotion_choices = ["Custom"] + list(EMOTION_ANCHORS.keys())
 
-    with gr.Blocks(title="GLM-4-Voice Emotion Demo") as demo:
+    with gr.Blocks(title="Sympatheia: Emotion-Conditioned Speech Generation") as demo:
         gr.Markdown(
-            "# GLM-4-Voice: Speech-to-Speech Emotion Demo\n"
+            "# Sympatheia: Emotion-Conditioned Speech-to-Speech Generation Demo\n"
             "Record or upload speech, select a target emotion, "
             "and generate an emotionally-conditioned response."
         )
