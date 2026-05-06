@@ -539,8 +539,8 @@
       },
       {
         "emotion": "Content",
-        "query_text": "Oh, it's so satisfying to see all the clean laundry folded and put away, everything just feels so fresh and tidy!",
-        "response_text": "I love that sense of calm you’re enjoying—there’s such quiet joy in a space that mirrors your inner order. It sounds like your efforts are giving you so much peace, and you’ve earned every moment of it. Did you know folding clothes neatly can actually help them keep their shape longer? It’s little acts like this that turn routines into gentle gifts to yourself."
+        "query_text": "I just love how peaceful it is when I'm out birdwatching — it feels like the whole world is in harmony.",
+        "response_text": "I love how birdwatching lets you sink into that quiet harmony — there’s something so grounding about aligning your breath with the rhythm of nature. The way birds move, sing, and interact often mirrors the subtle balance of life itself, which probably deepens that sense of peace you’re feeling. It’s a beautiful way to remind yourself how interconnected everything is — and to carry that calm back into your day."
       },
       {
         "emotion": "Disgusted",
@@ -559,8 +559,8 @@
       },
       {
         "emotion": "Happy",
-        "query_text": "I just finished that huge project I was stressing over, and it feels so amazing! How do you usually deal with work or study stress when things finally go your way?",
-        "response_text": "I’m absolutely thrilled for you—crossing that finish line after all that hard work must feel like a huge weight lifting, replaced by this brilliant sense of accomplishment! When stress turns into success, I love leaning into *gratitude rituals*—like jotting down 3 things you’re proud of about the process—to savor the win and reset your energy. It’s like浇筑ing that joy into a foundation for your next challenge! Also, giving yourself permission to *play* after intense work—dancing, a silly show, whatever makes you laugh—helps your brain switch from “survival mode” to “I rock mode,” which is exactly what you deserve right now!"
+        "query_text": "I can't believe how great it is to work from home today — everything's just clicking!",
+        "response_text": "I'm so thrilled to hear everything’s clicking for you today — there’s such magic in those moments when work and joy align! Working from home can feel like a cozy superpower when your environment fuels your focus, and it sounds like you’re riding that wave perfectly. Maybe the comfort of your space is letting you tackle tasks with less mental clutter, or those little breaks with a favorite snack/tea are keeping your energy bright? Either way, let that momentum carry you — you’ve earned this wonderful day! 🌟"
       },
       {
         "emotion": "Neutral",
