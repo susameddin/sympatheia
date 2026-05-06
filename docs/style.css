@@ -372,9 +372,13 @@ section:last-of-type { border-bottom: none; }
 .model-card.qwen       .model-card-header { background: var(--orange-lt); color: var(--orange);   }
 .model-card.opens2s    .model-card-header { background: var(--purple-lt); color: var(--purple);   }
 .model-card.kimi       .model-card-header { background: #e8f4fd;          color: #1a6fa8;         }
-.model-card.sympatheia .model-card-header { background: var(--teal-lt);   color: var(--teal-dk);  }
+.model-card.sympatheia .model-card-header {
+  background: linear-gradient(90deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc, #da77f2);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.28);
+}
 
-.model-card.sympatheia { border-color: var(--teal);  box-shadow: 0 0 0 1px var(--teal);  }
+.model-card.sympatheia { border-color: #da77f2; box-shadow: 0 0 0 1px #da77f2; }
 
 /* Transcript */
 details.transcript { font-size: .82rem; }
