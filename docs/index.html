@@ -73,6 +73,7 @@
     <h2 class="section-title">Example Responses to Neutral Queries with Emotion Conditioning</h2>
     <p class="section-sub">
       The user speaks a neutral question. All models receive the target labels for user emotion via system prompt.
+      This demonstrates how models adapt to emotional tone even in the absence of semantic or lexical cues in speech.
     </p>
 
     <div class="emotion-tabs" id="neutral-tabs"></div>
@@ -213,6 +214,7 @@ function buildComparison(prefix, tabsEl, panelsEl, modelDefs) {
     // Emotion tab button
     const btn = document.createElement("button");
     btn.className = "etab-btn" + (i === 0 ? " active" : "");
+    btn.dataset.emo = key;
     btn.textContent = emo.name;
     btn.addEventListener("click", () => {
       tabsEl.querySelectorAll(".etab-btn").forEach(b => b.classList.remove("active"));
@@ -371,7 +373,7 @@ fetch("audio/manifest.json")
     wrap.style.marginBottom = "2rem";
 
     const arrow = document.createElement("div");
-    arrow.className = "interp-arrow";
+    arrow.className = `interp-arrow interp-arrow--${set.id}`;
     arrow.innerHTML = `<span>${set.from}</span><span>${set.to}</span>`;
 
     const grid = document.createElement("div");

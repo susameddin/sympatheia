@@ -280,6 +280,20 @@ section:last-of-type { border-bottom: none; }
 .extab-btn:hover { border-color: var(--teal); color: var(--teal); }
 .extab-btn.active { background: var(--teal); border-color: var(--teal); color: var(--white); }
 
+/* Per-emotion active colors for emotion tab buttons */
+.etab-btn[data-emo="angry"].active      { background: #c0392b; border-color: #c0392b; color: #fff; }
+.etab-btn[data-emo="anxious"].active    { background: #7d3c98; border-color: #7d3c98; color: #fff; }
+.etab-btn[data-emo="content"].active    { background: #27ae60; border-color: #27ae60; color: #fff; }
+.etab-btn[data-emo="disgusted"].active  { background: #5b2c6f; border-color: #5b2c6f; color: #fff; }
+.etab-btn[data-emo="excited"].active    { background: #e67e22; border-color: #e67e22; color: #fff; }
+.etab-btn[data-emo="frustrated"].active { background: #c0737a; border-color: #c0737a; color: #fff; }
+.etab-btn[data-emo="happy"].active      { background: #f5d800; border-color: #f5d800; color: #2a221a; }
+.etab-btn[data-emo="neutral"].active    { background: #7f8c8d; border-color: #7f8c8d; color: #fff; }
+.etab-btn[data-emo="relaxed"].active    { background: #1a9e8a; border-color: #1a9e8a; color: #fff; }
+.etab-btn[data-emo="sad"].active        { background: #2980b9; border-color: #2980b9; color: #fff; }
+.etab-btn[data-emo="surprised"].active  { background: #c0579a; border-color: #c0579a; color: #fff; }
+.etab-btn[data-emo="tired"].active      { background: #8e9aaf; border-color: #8e9aaf; color: #fff; }
+
 .example-pane { display: none; }
 .example-pane.active { display: block; }
 
@@ -328,7 +342,7 @@ section:last-of-type { border-bottom: none; }
 /* Models grid */
 .models-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: .75rem;
 }
 
@@ -464,10 +478,13 @@ details.transcript summary::-webkit-details-marker { display: none; }
   content: '';
   flex: 1;
   height: 2px;
-  background: linear-gradient(90deg, #4facfe, #1fa87c);
+  background: var(--gray-10);
   margin: 0 .8rem;
   border-radius: 2px;
 }
+
+.interp-arrow--happy-sad::after       { background: linear-gradient(90deg, #f5d800, #2980b9); }
+.interp-arrow--anxious-relaxed::after { background: linear-gradient(90deg, #7d3c98, #1a9e8a); }
 
 /* ---------- Dataset ---------- */
 .dataset-split-label {
@@ -689,7 +706,7 @@ footer a:hover { color: var(--white); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
-  .models-grid { grid-template-columns: repeat(2, 1fr); }
+  .models-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 900px) {
