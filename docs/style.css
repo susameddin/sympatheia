@@ -379,6 +379,8 @@ section:last-of-type { border-bottom: none; }
   text-shadow: 0 1px 3px rgba(0,0,0,.28);
 }
 
+.model-card.sympatheia { border-color: var(--gray-30); }
+
 
 /* Transcript */
 details.transcript { font-size: .82rem; }

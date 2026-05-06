@@ -103,10 +103,10 @@ def load_manifest(path: Path) -> dict:
 
 # ---------------------------------------------------------------------------
 # Neutral comparison — three examples per emotion
-#   ex1=_02 (Neutral_00019), ex2=_00, ex3=_85
+#   ex1=_00, ex2=_14, ex3=_43
 # Models: Sympatheia (finetuned_va), GLM-4-Voice, Kimi Audio, Qwen3-Omni, OpenS2S
 # ---------------------------------------------------------------------------
-NEUTRAL_EX_INDICES = ["02", "00", "85"]
+NEUTRAL_EX_INDICES = ["00", "14", "43"]
 
 def process_neutral():
     print("\n=== Neutral eval ===")

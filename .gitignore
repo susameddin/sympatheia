@@ -50,6 +50,9 @@ src/eval/retired/
 src/eval/generate_responses/retired/
 src/eval/generate_responses/sensing/retired/
 
+# Personal utility scripts (not part of public API)
+src/prepare_demo_audio.py
+
 # Pickle caches
 *.pkl
 
