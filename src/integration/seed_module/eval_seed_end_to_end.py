@@ -12,16 +12,17 @@ Conditions (one VA-conditioned per modality + shared no_va baseline):
 
 Usage:
     # All three modalities (default)
-    conda run -n glm4voice3 --no-capture-output python -m integration.seed_module.eval_seed_end_to_end \\
+    python -m integration.seed_module.eval_seed_end_to_end \\
         --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930
 
     # Subset of modalities
-    conda run -n glm4voice3 --no-capture-output python -m integration.seed_module.eval_seed_end_to_end \\
+    python -m integration.seed_module.eval_seed_end_to_end \\
         --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930 \\
         --modality eeg_only combined
 
     # Then judge (neutral rubric):
-    conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_qwen3omni_neutral \\
         --manifest <output-dir>/manifest.jsonl \\
         --conditions eeg_only eye_only combined no_va
 """
@@ -156,7 +157,7 @@ def main():
     # Load precomputed predictions
     if not os.path.exists(args.predictions):
         print(f"ERROR: predictions not found: {args.predictions}", file=sys.stderr)
-        print("Run:  conda run -n s --no-capture-output "
+        print("Run:  "
               "python -m integration.seed_module.precompute_maet", file=sys.stderr)
         sys.exit(1)
 
@@ -285,7 +286,7 @@ def main():
         print(f"  {cond:>12}: {n} audio files")
     print(
         f"\nNext step (neutral judge):\n"
-        f"  conda run -n qwen3omni --no-capture-output "
+        f"  "
         f"python -m eval.judge.judge_qwen3omni_neutral \\\n"
         f"    --manifest {manifest_path.resolve()} \\\n"
         f"    --conditions {conditions_str}"

@@ -208,10 +208,10 @@ class HSEmotionFacePredictor:
     """Drop-in replacement for FaceVAPredictor backed by HSEmotion enet_b0_8_va_mtl.
 
     Uses the ONNX model via onnxruntime — no timm, no emotiefflib needed.
-    Works in any env with onnxruntime + numpy (e.g. glm4voice3).
+    Works in any env with onnxruntime + numpy.
 
-    The .onnx file is downloaded once by the 's' env. If missing, run:
-        conda run -n s python -c "
+    The .onnx file is downloaded once by the project environment. If missing, run:
+        python -c "
             from emotiefflib.facial_analysis import EmotiEffLibRecognizer
             EmotiEffLibRecognizer(engine='onnx', model_name='enet_b0_8_va_mtl')"
     """

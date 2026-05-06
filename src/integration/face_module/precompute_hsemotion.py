@@ -6,10 +6,10 @@ enet_b0_8_va_mtl (PyTorch backend via emotiefflib), and saves predictions
 to JSON for use by eval/generate_responses/sensing/generate_responses_face.py.
 
 Usage:
-    conda run -n s --no-capture-output python -m face_emotion.precompute_hsemotion
+    python -m face_emotion.precompute_hsemotion
 
     # Custom sampling:
-    conda run -n s --no-capture-output python -m face_emotion.precompute_hsemotion \\
+    python -m face_emotion.precompute_hsemotion \\
         --n-per-class 10 --seed 42 \\
         --output face_emotion/cache/hsemotion_predictions.json
 """

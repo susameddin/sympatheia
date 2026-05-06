@@ -12,9 +12,9 @@ Output files:
 
 Usage:
   python dataset_creation/merge_splits.py \\
-      --emotional-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Emotional \\
-      --neutral-dir   /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral \\
-      --output-dir    /engram/naplab/users/sd3705/Datasets/Sympatheia-18k
+      --emotional-dir /path/to/Sympatheia-18k/Emotional \\
+      --neutral-dir   /path/to/Sympatheia-18k/Neutral \\
+      --output-dir    /path/to/Sympatheia-18k
 """
 
 import argparse

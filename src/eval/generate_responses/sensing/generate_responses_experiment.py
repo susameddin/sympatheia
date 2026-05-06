@@ -11,14 +11,13 @@ Writes response WAVs to {session_dir}/audio/{condition}/{id}.wav and updates
 manifest.jsonl with the filled-in response paths.
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python \\
-        sympatheia/eval/generate_responses/sensing/generate_responses_experiment.py \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/experiment_face/s02/manifest.jsonl
+    python src/eval/generate_responses/sensing/generate_responses_experiment.py \
+        --manifest /path/to/experiment_face/{subject_id}/manifest.jsonl
 
 Then run the judge:
-    conda run -n qwen3omni --no-capture-output python \\
-        -m eval.judge.judge_qwen3omni_neutral \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/experiment_face/s02/manifest.jsonl \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_qwen3omni_neutral \
+        --manifest /path/to/experiment_face/{subject_id}/manifest.jsonl \
         --conditions face_va no_va
 """
 
@@ -189,7 +188,7 @@ def main():
     print(f"\nUpdated manifest: {manifest_path}")
     print(f"\nNext — run judge:")
     print(
-        f"  conda run -n qwen3omni --no-capture-output python \\\n"
+        f"  python \\\n"
         f"      -m eval.judge.judge_qwen3omni_neutral \\\n"
         f"      --manifest {manifest_path} \\\n"
         f"      --conditions face_va no_va"

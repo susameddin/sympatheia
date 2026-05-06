@@ -10,8 +10,7 @@ Download ISEAR CSV (one-time):
       https://raw.githubusercontent.com/sinmaniphel/py_isear_dataset/master/isear.csv
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output \
-        python -m integration.text_module.precompute_text --n-per-class 200
+    python -m integration.text_module.precompute_text --n-per-class 200
 """
 
 import argparse

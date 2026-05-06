@@ -17,16 +17,19 @@ Outputs:
   Prints a comparison table to stdout.
 
 Usage:
-    conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_emotional \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_qwen3omni_emotional \\
         --manifest results/eval_judge/manifest.jsonl
 
     # Judge only specific conditions:
-    conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_emotional \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_qwen3omni_emotional \\
         --manifest results/eval_judge/manifest.jsonl \\
         --conditions base finetuned_va
 
     # Resume interrupted run:
-    conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_emotional \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_qwen3omni_emotional \\
         --manifest results/eval_judge/manifest.jsonl \\
         --skip-existing
 """
@@ -45,7 +48,7 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
+DEFAULT_MODEL = "Qwen/Qwen3-Omni"
 ALL_CONDITIONS = ["base", "finetuned_va", "finetuned_na", "opens2s", "osum_no_think", "osum_think", "qwen3omni", "qwen2_5omni", "kimiaudio", "face_va", "text_va", "no_va", "oracle", "eeg_only", "eye_only", "combined", "ecg_va", "gsr_va", "fusion_va", "yaad_va", "qwen3tts_cascaded", "face_image_qwen3omni", "text_qwen3omni"]
 
 JUDGE_SYSTEM_PROMPT = """\

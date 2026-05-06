@@ -10,19 +10,21 @@ respond with appropriate empathy — no intermediate VA extraction step.
 Condition added: text_qwen3omni
 
 Prereqs:
-    # 1. Precompute text-to-VA predictions (in 's' env):
-    conda run -n s --no-capture-output python -m integration.text_module.precompute_text --n-per-class 200
+    # 1. Precompute text-to-VA predictions ():
+    python -m integration.text_module.precompute_text --n-per-class 200
 
-    # 2. Generate text_va / no_va Sympatheia responses (in 'glm4voice3' env):
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sensing.generate_responses_sensing --modality text
+    # 2. Generate text_va / no_va Sympatheia responses:
+    python -m eval.generate_responses.sensing.generate_responses_sensing --modality text
 
 Usage:
-    conda run -n qwen3omni --no-capture-output python -m eval.generate_responses.sensing.generate_responses_text_qwen3omni \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_text_e2e/manifest.jsonl
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sensing.generate_responses_text_qwen3omni \\
+        --manifest eval/eval_text_e2e/manifest.jsonl
 
     # Resume:
-    conda run -n qwen3omni --no-capture-output python -m eval.generate_responses.sensing.generate_responses_text_qwen3omni \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_text_e2e/manifest.jsonl \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sensing.generate_responses_text_qwen3omni \\
+        --manifest eval/eval_text_e2e/manifest.jsonl \\
         --skip-existing
 """
 
@@ -40,8 +42,8 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL    = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
-DEFAULT_MANIFEST = "/engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_text_e2e/manifest.jsonl"
+DEFAULT_MODEL    = "Qwen/Qwen3-Omni"
+DEFAULT_MANIFEST = "eval/eval_text_e2e/manifest.jsonl"
 DEFAULT_SPEAKER  = "Chelsie"
 SAMPLE_RATE      = 24000
 USE_AUDIO_IN_VIDEO = True
@@ -197,8 +199,8 @@ def main():
     if not manifest_path.exists():
         print(f"ERROR: manifest not found: {manifest_path}", file=sys.stderr)
         print(
-            "Run first (in glm4voice3 env):\n"
-            "  conda run -n glm4voice3 --no-capture-output "
+            "Run first:\n"
+            "  "
             "python -m eval.generate_responses.sensing.generate_responses_sensing --modality text",
             file=sys.stderr,
         )
@@ -336,9 +338,9 @@ def main():
     print(f"DONE")
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
-    print(f"\nNext step (judge in qwen3omni env):")
+    print(f"\nNext step (judge — requires Qwen3-Omni environment):")
     print(
-        f"  conda run -n qwen3omni --no-capture-output "
+        f"  "
         f"python -m eval.judge.judge_qwen3omni_emotional \\\n"
         f"      --manifest {out_manifest.resolve()} \\\n"
         f"      --conditions {CONDITION}"

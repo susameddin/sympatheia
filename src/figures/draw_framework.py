@@ -1,6 +1,6 @@
 """
 Framework schematic figure for paper.
-Run: conda run -n s --no-capture-output python figures/draw_framework.py
+Run: python figures/draw_framework.py
 Outputs: figures/framework.pdf and figures/framework.png
 """
 

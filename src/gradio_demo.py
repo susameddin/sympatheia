@@ -13,14 +13,12 @@ Usage:
 import sys
 import os
 
-# Ensure the glm4voice3 env's ffmpeg (VP8-capable) comes first on PATH.
-# The s env's ffmpeg is older and missing VP8 encoding — Gradio's video
-# preprocessing fails if that one is picked up instead.
-for _ffmpeg_env in ["glm4voice3", "s"]:
-    _ffmpeg_dir = os.path.expanduser(f"~/.conda/envs/{_ffmpeg_env}/bin")
-    if os.path.isfile(os.path.join(_ffmpeg_dir, "ffmpeg")):
-        os.environ["PATH"] = _ffmpeg_dir + ":" + os.environ.get("PATH", "")
-        break
+# Ensure a VP8-capable ffmpeg is first on PATH (required for Gradio video preprocessing).
+import shutil as _shutil
+_ffmpeg_path = _shutil.which("ffmpeg")
+if _ffmpeg_path:
+    os.environ["PATH"] = os.path.dirname(_ffmpeg_path) + ":" + os.environ.get("PATH", "")
+del _shutil, _ffmpeg_path
 
 # Keep the university proxy for outbound internet (needed for share tunnel),
 # but bypass it for localhost so Gradio's local health check works.

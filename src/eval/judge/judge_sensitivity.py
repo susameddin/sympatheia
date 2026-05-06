@@ -12,12 +12,14 @@ Outputs:
   Prints a sigma vs. mean-score table to stdout.
 
 Usage:
-    conda run -n qwen3omni --no-capture-output python -m eval.judge_sensitivity \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_sensitivity/manifest.jsonl
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge_sensitivity \\
+        --manifest eval/eval_sensitivity/manifest.jsonl
 
     # Resume interrupted run:
-    conda run -n qwen3omni --no-capture-output python -m eval.judge_sensitivity \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_sensitivity/manifest.jsonl \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge_sensitivity \\
+        --manifest eval/eval_sensitivity/manifest.jsonl \\
         --skip-existing
 """
 
@@ -36,7 +38,7 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
+DEFAULT_MODEL = "Qwen/Qwen3-Omni"
 
 JUDGE_SYSTEM_PROMPT = """\
 You are an expert evaluator of emotion-adaptive conversational AI. Your task is to \

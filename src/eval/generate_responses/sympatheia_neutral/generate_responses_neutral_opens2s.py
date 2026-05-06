@@ -11,11 +11,13 @@ Delegates inference to Models/OpenS2S/OpenS2S/batch_infer_eval_neutral.py
 (which accepts per-job system_prompt).
 
 Usage:
-    conda run -n opens2s2 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_opens2s \\
+    # Note: run this in the OpenS2S environment (see https://github.com/open-s2s/OpenS2S)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_opens2s \\
         --manifest results/eval_neutral/manifest.jsonl
 
     # Resume:
-    conda run -n opens2s2 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_opens2s \\
+    # Note: run this in the OpenS2S environment (see https://github.com/open-s2s/OpenS2S)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_opens2s \\
         --manifest results/eval_neutral/manifest.jsonl \\
         --skip-existing
 """
@@ -32,9 +34,9 @@ from pathlib import Path
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_OPENS2S_DIR = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/OpenS2S/OpenS2S"
-DEFAULT_MODEL_PATH  = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/OpenS2S/weights"
-DEFAULT_FLOW_PATH   = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/OpenS2S/weights/glm-4-voice-decoder"
+DEFAULT_OPENS2S_DIR = "/path/to/OpenS2S"
+DEFAULT_MODEL_PATH  = "/path/to/OpenS2S/weights"
+DEFAULT_FLOW_PATH   = "/path/to/OpenS2S/weights/glm-4-voice-decoder"
 
 
 def get_system_prompt(emotion: str) -> str:
@@ -224,7 +226,7 @@ def main():
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

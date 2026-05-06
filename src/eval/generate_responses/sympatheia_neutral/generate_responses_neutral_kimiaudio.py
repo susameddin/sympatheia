@@ -10,18 +10,13 @@ the only available mechanism for KimiAudio — system-role messages are not supp
 Reads the manifest.jsonl produced by generate_responses_neutral_sympatheia.py.
 Saves responses to audio/kimiaudio/ and writes manifest_kimiaudio.jsonl.
 
-Usage (must use absolute Python path — conda run resolves to wrong env on this machine):
-
-    cd /home/sd3705/emo_recog_2025s/sympatheia
-    LD_LIBRARY_PATH="/home/sd3705/.conda/envs/s_kimi/lib/python3.11/site-packages/nvidia/cuda_runtime/lib:${LD_LIBRARY_PATH:-}" \\
-    CUDA_HOME="/share/apps/cuda/12.0.0" \\
-    /home/sd3705/.conda/envs/s_kimi/bin/python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_kimiaudio \\
+Usage:
+    # Note: run this in the Kimi-Audio environment (see https://github.com/MoonshotAI/Kimi-Audio)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_kimiaudio \\
         --manifest /path/to/manifest.jsonl
 
     # Resume:
-    LD_LIBRARY_PATH="/home/sd3705/.conda/envs/s_kimi/lib/python3.11/site-packages/nvidia/cuda_runtime/lib:${LD_LIBRARY_PATH:-}" \\
-    CUDA_HOME="/share/apps/cuda/12.0.0" \\
-    /home/sd3705/.conda/envs/s_kimi/bin/python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_kimiaudio \\
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_kimiaudio \\
         --manifest /path/to/manifest.jsonl \\
         --skip-existing
 """
@@ -32,8 +27,8 @@ import sys
 import time
 from pathlib import Path
 
-KIMI_AUDIO_DIR = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Kimi-Audio/Kimi-Audio"
-DEFAULT_MODEL  = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Kimi-Audio/Kimi-Audio-7B-Instruct"
+KIMI_AUDIO_DIR = "/path/to/Kimi-Audio"
+DEFAULT_MODEL  = "moonshotai/Kimi-Audio-7B-Instruct"
 SAMPLE_RATE    = 24000
 
 SAMPLING_PARAMS = {
@@ -242,7 +237,7 @@ def main():
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

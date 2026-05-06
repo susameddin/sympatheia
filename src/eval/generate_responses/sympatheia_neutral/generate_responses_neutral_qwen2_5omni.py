@@ -9,16 +9,19 @@ knows the user's stated emotion — even though the audio is neutral.
 Reads manifest.jsonl produced by generate_responses_neutral_sympatheia.py.
 
 Usage:
-    conda run -n qwen2_5omni --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen2_5omni \\
+    # Note: run this in the Qwen2.5-Omni environment (see https://github.com/QwenLM/Qwen2.5-Omni)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen2_5omni \\
         --manifest results/eval_neutral/manifest.jsonl
 
     # Resume:
-    conda run -n qwen2_5omni --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen2_5omni \\
+    # Note: run this in the Qwen2.5-Omni environment (see https://github.com/QwenLM/Qwen2.5-Omni)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen2_5omni \\
         --manifest results/eval_neutral/manifest.jsonl \\
         --skip-existing
 
     # Smoke test (no manifest needed):
-    conda run -n qwen2_5omni --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen2_5omni \\
+    # Note: run this in the Qwen2.5-Omni environment (see https://github.com/QwenLM/Qwen2.5-Omni)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen2_5omni \\
         --smoke-test
 """
 
@@ -36,7 +39,7 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL   = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen2.5-Omni-7B"
+DEFAULT_MODEL   = "Qwen/Qwen2.5-Omni-7B"
 DEFAULT_SPEAKER = "Chelsie"
 SAMPLE_RATE     = 24000
 USE_AUDIO_IN_VIDEO = True
@@ -357,7 +360,7 @@ def main():
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

@@ -21,11 +21,11 @@ manifest files (e.g. manifest.jsonl + manifest_base.jsonl) are evaluated
 together in one output file.
 
 Usage:
-    conda run -n s --no-capture-output python -m eval.metrics.cross_emotion_similarity_eval \\
+    python -m eval.metrics.cross_emotion_similarity_eval \\
         --manifests manifest.jsonl manifest_base.jsonl
 
     # Fast path (no Whisper):
-    conda run -n s --no-capture-output python -m eval.metrics.cross_emotion_similarity_eval \\
+    python -m eval.metrics.cross_emotion_similarity_eval \\
         --manifests manifest.jsonl manifest_base.jsonl \\
         --use-text-field
 

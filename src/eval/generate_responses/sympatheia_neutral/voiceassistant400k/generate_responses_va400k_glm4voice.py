@@ -7,12 +7,12 @@ reuses the saved query WAVs, and generates base model responses. Writes
 manifest_base.jsonl with base_response and base_text fields added.
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_glm4voice \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_va400k/manifest.jsonl
+    python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_glm4voice \\
+        --manifest eval/eval_va400k/manifest.jsonl
 
     # Resume:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_glm4voice \\
-        --manifest /engram/.../eval_va400k/manifest.jsonl \\
+    python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_glm4voice \\
+        --manifest eval/eval_va400k/manifest.jsonl \\
         --skip-existing
 """
 
@@ -247,9 +247,9 @@ def main():
     print(f"DONE  {ok}/{total} base responses generated")
     print(f"Manifest: {out_manifest}")
     print(f"\nNext step (metrics):")
-    print(f"  conda run -n s --no-capture-output python -m eval.metrics.naturalness_eval --manifest {out_manifest.resolve()}")
-    print(f"  conda run -n s --no-capture-output python -m eval.metrics.intelligibility_eval --manifest {out_manifest.resolve()}")
-    print(f"  conda run -n s --no-capture-output python -m eval.metrics.coherence_eval --manifest {out_manifest.resolve()} --eval-jsonl {eval_jsonl}")
+    print(f"  python -m eval.metrics.naturalness_eval --manifest {out_manifest.resolve()}")
+    print(f"  python -m eval.metrics.intelligibility_eval --manifest {out_manifest.resolve()}")
+    print(f"  python -m eval.metrics.coherence_eval --manifest {out_manifest.resolve()} --eval-jsonl {eval_jsonl}")
     print(f"{'='*60}")
 
 

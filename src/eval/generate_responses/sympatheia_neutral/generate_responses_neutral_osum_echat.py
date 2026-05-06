@@ -19,11 +19,13 @@ Inference is delegated to Models/OSUM-EChat/OSUM/OSUM-EChat/batch_infer_eval_osu
 via subprocess (which now reads a per-job "system_prompt" field from the jobs JSONL).
 
 Usage:
-    conda run -n OSUM-EChat --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_osum_echat \\
+    # Note: run this in the OSUM-EChat environment (see https://github.com/open-s2s/OSUM)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_osum_echat \\
         --manifest results/eval_neutral/manifest.jsonl
 
     # Resume:
-    conda run -n OSUM-EChat --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_osum_echat \\
+    # Note: run this in the OSUM-EChat environment (see https://github.com/open-s2s/OSUM)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_osum_echat \\
         --manifest results/eval_neutral/manifest.jsonl \\
         --skip-existing
 """
@@ -40,7 +42,7 @@ from pathlib import Path
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_OSUM_DIR = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/OSUM-EChat/OSUM/OSUM-EChat"
+DEFAULT_OSUM_DIR = "/path/to/OSUM-EChat"
 
 
 def get_system_prompt(emotion: str, mode: str) -> str:
@@ -275,7 +277,7 @@ def main():
         print(f"  {mode} : {ok}/{total}")
     print(f"  Manifest : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

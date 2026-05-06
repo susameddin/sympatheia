@@ -17,15 +17,17 @@ Two-stage pipeline:
            clearly addresses the user's emotional state (thinking ON)
 
 Run (preview mode — inspect a few samples before full run):
-  conda run -n qwen3-tts4 --no-capture-output python dataset_creation/neutral/generate_neutral_text_pairs.py \
-      --llm-model /engram/naplab/users/sd3705/models/Qwen3-32B \
-      --output-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/metadata/ \
+  # Note: run this in the Qwen3-TTS environment (see https://github.com/QwenLM/Qwen3)
+  python dataset_creation/neutral/generate_neutral_text_pairs.py \
+      --llm-model Qwen/Qwen3-32B \
+      --output-dir /path/to/Sympatheia-18k/Neutral/metadata/ \
       --preview 3
 
 Run (full):
-  conda run -n qwen3-tts4 --no-capture-output python dataset_creation/neutral/generate_neutral_text_pairs.py \
-      --llm-model /engram/naplab/users/sd3705/models/Qwen3-32B \
-      --output-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/metadata/ \
+  # Note: run this in the Qwen3-TTS environment (see https://github.com/QwenLM/Qwen3)
+  python dataset_creation/neutral/generate_neutral_text_pairs.py \
+      --llm-model Qwen/Qwen3-32B \
+      --output-dir /path/to/Sympatheia-18k/Neutral/metadata/ \
       --resume
 """
 
@@ -280,7 +282,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--llm-model",
-        default="/engram/naplab/users/sd3705/models/Qwen3-32B",
+        default="Qwen/Qwen3-32B",
         help="Path or HuggingFace ID of the LLM",
     )
     parser.add_argument(

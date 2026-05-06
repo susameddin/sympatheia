@@ -10,11 +10,11 @@ manifest or audio directories is touched.
 Uses no emotion conditioning (plain system prompt).
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_glm4voice \\
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_glm4voice \\
         --manifest results/eval_emotional_.../manifest.jsonl
 
     # Resume:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_glm4voice \\
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_glm4voice \\
         --manifest results/eval_emotional_.../manifest.jsonl \\
         --skip-existing
 """

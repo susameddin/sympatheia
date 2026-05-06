@@ -17,12 +17,14 @@ via subprocess (with that directory as CWD), which avoids sys.path conflicts
 between this project's imports and OSUM-EChat's wenet/gxl_ai_utils imports.
 
 Usage:
-    conda run -n OSUM-EChat --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_osum_echat \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_emotional_.../manifest.jsonl
+    # Note: run this in the OSUM-EChat environment (see https://github.com/open-s2s/OSUM)
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_osum_echat \\
+        --manifest eval/eval_emotional_.../manifest.jsonl
 
     # Resume:
-    conda run -n OSUM-EChat --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_osum_echat \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_emotional_.../manifest.jsonl \\
+    # Note: run this in the OSUM-EChat environment (see https://github.com/open-s2s/OSUM)
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_osum_echat \\
+        --manifest eval/eval_emotional_.../manifest.jsonl \\
         --skip-existing
 """
 
@@ -38,7 +40,7 @@ from pathlib import Path
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_OSUM_DIR = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/OSUM-EChat/OSUM/OSUM-EChat"
+DEFAULT_OSUM_DIR = "/path/to/OSUM-EChat"
 
 
 # ---------------------------------------------------------------------------
@@ -253,7 +255,7 @@ def main():
         print(f"  {mode} : {ok}/{total}")
     print(f"  Manifest      : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_emotional \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_emotional \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

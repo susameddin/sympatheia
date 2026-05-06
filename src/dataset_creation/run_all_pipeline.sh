@@ -15,7 +15,7 @@
 #
 # Prerequisites:
 #   - conda envs: qwen3-tts4 (text gen + TTS), glm4voice3 (codec encoding)
-#   - LLM model: /engram/naplab/users/sd3705/models/Qwen3-32B
+#   - LLM model: Qwen/Qwen3-32B
 #   - TTS model: Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice (downloaded by HuggingFace)
 # =============================================================================
 
@@ -26,7 +26,7 @@ export PYTHONUNBUFFERED=1
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONDA_CONVERT="glm4voice3"
 
-BASE_DIR="/engram/naplab/users/sd3705/Datasets/Sympatheia-18k"
+BASE_DIR="/path/to/Sympatheia-18k"
 
 echo "================================================================"
 echo "  Sympatheia Full Dataset Pipeline"

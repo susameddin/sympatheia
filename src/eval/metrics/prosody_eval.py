@@ -19,11 +19,11 @@ Features extracted per audio:
 
 Usage:
     # Reference-free only:
-    conda run -n s --no-capture-output python -m eval.metrics.prosody_eval \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval_emotional_.../manifest.jsonl
+    python -m eval.metrics.prosody_eval \\
+        --manifest eval_emotional_.../manifest.jsonl
 
     # With reference audio comparison:
-    conda run -n s --no-capture-output python -m eval.metrics.prosody_eval \\
+    python -m eval.metrics.prosody_eval \\
         --manifest /path/to/manifest.jsonl \\
         --eval-jsonl new_samples/eval.jsonl \\
         --num-reference 5

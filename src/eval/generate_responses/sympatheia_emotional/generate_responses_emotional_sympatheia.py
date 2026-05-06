@@ -13,24 +13,24 @@ Outputs:
 
 The output dir is auto-constructed from the experiment name + checkpoint step
 when --output-dir is not explicitly provided:
-  /engram/naplab/users/sd3705/emo_recog_2025s/eval_emotional_<experiment>_ckpt<step>/
+  eval_emotional_<experiment>_ckpt<step>/
 
 For base GLM-4-Voice responses, use generate_responses_emotional_glm4voice_base.py.
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_sympatheia \\
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_sympatheia \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 1400 \\
         --num-samples 10
 
     # Resume:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_sympatheia \\
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_sympatheia \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 1400 \\
         --skip-existing
 
     # Quick test with 2 emotions:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_sympatheia \\
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_sympatheia \\
         --emotions happy sad \\
         --num-samples 2 \\
         --output-dir /tmp/eval_test/
@@ -65,8 +65,8 @@ DEFAULT_FINETUNED_EXPERIMENT = (
     "experiments/sympatheia-12emo-20260312-100309"
 )
 DEFAULT_CHECKPOINT_STEP = 2000
-DEFAULT_EVAL_AUDIO_DIR = "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Emotional_v2/audio/eval"
-DEFAULT_ENGRAM_BASE = "/engram/naplab/users/sd3705/emo_recog_2025s/eval"
+DEFAULT_EVAL_AUDIO_DIR = "/path/to/Sympatheia_12Emo_Emotional_v2/audio/eval"
+DEFAULT_ENGRAM_BASE = "eval"
 DECODER_SAMPLE_RATE = 22050
 
 PLAIN_SYSTEM_PROMPT = "Please respond in English."
@@ -376,7 +376,7 @@ def main():
     print(f"  finetuned_na:   {na_ok}/{total}")
     print(f"  Manifest:       {manifest_path}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_emotional \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_emotional \\")
     print(f"      --manifest {manifest_path.resolve()}")
     print(f"{'='*60}")
 

@@ -10,8 +10,8 @@ UTMOS loads via torch.hub (tarepan/SpeechMOS) — no extra install needed.
 First run downloads ~392MB model weights to the torch.hub cache.
 
 Usage:
-    conda run -n s --no-capture-output python -m eval.metrics.naturalness_eval \\
-        --manifest /engram/naplab/users/sd3705/emo_recog_2025s/eval_emotional_.../manifest.jsonl
+    python -m eval.metrics.naturalness_eval \\
+        --manifest eval_emotional_.../manifest.jsonl
 
 Outputs:
     <output-dir>/metrics/naturalness_metrics.json

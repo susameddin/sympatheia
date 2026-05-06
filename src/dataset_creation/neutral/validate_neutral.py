@@ -14,7 +14,7 @@ Checks:
 
 Run:
   python dataset_creation/neutral/validate_neutral.py \
-      --dataset-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/
+      --dataset-dir /path/to/Sympatheia-18k/Neutral/
 """
 
 import argparse

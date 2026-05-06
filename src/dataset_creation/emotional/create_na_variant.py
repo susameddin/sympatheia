@@ -7,7 +7,7 @@ This teaches the model to handle missing VA values at inference time.
 
 Usage:
   python dataset_creation/create_na_variant.py \
-      --input-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Emotional \
+      --input-dir /path/to/Sympatheia-18k/Emotional \
       --na-ratio 0.333
 """
 

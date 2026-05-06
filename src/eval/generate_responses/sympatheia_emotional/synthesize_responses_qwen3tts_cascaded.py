@@ -7,10 +7,10 @@ Reads manifest_qwen3omni_cascade_text.jsonl produced by Stage 1
 using the cascade_style field as the Qwen3-TTS instruct parameter.
 
 Usage:
-    conda run -n qwen3-tts4 --no-capture-output \\
-        python -m eval.generate_responses.sympatheia_emotional.synthesize_responses_qwen3tts_cascaded \\
-        --manifest <path/to/manifest_qwen3omni_cascade_text.jsonl> \\
-        --output-dir <path/to/output/>
+    # Note: run this in the Qwen3-TTS environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sympatheia_emotional.synthesize_responses_qwen3tts_cascaded \\
+    --manifest <path/to/manifest_qwen3omni_cascade_text.jsonl> \\
+    --output-dir <path/to/output/>
 
     # Resume:
     ... --skip-existing

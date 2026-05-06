@@ -40,11 +40,11 @@ CONDA_CONVERT="glm4voice3"   # GLM-4-Voice encoding/decoding (needs hyperpyyaml)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
-DATASET_DIR="/engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Emotional"
+DATASET_DIR="/path/to/Sympatheia-18k/Emotional"
 METADATA_DIR="$DATASET_DIR/metadata"
 AUDIO_DIR="$DATASET_DIR/audio"
 
-LLM_MODEL="/engram/naplab/users/sd3705/models/Qwen3-32B"
+LLM_MODEL="Qwen/Qwen3-32B"
 TTS_MODEL="Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
 
 NUM_GPUS=4          # adjust to available GPUs

@@ -8,11 +8,11 @@ openai-whisper, then computes WER against the model's own text output
 the intended text — a genuine speech intelligibility metric.
 
 Usage:
-    conda run -n s --no-capture-output python -m eval.metrics.intelligibility_eval \\
+    python -m eval.metrics.intelligibility_eval \\
         --manifest /path/to/manifest.jsonl
 
     # Use a smaller model (faster, less accurate):
-    conda run -n s --no-capture-output python -m eval.metrics.intelligibility_eval \\
+    python -m eval.metrics.intelligibility_eval \\
         --manifest /path/to/manifest.jsonl \\
         --whisper-model medium
 

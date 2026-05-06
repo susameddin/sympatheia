@@ -14,7 +14,7 @@ Requires:
     pip install bert-score rouge-score
 
 Usage:
-    conda run -n s --no-capture-output python -m eval.metrics.coherence_eval \\
+    python -m eval.metrics.coherence_eval \\
         --manifest /path/to/manifest.jsonl \\
         --eval-jsonl new_samples/eval.jsonl
 
@@ -51,7 +51,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.constants import ALL_EMOTIONS
 
 DEFAULT_EVAL_JSONL = str(
-    Path("/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Emotional_v2/tokens/eval.jsonl")
+    Path("/path/to/Sympatheia_12Emo_Emotional_v2/tokens/eval.jsonl")
 )
 
 

@@ -12,11 +12,11 @@ the same information as the fine-tuned model and other baselines (Qwen3-Omni,
 OpenS2S) — this makes the comparison fair.
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_glm4voice \\
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_glm4voice \\
         --manifest results/eval_neutral_.../manifest.jsonl
 
     # Resume:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_glm4voice \\
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_glm4voice \\
         --manifest results/eval_neutral_.../manifest.jsonl \\
         --skip-existing
 """

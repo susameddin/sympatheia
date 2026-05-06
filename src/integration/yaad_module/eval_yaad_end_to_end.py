@@ -13,17 +13,18 @@ and write into a combined manifest.
 
 Usage:
     # Single modality
-    conda run -n glm4voice3 --no-capture-output python -m integration.yaad_module.eval_yaad_end_to_end \\
+    python -m integration.yaad_module.eval_yaad_end_to_end \\
         --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930 \\
         --modality ecg
 
     # Multiple modalities in one pass
-    conda run -n glm4voice3 --no-capture-output python -m integration.yaad_module.eval_yaad_end_to_end \\
+    python -m integration.yaad_module.eval_yaad_end_to_end \\
         --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930 \\
         --modality ecg gsr
 
     # Then judge (neutral rubric):
-    conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_qwen3omni_neutral \\
         --manifest <output-dir>/manifest.jsonl \\
         --conditions ecg_va gsr_va no_va
 """
@@ -295,7 +296,7 @@ def main():
         print(f"  {cond:>12}: {n} audio files")
     print(
         f"\nNext step (neutral judge):\n"
-        f"  conda run -n qwen3omni --no-capture-output "
+        f"  "
         f"python -m eval.judge.judge_qwen3omni_neutral \\\n"
         f"    --manifest {manifest_path.resolve()} \\\n"
         f"    --conditions {conditions_str}"

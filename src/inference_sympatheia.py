@@ -18,7 +18,11 @@ Usage:
 
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+FINETUNE_DIR = os.path.dirname(os.path.abspath(__file__))   # src/
+PROJECT_DIR  = os.path.dirname(FINETUNE_DIR)                 # sympatheia/
+sys.path.insert(0, PROJECT_DIR)
+sys.path.insert(0, FINETUNE_DIR)
 
 import argparse
 import random
@@ -69,7 +73,7 @@ def parse_args():
     parser.add_argument(
         "--eval-audio-dir",
         type=str,
-        default="/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Emotional_v2/audio/eval",
+        default="/path/to/Sympatheia_12Emo_Emotional_v2/audio/eval",
         help="Root of eval audio dir containing {emotion}_query/ subdirs (used with --compare-mode)",
     )
     parser.add_argument(
@@ -450,9 +454,9 @@ def main():
     if args.input_audio:
         user_audio_path = Path(args.input_audio)
     else:
-        user_audio_path = Path("/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2/audio/eval/query/neutral/p2v2_Neutral_00029.wav")
+        user_audio_path = Path("/path/to/Sympatheia_12Emo_Neutral_v2/audio/eval/query/neutral/p2v2_Neutral_00029.wav")
         if not user_audio_path.exists():
-            user_audio_path = Path("/engram/naplab/users/sd3705/Datasets/OpenS2S_9Emo/audio/eval/neutral_query/4823.wav")
+            user_audio_path = Path("/path/to/OpenS2S_9Emo/audio/eval/neutral_query/4823.wav")
     assert user_audio_path.exists(), f"Missing audio: {user_audio_path}"
     print(f"Input audio: {user_audio_path}")
 

@@ -13,23 +13,23 @@ Download ISEAR CSV (one-time):
 
 Usage:
     # Keyword-only (no GPU needed):
-    conda run -n glm4voice3 --no-capture-output python -m integration.eval_text_va \\
+    python -m integration.eval_text_va \\
         --dataset-path integration/cache/isear.csv
 
     # HuggingFace 7-class classifier:
-    conda run -n glm4voice3 --no-capture-output python -m integration.eval_text_va \\
+    python -m integration.eval_text_va \\
         --dataset-path integration/cache/isear.csv --method hf
 
     # HuggingFace zero-shot NLI (all 12 anchors):
-    conda run -n glm4voice3 --no-capture-output python -m integration.eval_text_va \\
+    python -m integration.eval_text_va \\
         --dataset-path integration/cache/isear.csv --method hf_zs
 
     # With GLM-4 base model:
-    conda run -n glm4voice3 --no-capture-output python -m integration.eval_text_va \\
+    python -m integration.eval_text_va \\
         --dataset-path integration/cache/isear.csv --llm
 
     # With fine-tuned LoRA checkpoint:
-    conda run -n glm4voice3 --no-capture-output python -m integration.eval_text_va \\
+    python -m integration.eval_text_va \\
         --dataset-path integration/cache/isear.csv --llm \\
         --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-2200
 """
@@ -385,7 +385,7 @@ def parse_args():
     )
     parser.add_argument(
         "--llm", action="store_true",
-        help="Use GLM-4 LLM for VA extraction (requires glm4voice3 env and GPU). "
+        help="Use GLM-4 LLM for VA extraction (requires GPU). "
              "Equivalent to --method llm; overridden by --method if both are set.",
     )
     parser.add_argument(

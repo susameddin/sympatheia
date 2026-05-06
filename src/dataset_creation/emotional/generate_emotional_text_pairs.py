@@ -10,7 +10,8 @@ Output format is identical to text_pairs_train.jsonl / text_pairs_eval.jsonl so 
 existing TTS and GLM-4-Voice encoding steps work without modification.
 
 Run with:
-  conda run -n qwen3-tts4 --no-capture-output python dataset_creation/emotional/generate_emotional_text_pairs.py \
+  # Note: run this in the Qwen3-TTS environment (see https://github.com/QwenLM/Qwen3)
+  python dataset_creation/emotional/generate_emotional_text_pairs.py \
       --llm-model Qwen/Qwen3-32B-Instruct \
       --output-dir /path/to/new_metadata/ \
       --samples-per-emotion 1000
@@ -294,8 +295,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--llm-model",
-        default="/engram/naplab/users/sd3705/models/Qwen3-32B",
-        help="Path or HuggingFace ID of the LLM (default: /engram/naplab/users/sd3705/models/Qwen3-32B)",
+        default="Qwen/Qwen3-32B",
+        help="Path or HuggingFace ID of the LLM (default: Qwen/Qwen3-32B)",
     )
     parser.add_argument(
         "--output-dir",

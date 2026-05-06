@@ -5,11 +5,12 @@ and generates speech responses.  Downstream metrics (UTMOS, WER, LLM judge)
 quantify quality degradation vs. noise level.
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python -m integration.sensitivity_analysis \
+    python -m integration.sensitivity_analysis \
         --checkpoint experiments/sympatheia-12emo-20260312-100309/checkpoint-2000
 
     # Then judge:
-    conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_sensitivity \
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.judge.judge_sensitivity \
         --manifest <output-dir>/manifest.jsonl
 """
 
@@ -212,7 +213,7 @@ def main():
     n_audio = len(list(audio_dir.glob("*.wav")))
     print(f"  Audio files: {n_audio}")
     print(f"\nExpected total: {len(query_map)} emotions × {len(args.noise_levels)} noise levels × {args.n_repeats} repeats = {len(query_map) * len(args.noise_levels) * args.n_repeats}")
-    print(f"\nNext: conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_sensitivity --manifest {manifest_path.resolve()}")
+    print(f"\nNext: python -m eval.judge.judge_sensitivity --manifest {manifest_path.resolve()}")
 
 
 if __name__ == "__main__":

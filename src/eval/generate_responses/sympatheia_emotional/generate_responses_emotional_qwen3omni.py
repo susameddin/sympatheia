@@ -11,11 +11,13 @@ Unlike OpenS2S/OSUM-EChat, Qwen3-Omni shares the same conda environment as
 the judge (qwen3omni), so inference runs in-process without a subprocess.
 
 Usage:
-    conda run -n qwen3omni --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_qwen3omni \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_qwen3omni \\
         --manifest results/eval_judge/manifest.jsonl
 
     # Resume:
-    conda run -n qwen3omni --no-capture-output python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_qwen3omni \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_qwen3omni \\
         --manifest results/eval_judge/manifest.jsonl \\
         --skip-existing
 """
@@ -34,7 +36,7 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL   = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
+DEFAULT_MODEL   = "Qwen/Qwen3-Omni"
 DEFAULT_SPEAKER = "Chelsie"
 SAMPLE_RATE     = 24000
 USE_AUDIO_IN_VIDEO = True
@@ -283,7 +285,7 @@ def main():
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_emotional \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_emotional \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

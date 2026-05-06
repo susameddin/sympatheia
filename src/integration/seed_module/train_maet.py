@@ -11,13 +11,13 @@ Saves:
 
 Usage:
     # Train all 3 modalities for all 20 subjects:
-    conda run -n s --no-capture-output python -m eeg_emotion.train_maet
+    python -m eeg_emotion.train_maet
 
     # Train only one modality:
-    conda run -n s --no-capture-output python -m eeg_emotion.train_maet --modality eeg
+    python -m eeg_emotion.train_maet --modality eeg
 
     # Resume, skipping already-trained subjects/modalities:
-    conda run -n s --no-capture-output python -m eeg_emotion.train_maet --skip-existing
+    python -m eeg_emotion.train_maet --skip-existing
 """
 
 import argparse

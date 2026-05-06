@@ -11,10 +11,10 @@ into Stage 2 (synthesize_responses_qwen3tts_cascaded.py) which synthesizes audio
 Qwen3-TTS using the style as the TTS instruct parameter.
 
 Usage:
-    conda run -n qwen3omni --no-capture-output \\
-        python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_qwen3omni_cascade_text \\
-        --manifest <path/to/sample_emotional_manifest.jsonl> \\
-        --output-dir <path/to/output/>
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sympatheia_emotional.generate_responses_emotional_qwen3omni_cascade_text \\
+    --manifest <path/to/sample_emotional_manifest.jsonl> \\
+    --output-dir <path/to/output/>
 
     # Resume:
     ... --skip-existing
@@ -32,7 +32,7 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
+DEFAULT_MODEL = "Qwen/Qwen3-Omni"
 USE_AUDIO_IN_VIDEO = True
 
 SYSTEM_PROMPT = (
@@ -250,7 +250,7 @@ def main():
     print(f"DONE  {ok}/{total} samples have text output")
     print(f"  Manifest: {out_manifest}")
     print(f"\nNext step (Stage 2):")
-    print(f"  conda run -n qwen3-tts4 --no-capture-output \\")
+    print(f"  \\")
     print(f"      python -m eval.generate_responses.sympatheia_emotional.synthesize_responses_qwen3tts_cascaded \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")

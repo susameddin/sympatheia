@@ -9,11 +9,13 @@ knows the user's stated emotion — even though the audio is neutral.
 Reads manifest.jsonl produced by generate_responses_neutral_sympatheia.py.
 
 Usage:
-    conda run -n qwen3omni --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen3omni \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen3omni \\
         --manifest results/eval_neutral/manifest.jsonl
 
     # Resume:
-    conda run -n qwen3omni --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen3omni \\
+    # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_qwen3omni \\
         --manifest results/eval_neutral/manifest.jsonl \\
         --skip-existing
 """
@@ -32,7 +34,7 @@ import torch
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL   = "/engram/naplab/users/sd3705/emo_recog_2025s/Models/Qwen3-Omni"
+DEFAULT_MODEL   = "Qwen/Qwen3-Omni"
 DEFAULT_SPEAKER = "Chelsie"
 SAMPLE_RATE     = 24000
 USE_AUDIO_IN_VIDEO = True
@@ -289,7 +291,7 @@ def main():
     print(f"  Generated : {ok}/{total} samples")
     print(f"  Manifest  : {out_manifest}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {out_manifest.resolve()}")
     print(f"{'='*60}")
 

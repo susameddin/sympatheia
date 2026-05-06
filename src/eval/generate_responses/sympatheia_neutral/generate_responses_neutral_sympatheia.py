@@ -24,19 +24,19 @@ For base GLM-4-Voice responses, use generate_responses_neutral_glm4voice_base.py
 
 Usage:
     # Auto-versioned output dir:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_sympatheia \\
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_sympatheia \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 1400 \\
         --num-samples 10
 
     # Resume:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_sympatheia \\
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_sympatheia \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 1400 \\
         --skip-existing
 
     # Quick test with 2 emotions:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_sympatheia \\
+    python -m eval.generate_responses.sympatheia_neutral.generate_responses_neutral_sympatheia \\
         --emotions happy sad \\
         --num-samples 2 \\
         --output-dir /tmp/eval_neutral_test/
@@ -72,10 +72,10 @@ DEFAULT_FINETUNED_EXPERIMENT = (
 )
 DEFAULT_CHECKPOINT_STEP = 2000
 DEFAULT_NEUTRAL_AUDIO_DIR = (
-    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2"
+    "/path/to/Sympatheia_12Emo_Neutral_v2"
     "/audio/eval/query/neutral"
 )
-DEFAULT_ENGRAM_BASE = "/engram/naplab/users/sd3705/emo_recog_2025s/eval"
+DEFAULT_ENGRAM_BASE = "eval"
 DECODER_SAMPLE_RATE = 22050
 
 NA_SYSTEM_PROMPT = "Please respond in English. User emotion N/A"
@@ -390,7 +390,7 @@ def main():
     print(f"  finetuned_na:   {na_ok}/{total}")
     print(f"  Manifest:       {manifest_path}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {manifest_path.resolve()}")
     print(f"{'='*60}")
 

@@ -20,10 +20,11 @@ Output JSONL record:
   }
 
 Run:
-  conda run -n qwen3-tts4 --no-capture-output python dataset_creation/neutral/convert_neutral_to_glm4voice.py \\
-      --metadata-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/metadata/ \\
-      --audio-dir    /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/audio/ \\
-      --output-dir   /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/
+  # Note: run this in the Qwen3-TTS environment (see https://github.com/QwenLM/Qwen3)
+  python dataset_creation/neutral/convert_neutral_to_glm4voice.py \\
+      --metadata-dir /path/to/Sympatheia-18k/Neutral/metadata/ \\
+      --audio-dir    /path/to/Sympatheia-18k/Neutral/audio/ \\
+      --output-dir   /path/to/Sympatheia-18k/Neutral/
 """
 
 import argparse

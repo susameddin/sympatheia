@@ -18,9 +18,10 @@ Two-pass generation:
     - Output: audio/{split}/response/{response_emotion.lower()}/{pair_index}.wav
 
 Run:
-  conda run -n qwen3-tts4 --no-capture-output python dataset_creation/neutral/generate_neutral_audio_multigpu.py \
-      --metadata-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/metadata/ \
-      --output-audio-dir /engram/naplab/users/sd3705/Datasets/Sympatheia-18k/Neutral/audio/ \
+  # Note: run this in the Qwen3-TTS environment (see https://github.com/QwenLM/Qwen3)
+  python dataset_creation/neutral/generate_neutral_audio_multigpu.py \
+      --metadata-dir /path/to/Sympatheia-18k/Neutral/metadata/ \
+      --output-audio-dir /path/to/Sympatheia-18k/Neutral/audio/ \
       --num-gpus 4 --batch-size 16 --resume
 """
 

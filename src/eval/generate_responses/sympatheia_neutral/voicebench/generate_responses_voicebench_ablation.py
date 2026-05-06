@@ -29,11 +29,11 @@ Usage:
     # First, download VoiceBench once:
     #   python eval/retired/download_voicebench.py
 
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voicebench.generate_responses_voicebench_ablation \\
+    python -m eval.generate_responses.sympatheia_neutral.voicebench.generate_responses_voicebench_ablation \\
         --num-samples 50
 
     # Reuse audio_cache from a previous voicebench run:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voicebench.generate_responses_voicebench_ablation \\
+    python -m eval.generate_responses.sympatheia_neutral.voicebench.generate_responses_voicebench_ablation \\
         --shared-dir /path/to/voicebench/run --skip-base
 """
 
@@ -66,8 +66,8 @@ DEFAULT_FINETUNED_EXPERIMENT = (
     "experiments/sympatheia-12emo-v2-20260320-100225"
 )
 DEFAULT_CHECKPOINT_STEP = 2200
-DEFAULT_ENGRAM_BASE = "/engram/naplab/users/sd3705/emo_recog_2025s/eval"
-DEFAULT_VOICEBENCH_DIR = "/engram/naplab/users/sd3705/Datasets/VoiceBench/commoneval"
+DEFAULT_ENGRAM_BASE = "eval"
+DEFAULT_VOICEBENCH_DIR = "/path/to/VoiceBench/commoneval"
 DECODER_SAMPLE_RATE = 22050
 
 PLAIN_SYSTEM_PROMPT   = "Please respond in English."
@@ -471,7 +471,7 @@ def main():
     print(f"  finetuned_na          : {na_ok}/{total}")
     print(f"  Manifest              : {manifest_path}")
     print(f"\nNext step:")
-    print(f"  conda run -n qwen3omni --no-capture-output python -m eval.judge.judge_qwen3omni_neutral \\")
+    print(f"  python -m eval.judge.judge_qwen3omni_neutral \\")
     print(f"      --manifest {manifest_path.resolve()}")
     print(f"{'='*60}")
 

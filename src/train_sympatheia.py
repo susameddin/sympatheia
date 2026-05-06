@@ -1,3 +1,21 @@
+"""
+Fine-tune GLM-4-Voice-9B with LoRA on the Sympatheia-18k dataset.
+
+Reads hyperparameters from config.yaml (same directory). Saves checkpoints
+and a copy of config.yaml to ./experiments/<run_name>/.
+
+Dataset format:
+    Pre-encoded JSONL with a single "text" field containing audio tokens and
+    response text in GLM-4-Voice chat format. Generate this dataset using the
+    scripts in src/dataset_creation/ before running training.
+
+Usage (with DeepSpeed):
+    deepspeed --num_gpus=<N> src/train_sympatheia.py
+
+    # Or single-GPU (no DeepSpeed):
+    python src/train_sympatheia.py
+"""
+
 from datasets import load_dataset
 import datetime
 import os
@@ -6,14 +24,14 @@ from peft import LoraConfig
 from transformers import AutoModel, AutoTokenizer
 import yaml
 
-os.environ["WANDB_PROJECT"] = "Sympatheia-12emo"
+os.environ["WANDB_PROJECT"] = "Sympatheia"
 
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(_SRC_DIR, "config.yaml"), "r") as f:
     config = yaml.safe_load(f)
 
-run_name = f"sympatheia-12emo-v2-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
+run_name = f"sympatheia-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
 output_dir = f"./experiments/{run_name}"
 os.makedirs(output_dir, exist_ok=True)
 
@@ -24,13 +42,9 @@ with open(os.path.join(output_dir, "config.yaml"), "w") as f:
 MAX_LENGTH = config["max_length"]
 
 # VA format dataset (valence/arousal values in system prompt text)
-# data_files = {
-#     "train": "../../../Datasets/OpenS2S_Qwen3TTS/glm4voice_va_format/train.jsonl",
-#     "validation": "../../../Datasets/OpenS2S_Qwen3TTS/glm4voice_va_format/eval.jsonl",
-# }
 data_files = {
-    "train": "/engram/naplab/users/sd3705/Datasets/Sympatheia-18k/encoded_train.jsonl",
-    "validation": "/engram/naplab/users/sd3705/Datasets/Sympatheia-18k/encoded_eval.jsonl",
+    "train": "/path/to/Sympatheia-18k/encoded_train.jsonl",
+    "validation": "/path/to/Sympatheia-18k/encoded_eval.jsonl",
 }
 raw_datasets = load_dataset("json", data_files=data_files)
 train_dataset = raw_datasets["train"]

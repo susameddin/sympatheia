@@ -4,12 +4,12 @@
 Loads pre-computed predictions for the specified sensing modality and generates
 Sympatheia speech model responses under the modality's conditions.
 
-Precompute steps (run first, in 's' env):
+Precompute steps (run first):
     python -m integration.face_module.precompute_hsemotion   --n-per-class 150
     python -m integration.seed_module.precompute_maet        --n-per-class 6
     python -m integration.text_module.precompute_text        --n-per-class 200
 
-Generate (in 'glm4voice3' env):
+Generate:
     python -m eval.generate_responses.sensing.generate_responses_sensing --modality face
     python -m eval.generate_responses.sensing.generate_responses_sensing --modality eeg
     python -m eval.generate_responses.sensing.generate_responses_sensing --modality text
@@ -48,7 +48,7 @@ DEFAULT_CHECKPOINT = str(
 )
 DECODER_SAMPLE_RATE = 22050
 DEFAULT_EVAL_AUDIO = (
-    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2/audio/eval/query/neutral"
+    "/path/to/Sympatheia_12Emo_Neutral_v2/audio/eval/query/neutral"
 )
 
 _MODALITY_DEFAULTS = {
@@ -56,21 +56,21 @@ _MODALITY_DEFAULTS = {
         "predictions": str(
             PROJECT_ROOT / "integration" / "face_module" / "cache" / "face_predictions.json"
         ),
-        "output_dir": "/engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_face_hsemo",
+        "output_dir": "eval/eval_face_hsemo",
         "conditions": ["face_va", "no_va"],
     },
     "eeg": {
         "predictions": str(
             PROJECT_ROOT / "integration" / "seed_module" / "cache" / "eeg_predictions.json"
         ),
-        "output_dir": "/engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_eeg_maet",
+        "output_dir": "eval/eval_eeg_maet",
         "conditions": ["eeg_only", "eye_only", "combined", "no_va"],
     },
     "text": {
         "predictions": str(
             PROJECT_ROOT / "integration" / "text_module" / "cache" / "text_predictions.json"
         ),
-        "output_dir": "/engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_text_e2e",
+        "output_dir": "eval/eval_text_e2e",
         "conditions": ["text_va", "no_va"],
     },
 }
@@ -274,7 +274,7 @@ def main():
         print(f"ERROR: predictions not found: {predictions_path}", file=sys.stderr)
         print(
             f"Run first:\n"
-            f"  conda run -n s --no-capture-output "
+            f"  "
             f"python -m integration.{modality}_module.precompute_{'hsemotion' if modality == 'face' else ('maet' if modality == 'eeg' else 'text')}",
             file=sys.stderr,
         )
@@ -371,7 +371,7 @@ def main():
         print(f"  {cond:>14}: {n} audio files")
     print(f"  Manifest:       {manifest_path}")
     print(
-        f"\nNext:\n  conda run -n qwen3omni --no-capture-output "
+        f"\nNext:\n  "
         f"python -m eval.judge.judge_qwen3omni_emotional "
         f"--manifest {manifest_path.resolve()}"
     )

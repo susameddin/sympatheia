@@ -10,11 +10,11 @@ Output JSON mirrors face_emotion/cache/hsemotion_predictions.json format
 but with 3 modality conditions per record instead of one.
 
 Prerequisite:
-    conda run -n s --no-capture-output python -m eeg_emotion.train_maet
+    python -m eeg_emotion.train_maet
 
 Usage:
-    conda run -n s --no-capture-output python -m eeg_emotion.precompute_maet
-    conda run -n s --no-capture-output python -m eeg_emotion.precompute_maet --n-per-class 10
+    python -m eeg_emotion.precompute_maet
+    python -m eeg_emotion.precompute_maet --n-per-class 10
 """
 
 import argparse
@@ -118,7 +118,7 @@ def load_model(modality_key, subject_id, cache_dir, device):
         raise FileNotFoundError(
             f"Checkpoint not found: {ckpt_path}\n"
             "Run first:\n"
-            "  conda run -n s --no-capture-output python -m eeg_emotion.train_maet"
+            "  python -m eeg_emotion.train_maet"
         )
     ckpt = torch.load(ckpt_path, map_location=device)
     model = make_model(device)
@@ -153,7 +153,7 @@ def build_test_pool(subject_ids, cache_dir, seed=42):
             raise FileNotFoundError(
                 f"Norm stats not found: {norm_path}\n"
                 "Run first:\n"
-                "  conda run -n s --no-capture-output python -m eeg_emotion.train_maet"
+                "  python -m eeg_emotion.train_maet"
             )
         norm_data = np.load(str(norm_path))
         eeg_mean = norm_data["eeg_mean"]

@@ -18,12 +18,12 @@ Outputs:
   <output-dir>/eval.jsonl            — reference answers for coherence eval
 
 Usage:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_sympatheia \\
+    python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_sympatheia \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 2000
 
     # Smoke test:
-    conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_sympatheia \\
+    python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_sympatheia \\
         --finetuned-experiment experiments/my-experiment \\
         --checkpoint-step 2000 \\
         --num-samples 3 \\
@@ -57,7 +57,7 @@ from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 BASE_MODEL_ID = "THUDM/glm-4-voice-9b"
 DEFAULT_FINETUNED_EXPERIMENT = "experiments/sympatheia-12emo-20260312-100309"
 DEFAULT_CHECKPOINT_STEP = 2000
-DEFAULT_OUTPUT_DIR = "/engram/naplab/users/sd3705/emo_recog_2025s/eval/eval_va400k"
+DEFAULT_OUTPUT_DIR = "eval/eval_va400k"
 DECODER_SAMPLE_RATE = 22050
 QUERY_SAMPLE_RATE = 16000
 
@@ -411,7 +411,7 @@ def main():
     print(f"  Manifest:       {manifest_path}")
     print(f"  eval.jsonl:     {eval_jsonl_path}")
     print(f"\nNext step (base model):")
-    print(f"  conda run -n glm4voice3 --no-capture-output python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_glm4voice \\")
+    print(f"  python -m eval.generate_responses.sympatheia_neutral.voiceassistant400k.generate_responses_va400k_glm4voice \\")
     print(f"      --manifest {manifest_path.resolve()}")
     print(f"{'='*60}")
 
