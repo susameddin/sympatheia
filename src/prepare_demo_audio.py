@@ -299,10 +299,10 @@ def process_dataset():
     # Per-emotion index override (0-based) for the emotional split
     EMO_DATASET_IDX = {
         "Anxious":   1,
-        "Content":   1,
+        "Content":   9,
         "Disgusted": 1,
-        "Happy":     3,
-        "Neutral":   2,
+        "Happy":     10,
+        "Neutral":   12,
         "Relaxed":   2,
         "Surprised": 1,
     }

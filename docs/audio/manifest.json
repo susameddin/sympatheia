@@ -539,8 +539,8 @@
       },
       {
         "emotion": "Content",
-        "query_text": "I just love how easy these kitchen gadgets make cooking—they take all the stress out of meal prep and make everything so much more fun.",
-        "response_text": "I'm so glad to hear that sense of ease and joy in your cooking space — it sounds like these gadgets are truly enhancing your moments in the kitchen. Tools that simplify tasks can be wonderful allies in creating calm and confidence while cooking, letting you savor the process instead of stressing over it. Maybe try pairing them with a recipe you’ve never made before — sometimes even familiar gadgets surprise us with new ways to make cooking feel playful and rewarding. 🌟"
+        "query_text": "Oh, it's so satisfying to see all the clean laundry folded and put away, everything just feels so fresh and tidy!",
+        "response_text": "I love that sense of calm you’re enjoying—there’s such quiet joy in a space that mirrors your inner order. It sounds like your efforts are giving you so much peace, and you’ve earned every moment of it. Did you know folding clothes neatly can actually help them keep their shape longer? It’s little acts like this that turn routines into gentle gifts to yourself."
       },
       {
         "emotion": "Disgusted",
@@ -559,13 +559,13 @@
       },
       {
         "emotion": "Happy",
-        "query_text": "The forecast is perfect for our picnic tomorrow — I can't wait, the whole day just feels so right!",
-        "response_text": "Your joy is contagious—I can feel the sunshine in your words! The forecast truly is picture-perfect: 75°F with just a breeze to keep things comfortable, ideal for spreading out a blanket and savoring every moment. Why not pack a lemonade bar with extra berries? Those little bursts of flavor will match the brightness of your day. This kind of harmony between nature and plans is what makes memories glow—have an absolutely radiant picnic!"
+        "query_text": "I just finished that huge project I was stressing over, and it feels so amazing! How do you usually deal with work or study stress when things finally go your way?",
+        "response_text": "I’m absolutely thrilled for you—crossing that finish line after all that hard work must feel like a huge weight lifting, replaced by this brilliant sense of accomplishment! When stress turns into success, I love leaning into *gratitude rituals*—like jotting down 3 things you’re proud of about the process—to savor the win and reset your energy. It’s like浇筑ing that joy into a foundation for your next challenge! Also, giving yourself permission to *play* after intense work—dancing, a silly show, whatever makes you laugh—helps your brain switch from “survival mode” to “I rock mode,” which is exactly what you deserve right now!"
       },
       {
         "emotion": "Neutral",
-        "query_text": "Hey, do you have any good tips for getting more out of my smartphone? I'm just curious and trying to learn.",
-        "response_text": "Here are a few ideas to make the most of your smartphone: try exploring built-in features like voice assistants for hands-free tasks, or check your phone’s accessibility settings for tools that can simplify navigation. Apps like \"Digital Wellbeing\" can help track usage patterns, and customizing your home screen with shortcuts might save you time. You might also enjoy experimenting with camera modes or editing tools—many phones have pro-level features hidden in the settings. Let me know if you’d like deeper dives on any of these!"
+        "query_text": "I'm trying to find a good kitchen gadget to make morning routines easier—any suggestions?",
+        "response_text": "A programmable coffee maker or espresso machine can streamline your morning caffeine ritual by starting brews at your set time. Electric kettles heat water quickly for coffee, tea, or oatmeal, cutting minutes off your routine. If you’re into fresh juice, a manual citrus juicer with a reamer and built-in pulp separator makes squeezing lemons or limes effortless. For breakfasts that need baking, a mini convection toaster oven with pre-set functions can cook toast, waffles, or even small casseroles faster than a traditional oven. Each of these gadgets reduces small stressors, letting you focus on what matters most in your morning flow."
       },
       {
         "emotion": "Relaxed",
