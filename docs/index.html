@@ -254,9 +254,11 @@ function buildComparison(prefix, tabsEl, panelsEl, modelDefs) {
       <div class="example-tabs">
         <button class="extab-btn active" data-ex="ex1">Example 1</button>
         <button class="extab-btn" data-ex="ex2">Example 2</button>
+        <button class="extab-btn" data-ex="ex3">Example 3</button>
       </div>
       <div class="example-pane active" id="${prefix}-${key}-ex1">${makeExPane("ex1")}</div>
       <div class="example-pane" id="${prefix}-${key}-ex2">${makeExPane("ex2")}</div>
+      <div class="example-pane" id="${prefix}-${key}-ex3">${makeExPane("ex3")}</div>
     `;
 
     // Example sub-tab click handlers
@@ -275,17 +277,19 @@ function buildComparison(prefix, tabsEl, panelsEl, modelDefs) {
 }
 
 const NEUTRAL_MODELS = [
-  { id: "sym",  label: "Sympatheia",     file: "sympatheia_v2.wav", css: "sympatheia", textKey: "sympatheia_v2_text" },
-  { id: "base", label: "GLM-4-Voice",   file: "base.wav",          css: "base",       textKey: "base_text" },
-  { id: "qwen", label: "Qwen3-Omni",    file: "qwen3omni.wav",     css: "qwen",       textKey: "qwen3omni_text" },
-  { id: "open", label: "OpenS2S",       file: "opens2s.wav",       css: "opens2s",    textKey: "opens2s_text" },
+  { id: "sym",  label: "Sympatheia",  file: "sympatheia_v2.wav", css: "sympatheia", textKey: "sympatheia_v2_text" },
+  { id: "base", label: "GLM-4-Voice", file: "base.wav",          css: "base",       textKey: "base_text" },
+  { id: "kimi", label: "Kimi Audio",  file: "kimi.wav",          css: "kimi",       textKey: "kimi_text" },
+  { id: "qwen", label: "Qwen3-Omni",  file: "qwen3omni.wav",     css: "qwen",       textKey: "qwen3omni_text" },
+  { id: "open", label: "OpenS2S",     file: "opens2s.wav",       css: "opens2s",    textKey: "opens2s_text" },
 ];
 
 const EMOTIONAL_MODELS = [
-  { id: "sym",  label: "Sympatheia",     file: "sympatheia_v2.wav", css: "sympatheia", textKey: "sympatheia_v2_text" },
-  { id: "base", label: "GLM-4-Voice",   file: "base.wav",          css: "base",       textKey: "base_text" },
-  { id: "qwen", label: "Qwen3-Omni",    file: "qwen3omni.wav",     css: "qwen",       textKey: "qwen3omni_text" },
-  { id: "open", label: "OpenS2S",       file: "opens2s.wav",       css: "opens2s",    textKey: "opens2s_text" },
+  { id: "sym",  label: "Sympatheia",  file: "sympatheia_v2.wav", css: "sympatheia", textKey: "sympatheia_v2_text" },
+  { id: "base", label: "GLM-4-Voice", file: "base.wav",          css: "base",       textKey: "base_text" },
+  { id: "kimi", label: "Kimi Audio",  file: "kimi.wav",          css: "kimi",       textKey: "kimi_text" },
+  { id: "qwen", label: "Qwen3-Omni",  file: "qwen3omni.wav",     css: "qwen",       textKey: "qwen3omni_text" },
+  { id: "open", label: "OpenS2S",     file: "opens2s.wav",       css: "opens2s",    textKey: "opens2s_text" },
 ];
 
 buildComparison("neutral",   document.getElementById("neutral-tabs"),   document.getElementById("neutral-panels"),   NEUTRAL_MODELS);
@@ -298,7 +302,7 @@ fetch("audio/manifest.json")
     function injectTranscripts(records, prefix, modelDefs) {
       records.forEach(rec => {
         const key = rec.emotion.toLowerCase();
-        ["ex1", "ex2"].forEach(ex => {
+        ["ex1", "ex2", "ex3"].forEach(ex => {
           const texts = rec[ex] || {};
           modelDefs.forEach(m => {
             const txt = texts[m.textKey];

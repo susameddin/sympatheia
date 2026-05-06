@@ -357,6 +357,7 @@ section:last-of-type { border-bottom: none; }
 .model-card.base       .model-card-header { background: var(--red-lt);    color: var(--red);      }
 .model-card.qwen       .model-card-header { background: var(--orange-lt); color: var(--orange);   }
 .model-card.opens2s    .model-card-header { background: var(--purple-lt); color: var(--purple);   }
+.model-card.kimi       .model-card-header { background: #e8f4fd;          color: #1a6fa8;         }
 .model-card.sympatheia .model-card-header { background: var(--teal-lt);   color: var(--teal-dk);  }
 
 .model-card.sympatheia { border-color: var(--teal);  box-shadow: 0 0 0 1px var(--teal);  }
