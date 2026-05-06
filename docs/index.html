@@ -13,7 +13,7 @@
 
 <!-- ===== Navigation ===== -->
 <nav>
-  <span class="nav-brand">Sympatheia</span>
+  <span class="nav-brand rainbow-text">Sympatheia</span>
   <ul class="nav-links">
     <li><a href="#overview">Overview</a></li>
     <li><a href="#neutral">Neutral Queries</a></li>
@@ -60,7 +60,7 @@
 <section id="overview">
   <div class="container">
     <h2 class="section-title">System Overview</h2>
-    <p class="section-sub">Sympatheia combines implicit affect inference from user speech with optional explicit control through a continuous valence–arousal (VA) interface. Pluggable sensing modules — facial expression, EEG/biosignals, and textual affect descriptions — feed into the same VA interface, enabling emotionally aligned spoken responses even when speech cues alone are subtle or ambiguous.</p>
+    <p class="section-sub">Sympatheia combines implicit affect inference from user speech with optional explicit control through a continuous valence–arousal (VA) interface. Optional pluggable sensing modules (facial expression, EEG/biosignals, and textual affect descriptions) feed into the same VA interface, enabling emotionally aligned spoken responses even when speech cues alone are subtle or ambiguous.</p>
     <figure class="overview-img-wrap">
       <img src="img/overview.png" alt="Sympatheia system overview">
     </figure>
@@ -70,11 +70,9 @@
 <!-- ===== Neutral Query Comparison ===== -->
 <section id="neutral">
   <div class="container">
-    <h2 class="section-title">Neutral Query Comparison</h2>
+    <h2 class="section-title">Example Responses to Neutral Queries with Emotion Conditioning</h2>
     <p class="section-sub">
-      The user speaks a neutral question. All models receive the target emotion via system prompt
-      as a valence–arousal control signal. Sympatheia uses precise (V, A) coordinates and is
-      fine-tuned to produce tonally matched responses; baselines receive a general empathy instruction.
+      The user speaks a neutral question. All models receive the target labels for user emotion via system prompt.
     </p>
 
     <div class="emotion-tabs" id="neutral-tabs"></div>
@@ -85,10 +83,10 @@
 <!-- ===== Emotional Query Comparison ===== -->
 <section id="emotional">
   <div class="container">
-    <h2 class="section-title">Emotional Query Comparison</h2>
+    <h2 class="section-title">Example Responses to Emotional Queries</h2>
     <p class="section-sub">
       The user's voice itself carries emotion. No model receives emotion context in its system
-      prompt — each processes the same emotionally-expressive audio query without guidance,
+      prompt, each processes the same emotionally-expressive audio query without guidance,
       testing how well fine-tuning alone enables tonal adaptation from audio cues.
     </p>
 
@@ -123,7 +121,7 @@
     <h2 class="section-title">Sympatheia-18K Dataset Samples</h2>
     <p class="section-sub">
       Sympatheia-18K is a synthesized dataset of emotion-controlled speech-to-speech dialogue pairs.
-      Each sample is conditioned on one of 12 target emotions defined by continuous (valence, arousal) coordinates.
+      Each sample is conditioned on one of 12 target emotions.
       The dataset includes two splits. <strong>Emotional Split (12k):</strong> Emotion-matched query-response pairs;
       <strong>Neutral Split (6k):</strong> Neutral queries paired with all 12 emotional response variants.
     </p>
@@ -136,6 +134,7 @@
       <span class="audio-row-label">Query (shared)</span>
       <audio controls src="audio/dataset/neutral/query.wav"></audio>
     </div>
+    <div id="dataset-neutral-query-transcript" style="margin-bottom:1.25rem;padding:0 .1rem;"></div>
     <div class="dataset-grid" id="dataset-grid-neutral"></div>
   </div>
 </section>
@@ -252,9 +251,6 @@ function buildComparison(prefix, tabsEl, panelsEl, modelDefs) {
     }
 
     panel.innerHTML = `
-      <div class="panel-header">
-        <span class="emo-badge">${emo.name}</span>
-      </div>
       <div class="example-tabs">
         <button class="extab-btn active" data-ex="ex1">Example 1</button>
         <button class="extab-btn" data-ex="ex2">Example 2</button>
@@ -319,6 +315,45 @@ fetch("audio/manifest.json")
     }
     injectTranscripts(manifest.neutral,   "neutral",   NEUTRAL_MODELS);
     injectTranscripts(manifest.emotional, "emotional", EMOTIONAL_MODELS);
+
+    // Dataset transcripts
+    if (manifest.dataset) {
+      (manifest.dataset.emotional || []).forEach(rec => {
+        const key = rec.emotion.toLowerCase();
+        const container = document.getElementById(`dataset-transcript-emotional-${key}`);
+        if (!container) return;
+        if (rec.query_text) {
+          const det = document.createElement("details");
+          det.className = "transcript";
+          det.innerHTML = `<summary>Query Transcript</summary><p class="transcript-text">${escHtml(rec.query_text)}</p>`;
+          container.appendChild(det);
+        }
+        if (rec.response_text) {
+          const det = document.createElement("details");
+          det.className = "transcript";
+          det.innerHTML = `<summary>Response Transcript</summary><p class="transcript-text">${escHtml(rec.response_text)}</p>`;
+          container.appendChild(det);
+        }
+      });
+      const neutralQueryContainer = document.getElementById("dataset-neutral-query-transcript");
+      (manifest.dataset.neutral || []).forEach((rec, idx) => {
+        const key = rec.emotion.toLowerCase();
+        if (idx === 0 && neutralQueryContainer && rec.query_text) {
+          const det = document.createElement("details");
+          det.className = "transcript";
+          det.innerHTML = `<summary>Query Transcript</summary><p class="transcript-text">${escHtml(rec.query_text)}</p>`;
+          neutralQueryContainer.appendChild(det);
+        }
+        const container = document.getElementById(`dataset-transcript-neutral-${key}`);
+        if (!container) return;
+        if (rec.response_text) {
+          const det = document.createElement("details");
+          det.className = "transcript";
+          det.innerHTML = `<summary>Response Transcript</summary><p class="transcript-text">${escHtml(rec.response_text)}</p>`;
+          container.appendChild(det);
+        }
+      });
+    }
   })
   .catch(() => { /* manifest not yet present — audio still plays */ });
 
@@ -368,9 +403,6 @@ function buildDatasetGrid(gridId, queryPath, responsePath) {
     card.innerHTML = `
       <div class="dataset-card-header">
         ${emo.name}
-        <span style="font-weight:400;font-size:.75rem;opacity:.7;font-family:var(--mono)">
-          V:${fmtVA(emo.valence)} A:${fmtVA(emo.arousal)}
-        </span>
       </div>
       <div class="dataset-card-body">
         <div class="audio-row">
@@ -381,6 +413,7 @@ function buildDatasetGrid(gridId, queryPath, responsePath) {
           <span class="audio-row-label">Response</span>
           <audio controls src="${responsePath(key)}"></audio>
         </div>
+        <div id="dataset-transcript-emotional-${key}"></div>
       </div>
     `;
     grid.appendChild(card);
@@ -401,15 +434,13 @@ EMOTIONS_DATA.forEach(emo => {
   card.innerHTML = `
     <div class="dataset-card-header">
       ${emo.name}
-      <span style="font-weight:400;font-size:.75rem;opacity:.7;font-family:var(--mono)">
-        V:${fmtVA(emo.valence)} A:${fmtVA(emo.arousal)}
-      </span>
     </div>
     <div class="dataset-card-body">
       <div class="audio-row">
         <span class="audio-row-label">Response</span>
         <audio controls src="audio/dataset/neutral/${key}/response.wav"></audio>
       </div>
+      <div id="dataset-transcript-neutral-${key}"></div>
     </div>
   `;
   grid.appendChild(card);

@@ -6,26 +6,26 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --navy:      #1a2744;
-  --navy-lt:   #243259;
-  --teal:      #1fa87c;
-  --teal-lt:   #e8f8f2;
-  --teal-dk:   #167a5a;
-  --teal2:     #0284c7;
-  --teal2-lt:  #e0f2fe;
-  --teal2-dk:  #075985;
+  --navy:      #211d17;
+  --navy-lt:   #2e2820;
+  --teal:      #b85c2e;
+  --teal-lt:   #f5ede4;
+  --teal-dk:   #8e4520;
+  --teal2:     #8b6d4e;
+  --teal2-lt:  #f0e8dc;
+  --teal2-dk:  #6a5038;
   --orange:    #e07b39;
   --orange-lt: #fdf0e6;
   --purple:    #7e57c2;
   --purple-lt: #f0ecfb;
   --red:       #c0392b;
   --red-lt:    #fbeaea;
-  --gray-05:   #f5f5f5;
-  --gray-10:   #ececec;
-  --gray-30:   #b0b0b0;
+  --gray-05:   #f0ebe3;
+  --gray-10:   #e5ddd4;
+  --gray-30:   #b5a898;
   --gray-60:   #666;
-  --gray-80:   #333;
-  --white:     #fff;
+  --gray-80:   #2a221a;
+  --white:     #fdf9f4;
   --radius:    10px;
   --shadow:    0 2px 12px rgba(0,0,0,.10);
   --font:      'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;

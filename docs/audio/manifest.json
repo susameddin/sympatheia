@@ -529,125 +529,125 @@
     "emotional": [
       {
         "emotion": "Angry",
-        "valence": -0.85,
-        "arousal": 0.85
+        "query_text": "I don't care how fancy this city looks on postcards — what's the point of even trying to explore it if everything's closed and no one knows where anything is?",
+        "response_text": "I totally get why you’re frustrated—nothing ruins the vibe of a new place faster than hitting dead ends and feeling lost, especially when you’re trying to make the most of your time. It sounds like this city isn’t living up to the promise of its postcard perfection right now, which is so disappointing. To help: Check local event calendars or official tourism websites for real-time updates on closures, and try asking at a visitor center or using a map app with reviews—they might highlight hidden spots still open. Sometimes the best discoveries happen when plans pivot, even if it’s harder when you’re in the thick of the hassle."
       },
       {
         "emotion": "Anxious",
-        "valence": -0.4,
-        "arousal": 0.65
+        "query_text": "Do you think I'm weird for not getting into board games or card games? I just... I get so nervous trying to keep up with the rules and everyone's watching me.",
+        "response_text": "It’s totally valid to feel nervous—learning new games can be overwhelming, especially when you’re worried about keeping up or being watched. You’re not weird at all; many people find rules or social pressure stressful, and that doesn’t mean there’s anything “wrong” with you. If board games don’t feel right, there are plenty of other ways to connect or have fun that might feel more comfortable, like casual chats, creative activities, or games with simpler rules. What matters most is that you feel at ease, and that’s something to honor, not apologize for."
       },
       {
         "emotion": "Content",
-        "valence": 0.6,
-        "arousal": -0.2
+        "query_text": "I just started investing a little bit of money and I'm feeling so good about taking this step toward my future!",
+        "response_text": "It’s wonderful to hear you’re feeling so content and at peace with taking this step toward your future—investing can be such a grounding way to build confidence in your long-term vision. Starting small while you learn the ropes is a wise approach, and it’s so meaningful that you’re connecting this action to your sense of calm; that mindfulness will serve you well as you grow. Trust that this gentle, intentional pace not only nurtures your financial goals but also honors the peace you’re already cultivating in your life."
       },
       {
         "emotion": "Disgusted",
-        "valence": -0.82,
-        "arousal": -0.2
+        "query_text": "Ugh, I can't stand the way people act all dramatic in theater — it's so fake and over the top, like they're trying way too hard to make a scene.",
+        "response_text": "Ugh, totally get that — watching actors go full-on ham is seriously revolting when it feels forced. Forced dramatics often come from actors trying to “sell” emotions they aren’t fully embodying — it’s like watching someone fake a cough on stage. It’s totally valid to want performances that feel earned, not manufactured — you’re not alone in finding that cringe-worthy."
       },
       {
         "emotion": "Excited",
-        "valence": 0.75,
-        "arousal": 0.9
+        "query_text": "Hey, guess what? I just discovered this amazing new food that fits my diet and it's like a dream come true — you gotta hear about it!",
+        "response_text": "Wow, I can *feel* your excitement bubbling over—I’m so thrilled for you! What’s the magical food that’s checking all the boxes for your diet? Is it a clever twist on a favorite dish or something totally new? These kinds of discoveries make all the difference in staying motivated and nourished, and I’d *love* to hear how it’s like a \"dream come true\" for you—does it solve a craving you’ve been missing? Spill the details! 🌟"
       },
       {
         "emotion": "Frustrated",
-        "valence": -0.8,
-        "arousal": 0.35
+        "query_text": "I can't believe I forgot to back up my files again, and now everything's gone—what am I even supposed to do now?!",
+        "response_text": "I totally get why this feels so frustrating and overwhelming—losing your work feels like a punch to the gut, especially when you were counting on it. Let’s tackle this: first, check if your files are auto-saved in the cloud (like Google Drive, OneDrive, or iCloud) or in an app’s version history. If not, try using recovery software like Recuva or DiskDigger to scan your drive—it’s not guaranteed, but it’s a shot. If that fails, a professional data recovery service might help, though it’s pricier. I know this is a race against panic, but taking these steps can at least give you a lifeline while you breathe through the stress."
       },
       {
         "emotion": "Happy",
-        "valence": 0.85,
-        "arousal": 0.35
+        "query_text": "Hey, I just had the best time baking cookies while it rained outside — wanna hear how cozy it got in here?",
+        "response_text": "I can *hear* the warmth and joy in your voice, and it’s so contagious! Baking cookies while it rains is like a cozy hug for the soul— the smell of dough and vanilla mixing with the rain’s gentle rhythm? Pure magic. Tell me, did you crank up your favorite songs or curl up with a book? Those little rituals turn a simple day into something sparkling, just like your mood! 🌧️🍪"
       },
       {
         "emotion": "Neutral",
-        "valence": 0.0,
-        "arousal": 0.0
+        "query_text": "I've been thinking a lot about how important it is to take care of your mental health, you know? But sometimes I just don't know where to start.",
+        "response_text": "Starting to prioritize mental health can feel overwhelming, but small steps make a difference. Try practices like mindful breathing, short walks, or journaling thoughts for a few minutes daily. Connecting with someone you trust or setting a tiny, achievable goal each day can also build momentum. It’s about finding what feels doable and consistent—progress matters more than perfection."
       },
       {
         "emotion": "Relaxed",
-        "valence": 0.25,
-        "arousal": -0.6
+        "query_text": "You know, I was just thinking the other day about how nice it would be to foster a pet... maybe something small, like a kitten or a puppy?",
+        "response_text": "It’s such a cozy, peaceful moment you’re sharing—and fostering a pet sounds like a gentle reflection of that warmth you’re carrying right now. Bringing a small kitten or puppy into your life could be such a soft, joyful addition, offering little bursts of love and companionship without overwhelming your rhythm. Just imagine the quiet contentment of coming home to a tiny paw greeting you, or the quiet snuggles on lazy afternoons—though it’s a big commitment, it sounds like you’re in a calm, open space to consider it thoughtfully. If you ever take the leap, it could be a beautiful way to give and receive love at your own unhurried pace."
       },
       {
         "emotion": "Sad",
-        "valence": -0.75,
-        "arousal": -0.65
+        "query_text": "I used to love my morning routine, but now even getting out of bed feels like too much. Do you have any ideas for making mornings a little easier?",
+        "response_text": "I’m so sorry you’re feeling this heavy right now—it’s okay to let the grief or hurt sit there, and it’s also okay to take mornings one small step at a time. Maybe try easing into the day with something gentle, like sipping warm water with lemon, stretching for just 2 minutes, or lighting a candle for comfort. You could also try delaying your “to-do” thoughts by whispering, “I’ll handle you later,” then giving yourself 5 quiet minutes with a cozy blanket or a song that feels like a hug. You’re not alone in this, and tiny shifts can sometimes soften the weight—would any of these feel doable today?"
       },
       {
         "emotion": "Surprised",
-        "valence": 0.1,
-        "arousal": 0.8
+        "query_text": "You wake up at the crack of dawn every single day? Man, how do you even do that?",
+        "response_text": "Wow, that’s such a great observation — I have to be honest, the idea of a “dawn” routine is totally new to me! (I don’t actually sleep, so my “waking up” is… a bit instant, to say the least.) But I’m really curious: what makes those early hours so special for you? I’d love to hear how you make that magic happen — does it feel energizing, or is there a calm to it that draws you in?"
       },
       {
         "emotion": "Tired",
-        "valence": -0.15,
-        "arousal": -0.75
+        "query_text": "I don't know how I'm supposed to run even a 5K, I'm so exhausted I can barely keep my eyes open.",
+        "response_text": "Oh, I hear how drained you're feeling—your body is clearly asking for rest right now. Running feels impossible when you're this low on energy, and that’s totally okay. Rest isn’t wasted time—it’s what’ll help you actually show up for that 5K when you’re ready. For today, let your body sleep, recharge, and take what it needs."
       }
     ],
     "neutral": [
       {
         "emotion": "Angry",
-        "valence": -0.85,
-        "arousal": 0.85
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Gathering receipts, sorting documents, and setting aside time to review your finances can feel like wading through a storm — especially when you’re already carrying so much frustration. Start by creating a quiet space to organize your records, because taking control of the tangible details can sometimes help steady the rest of the chaos. If numbers or forms feel like another injustice, consider reaching out to a trusted advisor or a free tax assistance program; you don’t have to navigate this alone. And if something on your return feels off, remember: you *can* question it, challenge it, or adjust it — this is your chance to set things right, even if it’s just one piece of the puzzle."
       },
       {
         "emotion": "Anxious",
-        "valence": -0.4,
-        "arousal": 0.65
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Tax season can feel overwhelming, especially when uncertainty looms, but breaking it into small steps can help ease the tension. Start by gathering key documents like W-2s, 1099s, and receipts in one place—this creates clarity and control. Next, note your filing deadline and set a date a few weeks earlier to avoid last-minute rush; many find using tax software or talking to a trusted preparer brings extra peace. Remember, you don’t have to navigate this alone—taking it step by step can turn that heavy worry into manageable pieces."
       },
       {
         "emotion": "Content",
-        "valence": 0.6,
-        "arousal": -0.2
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "It’s lovely that you’re approaching tax season with such calm — there’s something grounding about getting organized at your own pace. Start by gathering your documents in one quiet space, like receipts and statements, so everything feels within reach; maybe set a gentle timer to work in short, peaceful bursts. Check if you’re aware of any deductions that might ease the process, like charitable donations or home office expenses, and jot them down while the rhythm of it all feels smooth. If you’d like, lean into tools or a trusted advisor to help — sometimes sharing the task keeps the calm intact. You’ve got this, gently and gracefully."
       },
       {
         "emotion": "Disgusted",
-        "valence": -0.82,
-        "arousal": -0.2
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Ugh, I completely get why tax season feels so gross—sifting through receipts and number-crunching is about the most revolting chore out there. Start by gathering all your W-2s, receipts, and bank statements in one place, then double-check the IRS deadline to avoid last-minute panic. Using tax software can streamline the mess, or a pro can handle the gory details for you—either way, breaking it into small steps makes the whole thing less *yuck*."
       },
       {
         "emotion": "Excited",
-        "valence": 0.75,
-        "arousal": 0.9
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Tax season is your time to shine, and I love that you’re ready to tackle it with such fire! Let’s harness that energy: start by gathering all your docs—receipts, W-2s, 1099s—and organize them like a pro (think color-coded folders or digital scans for easy access). Next, dust off last year’s return to spot patterns or deductions you might’ve missed this time. Oh, and since you’re thriving, why not explore tax credits you qualify for? They’re like hidden treasures waiting to boost your refund! Finally, lock in a tax pro or software early—this way you’ll crush deadlines and keep that momentum rolling. You’ve got this, and it’s going to be an *awesome* season!"
       },
       {
         "emotion": "Frustrated",
-        "valence": -0.8,
-        "arousal": 0.35
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Tax season can feel like a maze when you’re already stressed, especially with deadlines looming and paperwork piling up—I get it. Start by gathering all your documents (W-2s, receipts, etc.) in one place, even if it’s just a folder on your desk; small wins add up. Next, jot down key dates like when you need to file to avoid last-minute chaos, and consider using tax software or talking to a pro if it feels overwhelming—there’s no shame in asking for help. Break it into 20-minute chunks if your head’s spinning; you don’t have to do it all at once. You’re not alone in this, and taking one step at a time might just clear the fog a little."
       },
       {
         "emotion": "Happy",
-        "valence": 0.85,
-        "arousal": 0.35
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "It’s so wonderful to hear you’re in such a bright, joyful place—what a gift to carry into tax season! Let that energy fuel your prep: start by gathering all your documents (W-2s, receipts, etc.) with the excitement of solving a puzzle you know will pay off. Organize them with the same care you’d sort favorite photos, turning chaos into clarity, and don’t forget to treat yourself to a little celebration once you’re done—maybe that favorite snack or song that makes you smile even bigger. Taxes might not be *adventurous*, but your cheerful momentum can make them feel like a smooth, empowering checkmark on your to-do list!"
       },
       {
         "emotion": "Neutral",
-        "valence": 0.0,
-        "arousal": 0.0
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Getting ready for tax season can feel simpler when you break it into smaller steps. Start by gathering all your documents—W-2s, 1099s, receipts, and bank account info—and organize them in one place. Next, decide whether you’ll use tax software, a professional, or do it manually, then set a deadline to stay on track. Don’t forget to review last year’s return for reference, and take breaks if you need to—no rush!"
       },
       {
         "emotion": "Relaxed",
-        "valence": 0.25,
-        "arousal": -0.6
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Gather your documents slowly, like arranging puzzle pieces in a calm morning light—receipts, W-2s, that cozy stack of year-end summaries. Let the process unfold in a gentle rhythm: start with a quiet coffee, sort what’s due, and breathe space into each task. If numbers feel heavy, lean on trusted tools or a patient friend to walk through them. There’s no rush; this is your time to prepare with ease, turning the quiet work of tax season into a steady, grounding ritual."
       },
       {
         "emotion": "Sad",
-        "valence": -0.75,
-        "arousal": -0.65
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Gathering your tax documents can feel like a heavy task when your heart’s already carrying so much—start by setting small, gentle goals, like organizing just one folder or noting deductions you’re eligible for, and give yourself space to pause whenever you need. Even simple acts like writing down what you *can* manage today can create tiny moments of control and clarity, which might help lighten the emotional weight alongside the paperwork. You don’t have to power through everything at once; being kind to yourself in both your grief and your tasks is a quiet act of healing."
       },
       {
         "emotion": "Surprised",
-        "valence": 0.1,
-        "arousal": 0.8
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "That’s such an intriguing question — tax season can feel like unlocking a hidden map if you don’t know where to start! Let’s wonder through it together: begin by gathering all your documents (W-2s, receipts, etc.), then explore deductions you might’ve overlooked, like home office space or charitable donations. Use free tools or chat with a volunteer advisor to demystify the forms — it’s like piecing together a puzzle, and every step makes the picture clearer. The surprise is part of the adventure!"
       },
       {
         "emotion": "Tired",
-        "valence": -0.15,
-        "arousal": -0.75
+        "query_text": "What are some steps I can take to get ready for tax season?",
+        "response_text": "Tax season can feel like climbing a hill when your batteries are low — here’s how to ease the climb: Start by taking *one small breath* (maybe jotting down just *one* document you need), then give yourself permission to pause. When you’re ready, gather what you can *without pressure*, and consider asking a friend or professional to share the load — you don’t have to do this alone. Your energy matters; let the process honor how tired you are, step by gentle step."
       }
     ]
   }

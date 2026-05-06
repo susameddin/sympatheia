@@ -53,7 +53,7 @@ FIGURES_DIR = Path("/home/sd3705/emo_recog_2025s/sympatheia/figures")
 # ---------------------------------------------------------------------------
 # Output paths
 # ---------------------------------------------------------------------------
-REPO_ROOT = Path(__file__).parent
+REPO_ROOT = Path(__file__).parent.parent  # sympatheia/
 DOCS = REPO_ROOT / "docs"
 AUDIO_OUT = DOCS / "audio"
 IMG_OUT = DOCS / "img"
@@ -289,47 +289,67 @@ def process_interpolation():
 # Emotional split: per-emotion query + response
 # Neutral split:   shared query (p2v2_Neutral_00259.wav) + per-emotion response
 # ---------------------------------------------------------------------------
-NEUTRAL_DATASET_QUERY = Path(
-    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2"
-    "/audio/eval/query/neutral/p2v2_Neutral_00259.wav"
-)
-NEUTRAL_DATASET_RESPONSE_DIR = Path(
-    "/engram/naplab/users/sd3705/Datasets/Sympatheia_12Emo_Neutral_v2"
-    "/audio/eval/response"
-)
-# v2 dataset: response filename suffix matches the emotion name exactly
-NEUTRAL_RESPONSE_SUFFIX = {emo: emo for emo in EMOTIONS}
+SYMPATHEIA_18K = Path("/engram/naplab/users/sd3705/Datasets/Sympatheia-18k")
+# Neutral query index with all 12 emotion responses present in eval set
+NEUTRAL_DATASET_QID = "Neutral_00084"
 
 def process_dataset():
     print("\n=== Dataset samples (all 12 emotions) ===")
-    v2_main = load_manifest(V2_NEUTRAL_EVAL / "manifest.jsonl")
 
-    # Emotional split: unchanged (per-emotion query + response from eval manifest)
+    # Emotional split: first entry per emotion from metadata
+    emo_meta_path = SYMPATHEIA_18K / "Emotional/metadata/text_pairs_eval.jsonl"
+    by_emotion = {}
+    with open(emo_meta_path) as f:
+        for line in f:
+            d = json.loads(line)
+            emo = d["user_emotion"]
+            if emo not in by_emotion:
+                by_emotion[emo] = d
+
     emotional_records = []
     for emo in EMOTIONS:
-        eid = f"{emo.lower()}_00"
-        m = v2_main.get(eid)
-        if not m:
-            print(f"  [SKIP emotional] {eid}")
+        d = by_emotion.get(emo)
+        if not d:
+            print(f"  [SKIP emotional] {emo} not in metadata")
             continue
+        qidx = d["query_index"]
+        ridx  = d["response_index"]
+        qsrc = SYMPATHEIA_18K / "Emotional/audio/eval" / f"{emo.lower()}_query"  / f"{qidx}.wav"
+        rsrc = SYMPATHEIA_18K / "Emotional/audio/eval" / f"{emo.lower()}_response" / f"{ridx}.wav"
         pfx = f"dataset/emotional/{emo.lower()}"
-        copy(m.get("query_audio"),           AUDIO_OUT / pfx / "query.wav")
-        copy(m.get("finetuned_va_response"), AUDIO_OUT / pfx / "response.wav")
+        copy(qsrc, AUDIO_OUT / pfx / "query.wav")
+        copy(rsrc, AUDIO_OUT / pfx / "response.wav")
         emotional_records.append({
-            "emotion": emo, "valence": m["valence"], "arousal": m["arousal"],
+            "emotion":       emo,
+            "query_text":    d.get("query_text", ""),
+            "response_text": d.get("response_text", ""),
         })
 
-    # Neutral split: shared query + per-emotion responses from dataset
-    copy(NEUTRAL_DATASET_QUERY, AUDIO_OUT / "dataset/neutral/query.wav")
+    # Neutral split: shared query + per-emotion responses (Neutral_00084 has all 12)
+    neutral_meta_path = SYMPATHEIA_18K / "Neutral/metadata/text_pairs_eval.jsonl"
+    neutral_by_emotion = {}
+    with open(neutral_meta_path) as f:
+        for line in f:
+            d = json.loads(line)
+            if d["query_index"] == NEUTRAL_DATASET_QID:
+                neutral_by_emotion[d["user_emotion"]] = d
+
+    query_src = SYMPATHEIA_18K / "Neutral/audio/eval/query/neutral" / f"{NEUTRAL_DATASET_QID}.wav"
+    copy(query_src, AUDIO_OUT / "dataset/neutral/query.wav")
+
     neutral_records = []
     for emo in EMOTIONS:
-        eid = f"{emo.lower()}_00"
-        m = v2_main.get(eid, {})
-        suffix = NEUTRAL_RESPONSE_SUFFIX.get(emo, emo)
-        response_src = NEUTRAL_DATASET_RESPONSE_DIR / emo.lower() / f"p2v2_Neutral_00259_{suffix}.wav"
-        copy(response_src, AUDIO_OUT / f"dataset/neutral/{emo.lower()}/response.wav")
+        d = neutral_by_emotion.get(emo)
+        if not d:
+            print(f"  [SKIP neutral] {emo} not found for {NEUTRAL_DATASET_QID}")
+            continue
+        ridx = d["response_index"]  # e.g. "Neutral_00084_Angry"
+        rsrc = SYMPATHEIA_18K / "Neutral/audio/eval/response" / emo.lower() / f"{ridx}.wav"
+        copy(rsrc, AUDIO_OUT / f"dataset/neutral/{emo.lower()}/response.wav")
         neutral_records.append({
-            "emotion": emo, "valence": m.get("valence", 0), "arousal": m.get("arousal", 0),
+            "emotion":       emo,
+            "query_text":    d.get("query_text", ""),
+            "response_text": d.get("response_text", ""),
         })
 
     return {"emotional": emotional_records, "neutral": neutral_records}
@@ -346,10 +366,26 @@ def copy_figures():
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+def _load_existing_manifest():
+    """Load sections from the existing manifest.json, if present."""
+    out_path = AUDIO_OUT / "manifest.json"
+    if out_path.exists():
+        with open(out_path) as f:
+            return json.load(f)
+    return {}
+
+def _try(fn, section, existing):
+    try:
+        return fn()
+    except Exception as e:
+        print(f"  [WARNING] {section} failed ({e}); keeping existing records")
+        return existing.get(section, [] if section != "interpolation" else {})
+
 def main():
-    neutral   = process_neutral()
-    emotional = process_emotional()
-    interp    = process_interpolation()
+    existing  = _load_existing_manifest()
+    neutral   = _try(process_neutral,       "neutral",   existing)
+    emotional = _try(process_emotional,     "emotional", existing)
+    interp    = _try(process_interpolation, "interpolation", existing)
     dataset   = process_dataset()
     copy_figures()
 
@@ -366,9 +402,10 @@ def main():
         json.dump(manifest, f, indent=2, ensure_ascii=False)
 
     print(f"\nWrote {out_path}")
-    print(f"Total neutral records:   {len(neutral)}")
-    print(f"Total emotional records: {len(emotional)}")
-    print(f"Interpolation steps:     {len(interp)}")
+    n_neutral = len(neutral) if isinstance(neutral, list) else 0
+    n_emotional = len(emotional) if isinstance(emotional, list) else 0
+    print(f"Total neutral records:   {n_neutral}")
+    print(f"Total emotional records: {n_emotional}")
     print(f"Dataset samples:         emotional={len(dataset['emotional'])}, neutral={len(dataset['neutral'])}")
     print("\nDone!")
 
