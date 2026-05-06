@@ -379,13 +379,6 @@ section:last-of-type { border-bottom: none; }
   text-shadow: 0 1px 3px rgba(0,0,0,.28);
 }
 
-/* background-clip trick: white fills padding-box, gradient fills border-box (preserves border-radius) */
-.model-card.sympatheia {
-  border: 2px solid transparent;
-  background: var(--white) padding-box,
-    linear-gradient(45deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc, #da77f2) border-box;
-  box-shadow: none;
-}
 
 /* Transcript */
 details.transcript { font-size: .82rem; }
