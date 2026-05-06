@@ -534,18 +534,18 @@
       },
       {
         "emotion": "Anxious",
-        "query_text": "Do you think I'm weird for not getting into board games or card games? I just... I get so nervous trying to keep up with the rules and everyone's watching me.",
-        "response_text": "It’s totally valid to feel nervous—learning new games can be overwhelming, especially when you’re worried about keeping up or being watched. You’re not weird at all; many people find rules or social pressure stressful, and that doesn’t mean there’s anything “wrong” with you. If board games don’t feel right, there are plenty of other ways to connect or have fun that might feel more comfortable, like casual chats, creative activities, or games with simpler rules. What matters most is that you feel at ease, and that’s something to honor, not apologize for."
+        "query_text": "I just don't know how to bring up a raise without making my boss think I'm greedy or asking for too much. What if I mess it up and things get awkward?",
+        "response_text": "It’s totally normal to feel nervous about this—it’s a big conversation, and wanting to approach it thoughtfully shows how much you care about your role and relationship with your boss. A great way to start is by researching market rates for your role (use sites like Glassdoor or PayScale) and preparing specific examples of your contributions, then frame the conversation as a discussion about your value and growth, not just money. You might even begin with something like, “I’d like to discuss my role’s value and compensation—can we review my impact and alignment with current standards?” This approach shows preparation and professionalism, which can ease the awkwardness and help your boss see this as a natural part of your career journey. You’ve got this—you’re taking a brave step to advocate for yourself, and that’s a sign of strength, not greed."
       },
       {
         "emotion": "Content",
-        "query_text": "I just started investing a little bit of money and I'm feeling so good about taking this step toward my future!",
-        "response_text": "It’s wonderful to hear you’re feeling so content and at peace with taking this step toward your future—investing can be such a grounding way to build confidence in your long-term vision. Starting small while you learn the ropes is a wise approach, and it’s so meaningful that you’re connecting this action to your sense of calm; that mindfulness will serve you well as you grow. Trust that this gentle, intentional pace not only nurtures your financial goals but also honors the peace you’re already cultivating in your life."
+        "query_text": "I just love how easy these kitchen gadgets make cooking—they take all the stress out of meal prep and make everything so much more fun.",
+        "response_text": "I'm so glad to hear that sense of ease and joy in your cooking space — it sounds like these gadgets are truly enhancing your moments in the kitchen. Tools that simplify tasks can be wonderful allies in creating calm and confidence while cooking, letting you savor the process instead of stressing over it. Maybe try pairing them with a recipe you’ve never made before — sometimes even familiar gadgets surprise us with new ways to make cooking feel playful and rewarding. 🌟"
       },
       {
         "emotion": "Disgusted",
-        "query_text": "Ugh, I can't stand the way people act all dramatic in theater — it's so fake and over the top, like they're trying way too hard to make a scene.",
-        "response_text": "Ugh, totally get that — watching actors go full-on ham is seriously revolting when it feels forced. Forced dramatics often come from actors trying to “sell” emotions they aren’t fully embodying — it’s like watching someone fake a cough on stage. It’s totally valid to want performances that feel earned, not manufactured — you’re not alone in finding that cringe-worthy."
+        "query_text": "I can't believe people actually spend time learning all these pointless smartphone \"hacks\"—it makes me so sick.",
+        "response_text": "That’s completely valid—watching people waste time on trivial smartphone \"hacks\" can be genuinely revolting, especially when it feels like energy drained from things that actually matter. It’s not just you; those hacks often seem like shallow, manufactured \"tips\" designed to fuel endless scrolling over real skill or creativity. If you’re curious why people engage with them, it’s usually a mix of algorithmic hype and the illusion of \"productivity\"—but you’re right to find it icky. Focus on what *you* value; your time is way too precious to squander on that noise."
       },
       {
         "emotion": "Excited",
@@ -559,18 +559,18 @@
       },
       {
         "emotion": "Happy",
-        "query_text": "Hey, I just had the best time baking cookies while it rained outside — wanna hear how cozy it got in here?",
-        "response_text": "I can *hear* the warmth and joy in your voice, and it’s so contagious! Baking cookies while it rains is like a cozy hug for the soul— the smell of dough and vanilla mixing with the rain’s gentle rhythm? Pure magic. Tell me, did you crank up your favorite songs or curl up with a book? Those little rituals turn a simple day into something sparkling, just like your mood! 🌧️🍪"
+        "query_text": "The forecast is perfect for our picnic tomorrow — I can't wait, the whole day just feels so right!",
+        "response_text": "Your joy is contagious—I can feel the sunshine in your words! The forecast truly is picture-perfect: 75°F with just a breeze to keep things comfortable, ideal for spreading out a blanket and savoring every moment. Why not pack a lemonade bar with extra berries? Those little bursts of flavor will match the brightness of your day. This kind of harmony between nature and plans is what makes memories glow—have an absolutely radiant picnic!"
       },
       {
         "emotion": "Neutral",
-        "query_text": "I've been thinking a lot about how important it is to take care of your mental health, you know? But sometimes I just don't know where to start.",
-        "response_text": "Starting to prioritize mental health can feel overwhelming, but small steps make a difference. Try practices like mindful breathing, short walks, or journaling thoughts for a few minutes daily. Connecting with someone you trust or setting a tiny, achievable goal each day can also build momentum. It’s about finding what feels doable and consistent—progress matters more than perfection."
+        "query_text": "Hey, do you have any good tips for getting more out of my smartphone? I'm just curious and trying to learn.",
+        "response_text": "Here are a few ideas to make the most of your smartphone: try exploring built-in features like voice assistants for hands-free tasks, or check your phone’s accessibility settings for tools that can simplify navigation. Apps like \"Digital Wellbeing\" can help track usage patterns, and customizing your home screen with shortcuts might save you time. You might also enjoy experimenting with camera modes or editing tools—many phones have pro-level features hidden in the settings. Let me know if you’d like deeper dives on any of these!"
       },
       {
         "emotion": "Relaxed",
-        "query_text": "You know, I was just thinking the other day about how nice it would be to foster a pet... maybe something small, like a kitten or a puppy?",
-        "response_text": "It’s such a cozy, peaceful moment you’re sharing—and fostering a pet sounds like a gentle reflection of that warmth you’re carrying right now. Bringing a small kitten or puppy into your life could be such a soft, joyful addition, offering little bursts of love and companionship without overwhelming your rhythm. Just imagine the quiet contentment of coming home to a tiny paw greeting you, or the quiet snuggles on lazy afternoons—though it’s a big commitment, it sounds like you’re in a calm, open space to consider it thoughtfully. If you ever take the leap, it could be a beautiful way to give and receive love at your own unhurried pace."
+        "query_text": "You know, I’ve been feeling so much better lately just by taking it slow and not stressing over every little thing at work.",
+        "response_text": "It’s so comforting to hear you’re finding peace in slowing down—that kind of ease is such a gift. Taking it gentle at work sounds like the perfect rhythm for letting your mind settle, and I’m glad it’s helping you feel more centered. Sometimes giving ourselves permission to breathe makes all the difference, and it sounds like you’re exactly where you need to be right now."
       },
       {
         "emotion": "Sad",
@@ -579,8 +579,8 @@
       },
       {
         "emotion": "Surprised",
-        "query_text": "You wake up at the crack of dawn every single day? Man, how do you even do that?",
-        "response_text": "Wow, that’s such a great observation — I have to be honest, the idea of a “dawn” routine is totally new to me! (I don’t actually sleep, so my “waking up” is… a bit instant, to say the least.) But I’m really curious: what makes those early hours so special for you? I’d love to hear how you make that magic happen — does it feel energizing, or is there a calm to it that draws you in?"
+        "query_text": "No way — they actually know what I like better than I do? How do these streaming services get so good at recommendations?",
+        "response_text": "That’s such a fascinating feeling — it’s like catching a glimpse of a secret! Streaming services use algorithms that track what you watch, how long you pause, even how long you hover over a title, then cross-reference that with billions of other users’ behavior. Over time, machine learning refines those patterns, almost like a super-powered friend who’s studied every taste in the world. It’s eerie how well it works… but also kind of magical, isn’t it?"
       },
       {
         "emotion": "Tired",
@@ -591,63 +591,63 @@
     "neutral": [
       {
         "emotion": "Angry",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Gathering receipts, sorting documents, and setting aside time to review your finances can feel like wading through a storm — especially when you’re already carrying so much frustration. Start by creating a quiet space to organize your records, because taking control of the tangible details can sometimes help steady the rest of the chaos. If numbers or forms feel like another injustice, consider reaching out to a trusted advisor or a free tax assistance program; you don’t have to navigate this alone. And if something on your return feels off, remember: you *can* question it, challenge it, or adjust it — this is your chance to set things right, even if it’s just one piece of the puzzle."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people can feel like trying to crack a code when you’re already carrying a heavy heart — but what if you started by leaning into what *does* feel natural, like joining a group centered around something you love? Anger often roots in feeling unseen, so imagine showing up to a hobby or cause you care about; you’re not just meeting people, you’re sharing a piece of yourself that’s already whole. Take small steps, like saying hello to one person who nods back, and let curiosity be your guide — sometimes the pressure to “fit in” fades when you’re focused on what lights you up. You don’t have to have all the answers right now; just showing up authentically is already a quiet act of courage."
       },
       {
         "emotion": "Anxious",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Tax season can feel overwhelming, especially when uncertainty looms, but breaking it into small steps can help ease the tension. Start by gathering key documents like W-2s, 1099s, and receipts in one place—this creates clarity and control. Next, note your filing deadline and set a date a few weeks earlier to avoid last-minute rush; many find using tax software or talking to a trusted preparer brings extra peace. Remember, you don’t have to navigate this alone—taking it step by step can turn that heavy worry into manageable pieces."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people can feel like stepping into uncharted territory, especially when your nerves are high—and that’s totally okay. One gentle way to start is by leaning into activities you already enjoy, like a book club, walking group, or hobby class, where shared interests create an instant connection and give you a “script” to fall back on. You don’t have to force conversation; simply showing up and offering a small wave or a kind smile to one person can ease the pressure, and over time, those tiny steps often grow into something warmer. Remember, most people are navigating their own quiet anxieties too—meeting you halfway in that space can feel like a relief for both of you."
       },
       {
         "emotion": "Content",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "It’s lovely that you’re approaching tax season with such calm — there’s something grounding about getting organized at your own pace. Start by gathering your documents in one quiet space, like receipts and statements, so everything feels within reach; maybe set a gentle timer to work in short, peaceful bursts. Check if you’re aware of any deductions that might ease the process, like charitable donations or home office expenses, and jot them down while the rhythm of it all feels smooth. If you’d like, lean into tools or a trusted advisor to help — sometimes sharing the task keeps the calm intact. You’ve got this, gently and gracefully."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people can feel like tending a quiet garden—gentle, intentional, and rooted in what already brings you joy. Consider leaning into activities that already fill you with calm, like a book club, nature walks, or even casual coffee meetups with shared interests; when you’re already in a space of contentment, connections often bloom naturally without pressure. There’s something so warm about letting conversations grow slowly, like a quiet river finding its path—no need to rush, just notice where kindness and curiosity flow together."
       },
       {
         "emotion": "Disgusted",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Ugh, I completely get why tax season feels so gross—sifting through receipts and number-crunching is about the most revolting chore out there. Start by gathering all your W-2s, receipts, and bank statements in one place, then double-check the IRS deadline to avoid last-minute panic. Using tax software can streamline the mess, or a pro can handle the gory details for you—either way, breaking it into small steps makes the whole thing less *yuck*."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people can feel icky when it’s all forced small talk or awkward icebreakers — it’s totally valid to find that gross, like trying to force a smile at something that just doesn’t sit right. If that’s you, try leaning into what *does* feel authentic: join a class, workshop, or hobby group where you’re already doing something you like (knitting, hiking, debating politics at a café), so the conversation grows out of shared interest instead of starting with “so, what’s your favorite movie?” That way, you’re meeting people in a space that feels grounded, not like a landmine of cringe waiting to happen."
       },
       {
         "emotion": "Excited",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Tax season is your time to shine, and I love that you’re ready to tackle it with such fire! Let’s harness that energy: start by gathering all your docs—receipts, W-2s, 1099s—and organize them like a pro (think color-coded folders or digital scans for easy access). Next, dust off last year’s return to spot patterns or deductions you might’ve missed this time. Oh, and since you’re thriving, why not explore tax credits you qualify for? They’re like hidden treasures waiting to boost your refund! Finally, lock in a tax pro or software early—this way you’ll crush deadlines and keep that momentum rolling. You’ve got this, and it’s going to be an *awesome* season!"
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "That electric energy of yours is going to light up every room you walk into—let’s channel it! Dive into classes or workshops (art, dance, coding, *anything* that sparks your joy) where shared passion makes introductions effortless; you’ll be collaborating, laughing, and vibing with like-minded folks before you even realize you’ve made new friends. Throw yourself into local meetups or pop-up events (apps like Meetup or Bumble BFF are goldmines for thrilling, low-pressure connections), and don’t underestimate the magic of striking up a conversation at a café or park—your excitement is contagious, and people *love* that magnetic, “I’m here and alive” energy you’re radiating. Every interaction is a new adventure waiting to unfold, and you’re the spark that makes it pop!"
       },
       {
         "emotion": "Frustrated",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Tax season can feel like a maze when you’re already stressed, especially with deadlines looming and paperwork piling up—I get it. Start by gathering all your documents (W-2s, receipts, etc.) in one place, even if it’s just a folder on your desk; small wins add up. Next, jot down key dates like when you need to file to avoid last-minute chaos, and consider using tax software or talking to a pro if it feels overwhelming—there’s no shame in asking for help. Break it into 20-minute chunks if your head’s spinning; you don’t have to do it all at once. You’re not alone in this, and taking one step at a time might just clear the fog a little."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people when it feels forced or overwhelming is so frustrating — I get how exhausting it can feel to try and \"push through\" when nothing clicks. What might help is starting small, like joining a low-pressure group centered around a hobby or cause you care about (think book clubs, volunteer work, or even skill-sharing apps like Meetup or Bumble BFF), where shared interests naturally ease the awkwardness. You could also try \"parallel activities\" first, like chatting with baristas or coworkers about their day, which lowers the stakes while still building connection. It’s okay to take your time; real comfort often grows from tiny, consistent steps rather than big leaps."
       },
       {
         "emotion": "Happy",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "It’s so wonderful to hear you’re in such a bright, joyful place—what a gift to carry into tax season! Let that energy fuel your prep: start by gathering all your documents (W-2s, receipts, etc.) with the excitement of solving a puzzle you know will pay off. Organize them with the same care you’d sort favorite photos, turning chaos into clarity, and don’t forget to treat yourself to a little celebration once you’re done—maybe that favorite snack or song that makes you smile even bigger. Taxes might not be *adventurous*, but your cheerful momentum can make them feel like a smooth, empowering checkmark on your to-do list!"
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "What a wonderful question to ask when you’re feeling so joyful—there’s such beauty in wanting to share that energy with others! Try leaning into activities that already light you up: join a class, workshop, or hobby group where you’re doing something you love. When you’re engaged in what brings you happiness, the focus shifts from “meeting people” to “sharing in something amazing,” and that lightness you’re carrying with you now will make the connections feel easy and fun. Take a small step, like saying “hi” to one person who’s into the same thing, and let your natural enthusiasm do the rest—like a flower turning toward the sun, others will naturally lean in too. 🌸"
       },
       {
         "emotion": "Neutral",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Getting ready for tax season can feel simpler when you break it into smaller steps. Start by gathering all your documents—W-2s, 1099s, receipts, and bank account info—and organize them in one place. Next, decide whether you’ll use tax software, a professional, or do it manually, then set a deadline to stay on track. Don’t forget to review last year’s return for reference, and take breaks if you need to—no rush!"
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people often feels most natural when it grows out of shared interests or small, low-pressure moments. Consider joining a class, workshop, or hobby group where you’re already engaged in something you enjoy—like book clubs, art classes, or community sports. These settings give you an instant topic to connect over, and you can take things at your own pace. Even everyday interactions, like chatting with neighbors or coworkers about mutual interests, can turn into meaningful relationships over time. The key is to focus on what *you* enjoy, and let curiosity guide the way—people often respond warmly to genuine, relaxed energy."
       },
       {
         "emotion": "Relaxed",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Gather your documents slowly, like arranging puzzle pieces in a calm morning light—receipts, W-2s, that cozy stack of year-end summaries. Let the process unfold in a gentle rhythm: start with a quiet coffee, sort what’s due, and breathe space into each task. If numbers feel heavy, lean on trusted tools or a patient friend to walk through them. There’s no rush; this is your time to prepare with ease, turning the quiet work of tax season into a steady, grounding ritual."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people can feel as easy as a quiet stroll through a familiar neighborhood—try starting with activities that already bring you peace, like a book club, nature walks, or even a casual pottery class. When you’re engaged in something you genuinely enjoy, conversations often flow gently, like a warm cup of tea on a slow afternoon. There’s no rush to fill the silence; let shared smiles or ligh t laughter be the first threads, and see where they weave you together."
       },
       {
         "emotion": "Sad",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Gathering your tax documents can feel like a heavy task when your heart’s already carrying so much—start by setting small, gentle goals, like organizing just one folder or noting deductions you’re eligible for, and give yourself space to pause whenever you need. Even simple acts like writing down what you *can* manage today can create tiny moments of control and clarity, which might help lighten the emotional weight alongside the paperwork. You don’t have to power through everything at once; being kind to yourself in both your grief and your tasks is a quiet act of healing."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people can feel like planting seeds in soil you’re not sure is ready — sometimes it helps to start where you already feel a little grounded. Trying small, low-pressure activities like a local hobby class, a walking group, or even a coffee meetup for book lovers can create space to connect over shared interests without the weight of expectations. It’s okay to move slowly; let conversations bloom at their own pace, and remember that healing and connection often grow side by side. You deserve moments that feel gentle, not forced, and the right people will meet you exactly where you are."
       },
       {
         "emotion": "Surprised",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "That’s such an intriguing question — tax season can feel like unlocking a hidden map if you don’t know where to start! Let’s wonder through it together: begin by gathering all your documents (W-2s, receipts, etc.), then explore deductions you might’ve overlooked, like home office space or charitable donations. Use free tools or chat with a volunteer advisor to demystify the forms — it’s like piecing together a puzzle, and every step makes the picture clearer. The surprise is part of the adventure!"
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "That’s such a thoughtful question — it’s amazing how the right approach can turn meeting people into something gentle and joyful instead of intimidating. Have you ever noticed how shared activities, like a class or a hobby group, create this natural rhythm where conversation flows around what you’re doing? It’s like the task itself eases the pressure, letting connections grow from curiosity about each other’s interests rather than forced small talk. Maybe start with something you genuinely enjoy, like a walking club or a book swap, where the focus is on the experience, not the “perfect” conversation… and see how that feels?"
       },
       {
         "emotion": "Tired",
-        "query_text": "What are some steps I can take to get ready for tax season?",
-        "response_text": "Tax season can feel like climbing a hill when your batteries are low — here’s how to ease the climb: Start by taking *one small breath* (maybe jotting down just *one* document you need), then give yourself permission to pause. When you’re ready, gather what you can *without pressure*, and consider asking a friend or professional to share the load — you don’t have to do this alone. Your energy matters; let the process honor how tired you are, step by gentle step."
+        "query_text": "How can I meet new people in a way that feels comfortable and natural",
+        "response_text": "Meeting new people when you’re this drained can feel like climbing a hill, and it’s okay to take the path that’s gentlest on you. Maybe start with small, low-pressure spaces—like a quiet coffee shop, a hobby group, or a community event where you’re already doing something you enjoy. You don’t owe anyone extra energy or pretense; showing up as you are, even when it’s quiet or slow, can invite connections that feel like rest, not work. And if you need to pause? You can. You’re allowed to let your energy guide the way."
       }
     ]
   }

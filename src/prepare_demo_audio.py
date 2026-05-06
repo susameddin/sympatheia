@@ -291,24 +291,36 @@ def process_interpolation():
 # ---------------------------------------------------------------------------
 SYMPATHEIA_18K = Path("/engram/naplab/users/sd3705/Datasets/Sympatheia-18k")
 # Neutral query index with all 12 emotion responses present in eval set
-NEUTRAL_DATASET_QID = "Neutral_00084"
+NEUTRAL_DATASET_QID = "Neutral_00259"
 
 def process_dataset():
     print("\n=== Dataset samples (all 12 emotions) ===")
 
-    # Emotional split: first entry per emotion from metadata
+    # Per-emotion index override (0-based) for the emotional split
+    EMO_DATASET_IDX = {
+        "Anxious":   1,
+        "Content":   1,
+        "Disgusted": 1,
+        "Happy":     3,
+        "Neutral":   2,
+        "Relaxed":   2,
+        "Surprised": 1,
+    }
+
+    # Emotional split: selected entry per emotion from metadata
     emo_meta_path = SYMPATHEIA_18K / "Emotional/metadata/text_pairs_eval.jsonl"
     by_emotion = {}
     with open(emo_meta_path) as f:
         for line in f:
             d = json.loads(line)
             emo = d["user_emotion"]
-            if emo not in by_emotion:
-                by_emotion[emo] = d
+            by_emotion.setdefault(emo, []).append(d)
 
     emotional_records = []
     for emo in EMOTIONS:
-        d = by_emotion.get(emo)
+        entries = by_emotion.get(emo, [])
+        idx = EMO_DATASET_IDX.get(emo, 0)
+        d = entries[idx] if idx < len(entries) else (entries[0] if entries else None)
         if not d:
             print(f"  [SKIP emotional] {emo} not in metadata")
             continue
