@@ -73,7 +73,7 @@
     <h2 class="section-title">Example Responses to Neutral Queries with Emotion Conditioning</h2>
     <p class="section-sub">
       The user speaks a neutral question. All models receive the target labels for user emotion via system prompt.
-      This demonstrates how models adapt to emotional tone even in the absence of semantic or lexical cues in speech.
+      This demonstrates how models adapt to emotional tone even in the absence of semantic or acoustic cues in speech.
     </p>
 
     <div class="emotion-tabs" id="neutral-tabs"></div>
@@ -88,7 +88,7 @@
     <p class="section-sub">
       The user's voice itself carries emotion. No model receives emotion context in its system
       prompt, each processes the same emotionally-expressive audio query without guidance,
-      testing how well fine-tuning alone enables tonal adaptation from audio cues.
+      testing how well models show tonal adaptation from semantic and acoustic cues in speech.
     </p>
 
     <div class="emotion-tabs" id="emotional-tabs"></div>
@@ -101,10 +101,11 @@
   <div class="container">
     <h2 class="section-title">Continuous Emotion Interpolation</h2>
     <p class="section-sub">
-      Unlike discrete emotion classifiers, Sympatheia operates in continuous VA space, enabling smooth
+      Sympatheia operates in continuous VA space, enabling smooth
       blending between any two emotional states. The same query audio is used for all five responses;
       valence and arousal are linearly interpolated between <strong>Happy</strong> (V=+0.85, A=+0.35)
-      and <strong>Sad</strong> (V=−0.75, A=−0.65), demonstrating fine-grained tonal control.
+      and <strong>Sad</strong> (V=−0.75, A=−0.65), and between <strong>Anxious</strong> (V=−0.40, A=+0.65)
+      and <strong>Relaxed</strong> (V=+0.25, A=−0.60), demonstrating fine-grained tonal control.
     </p>
 
     <div class="interp-input-row">
@@ -142,7 +143,7 @@
 
 <!-- ===== Footer ===== -->
 <footer>
-  <p>Sympatheia: Emotionally Adaptive Voice Assistant &nbsp;&middot;&nbsp; Anonymous NeurIPS 2026 Submission &nbsp;&middot;&nbsp;
+  <p>Sympatheia: Emotionally Adaptive Voice Assistant &nbsp;&middot;&nbsp; Anonymous Submission &nbsp;&middot;&nbsp;
      <a href="https://anonymous.4open.science/r/sympatheia-1181">Code</a>
   </p>
 </footer>
@@ -374,7 +375,7 @@ fetch("audio/manifest.json")
 
     const arrow = document.createElement("div");
     arrow.className = `interp-arrow interp-arrow--${set.id}`;
-    arrow.innerHTML = `<span>${set.from}</span><span>${set.to}</span>`;
+    arrow.innerHTML = `<span>${set.from} - ${set.to}</span>`;
 
     const grid = document.createElement("div");
     grid.className = `interp-steps interp-steps--${set.id}`;
