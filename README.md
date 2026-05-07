@@ -1,6 +1,6 @@
 # Sympatheia: Emotionally Adaptive Voice Assistant with Continuous Affect Conditioning
 
-> *Submitted to NeurIPS 2026. Anonymous submission — code, demo, and dataset links use anonymized identifiers.*
+> *Anonymous submission -- code, demo, and dataset links use anonymized identifiers.*
 
 [[Paper]](sympatheia_neurips_2026.pdf) &nbsp;|&nbsp; [[Demo]](https://anonymous.4open.science/w/sympatheia-1181/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k) &nbsp;|&nbsp; [[Code]](https://anonymous.4open.science/r/sympatheia-1181)
 
@@ -56,7 +56,7 @@ The Sympatheia LoRA adapter checkpoint is available at [huggingface.co/anonymous
 huggingface-cli download anonymous2222/Sympatheia --local-dir /path/to/checkpoint
 ```
 
-Download the checkpoint folder and place it anywhere convenient — the inference and evaluation scripts accept a `--checkpoint` argument pointing to the folder.
+Download the checkpoint folder and place it anywhere convenient -- the inference and evaluation scripts accept a `--checkpoint` argument pointing to the folder.
 
 ---
 
@@ -152,7 +152,7 @@ The evaluation pipeline has two stages: (1) generating model responses for each 
 
 All evaluation scripts are under `src/eval/`. Run them from `src/`.
 
-### Stage 1a: Generate responses — Neutral query setting
+### Stage 1a: Generate responses -- Neutral query setting
 
 The neutral setting evaluates whether the model adapts its response when the user audio is neutral but the system prompt specifies a target emotion.
 
@@ -167,7 +167,7 @@ python eval/generate_responses/sympatheia_neutral/generate_responses_neutral_sym
 
 Outputs: `{eval_output_dir}/finetuned_va/` and `{eval_output_dir}/finetuned_na/` audio files + `manifest.jsonl`.
 
-### Stage 1b: Generate responses — Emotional query setting
+### Stage 1b: Generate responses -- Emotional query setting
 
 The emotional setting evaluates empathetic response when the user audio itself carries the target emotion.
 
