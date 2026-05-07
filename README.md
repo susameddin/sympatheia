@@ -1,6 +1,6 @@
 # Sympatheia: Emotionally Adaptive Voice Assistant with Continuous Affect Conditioning
 
-> *Anonymous submission -- code, demo, and dataset links use anonymized identifiers.*
+> *Anonymous submission: Code, demo, and dataset links use anonymized identifiers.*
 
 [[Paper]](sympatheia_neurips_2026.pdf) &nbsp;|&nbsp; [[Demo]](https://anonymous.4open.science/w/sympatheia-1181/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k) &nbsp;|&nbsp; [[Code]](https://anonymous.4open.science/r/sympatheia-1181)
 
