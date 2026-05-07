@@ -38,9 +38,8 @@ core.*
 .gradio/
 
 # Logs, outputs, figures
-src/figures/*.pdf
-src/figures/*.png
-src/figures/*.svg
+src/figures/
+
 
 # Retired scripts
 src/dataset_creation/retired/
