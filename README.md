@@ -142,7 +142,7 @@ The demo supports four emotion input modes:
 - **Describe Your Feeling**: enter a free-text description of how you feel and it is automatically mapped to valence/arousal via a language model.
 - **Detect From Face**: stream webcam video; audio goes to the speech model and face expressions from the video are analyzed for emotion automatically. A static face image upload is also supported.
 
-By default the demo creates a public Gradio share link, so it can be accessed from a browser on a different machine. Pass `--ssl` to enable HTTPS for microphone access in Safari or on mobile.
+By default the demo creates a public Gradio share link, so it can be accessed from a browser on a different machine. Pass `--ssl` to enable HTTPS for microphone access.
 
 ---
 
