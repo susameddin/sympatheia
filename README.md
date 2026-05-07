@@ -22,7 +22,7 @@ cd sympatheia
 pip install -r requirements.txt
 ```
 
-> **Note:** The CosyVoice TTS components in `src/cosyvoice/` require `matcha-tts`, `conformer`, `phonemizer`, and `hyperpyyaml`, which are included in `requirements.txt`. The dataset creation pipeline additionally requires the [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) package (`qwen_tts`) — install it separately if you want to re-generate the dataset.
+> **Note:** The CosyVoice TTS components in `src/cosyvoice/` require `matcha-tts`, `conformer`, `phonemizer`, and `hyperpyyaml`, which are included in `requirements.txt`. The dataset creation pipeline additionally requires the [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) package (`qwen_tts`), and the evaluation judge scripts require [Qwen3-Omni](https://github.com/QwenLM/Qwen3). Install these separately if you plan to re-generate the dataset or run the LLM judge.
 
 ### 2. Download decoder weights
 
@@ -124,13 +124,25 @@ python inference_sympatheia.py \
     --eval-audio-dir /path/to/eval/audio
 ```
 
-**Interactive demo:**
+---
+
+## Interactive Demo
+
 ```bash
 cd src
 python gradio_demo.py \
     --checkpoint /path/to/checkpoint \
     --port 7860
 ```
+
+The demo supports four emotion input modes:
+
+- **Select Manually**: 12 emotion presets (angry, anxious, content, disgusted, excited, frustrated, happy, neutral, relaxed, sad, surprised, tired) via dropdown, plus fine-grained valence and arousal sliders.
+- **Detect From Audio**: no VA injection; the model uses its own built-in emotion detection from the user's speech.
+- **Describe Your Feeling**: enter a free-text description of how you feel and it is automatically mapped to valence/arousal via a language model.
+- **Detect From Face**: stream webcam video; audio goes to the speech model and face expressions from the video are analyzed for emotion automatically. A static face image upload is also supported.
+
+By default the demo creates a public Gradio share link, so it can be accessed from a browser on a different machine. Pass `--ssl` to enable HTTPS for microphone access in Safari or on mobile.
 
 ---
 
@@ -190,6 +202,8 @@ python eval/judge/judge_qwen3omni_emotional.py \
 Outputs: `judgments.jsonl` + `summary.json` with mean scores per condition and emotion.
 
 > **Qwen3-Omni judge:** The judge scripts expect a local Qwen3-Omni model. Point the `--model-path` argument to your local copy, or set the default path in the script.
+
+> **Baseline model requirements:** `requirements.txt` covers only Sympatheia's training and inference pipeline. Each baseline evaluation script requires the corresponding model to be installed separately; refer to each model's own repository for setup instructions.
 
 ---
 
