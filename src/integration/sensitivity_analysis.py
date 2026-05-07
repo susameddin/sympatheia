@@ -6,7 +6,7 @@ quantify quality degradation vs. noise level.
 
 Usage:
     python -m integration.sensitivity_analysis \
-        --checkpoint experiments/sympatheia-12emo-20260312-100309/checkpoint-2000
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N
 
     # Then judge:
     # Note: run this in the Qwen3-Omni environment (see https://github.com/QwenLM/Qwen3)
@@ -37,7 +37,7 @@ from src.constants import EMOTION_VA_MAPPING
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-DEFAULT_CHECKPOINT = str(PROJECT_ROOT / "experiments" / "sympatheia-12emo-v2-20260320-100225" / "checkpoint-2200")
+DEFAULT_CHECKPOINT = str(PROJECT_ROOT / "experiments" / "sympatheia-12emo-YYYYMMDD-HHMMSS" / "checkpoint-N")
 DEFAULT_NEUTRAL_QUERY_DIR = os.environ.get("NEUTRAL_QUERY_DIR", "/path/to/eval/query/neutral")
 DEFAULT_OUTPUT_DIR = os.environ.get("EVAL_OUTPUT_DIR", "./eval/eval_sensitivity")
 DECODER_SAMPLE_RATE = 22050

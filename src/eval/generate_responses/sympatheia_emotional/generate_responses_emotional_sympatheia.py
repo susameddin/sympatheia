@@ -62,7 +62,7 @@ from src.constants import EMOTION_VA_MAPPING, ALL_EMOTIONS
 
 BASE_MODEL_ID = "THUDM/glm-4-voice-9b"
 DEFAULT_FINETUNED_EXPERIMENT = (
-    "experiments/sympatheia-12emo-20260312-100309"
+    "experiments/sympatheia-12emo-YYYYMMDD-HHMMSS"
 )
 DEFAULT_CHECKPOINT_STEP = 2000
 DEFAULT_EVAL_AUDIO_DIR = "/path/to/Sympatheia_12Emo_Emotional_v2/audio/eval"

@@ -13,7 +13,7 @@ Usage:
 
     # Or run a single checkpoint (backward compatible):
     python inference_sympatheia.py \
-        --checkpoint experiments/sympatheia-12emo-v2-YYYYMMDD-HHMMSS/checkpoint-200
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N
 """
 
 import sys
@@ -50,7 +50,7 @@ def parse_args():
     group.add_argument(
         "--checkpoint",
         type=str,
-        help="Single checkpoint path (e.g., experiments/.../checkpoint-300)",
+        help="Single checkpoint path (e.g., experiments/.../checkpoint-N)",
     )
     parser.add_argument(
         "--checkpoints",

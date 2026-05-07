@@ -18,6 +18,7 @@ __pycache__/
 # Training artifacts
 src/experiments/
 src/wandb/
+src/figure/
 src/glm-4-voice-decoder/
 core.*
 

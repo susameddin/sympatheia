@@ -13,11 +13,11 @@ Conditions (one VA-conditioned per modality + shared no_va baseline):
 Usage:
     # All three modalities (default)
     python -m integration.seed_module.eval_seed_end_to_end \\
-        --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N
 
     # Subset of modalities
     python -m integration.seed_module.eval_seed_end_to_end \\
-        --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930 \\
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N \\
         --modality eeg_only combined
 
     # Then judge (neutral rubric):
@@ -53,7 +53,7 @@ from src.constants import SPEECH_ANCHORS
 # ---------------------------------------------------------------------------
 _DEFAULT_CHECKPOINT = str(
     PROJECT_ROOT / "experiments"
-    / "sympatheia-12emo-v2-20260320-100225" / "checkpoint-2200"
+    / "sympatheia-12emo-YYYYMMDD-HHMMSS" / "checkpoint-N"
 )
 _DEFAULT_EVAL_AUDIO = os.environ.get("NEUTRAL_QUERY_DIR", "/path/to/eval/query/neutral")
 _DEFAULT_OUTPUT_BASE = os.environ.get("EVAL_OUTPUT_DIR", "./eval")

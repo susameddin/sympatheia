@@ -6,7 +6,7 @@ and generates an emotionally-conditioned speech response.
 
 Usage:
     python gradio_demo.py \
-        --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-2200 \
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N \
         --port 7860
 """
 
@@ -103,7 +103,7 @@ _HEATMAP_ALPHA = 0.70
 
 DEFAULT_CHECKPOINT = os.path.join(
     FINETUNE_DIR,
-    "experiments/glm-model-opens2s-qwen3tts-va-text-lora-20260205-213752/checkpoint-700",
+    "experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N",
 )
 SAMPLE_RATE = 22050
 

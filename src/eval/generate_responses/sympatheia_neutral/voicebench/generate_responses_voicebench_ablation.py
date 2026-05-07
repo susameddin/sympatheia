@@ -63,7 +63,7 @@ from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 
 BASE_MODEL_ID = "THUDM/glm-4-voice-9b"
 DEFAULT_FINETUNED_EXPERIMENT = (
-    "experiments/sympatheia-12emo-v2-20260320-100225"
+    "experiments/sympatheia-12emo-YYYYMMDD-HHMMSS"
 )
 DEFAULT_CHECKPOINT_STEP = 2200
 DEFAULT_ENGRAM_BASE = "eval"

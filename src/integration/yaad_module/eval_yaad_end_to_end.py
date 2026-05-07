@@ -14,12 +14,12 @@ and write into a combined manifest.
 Usage:
     # Single modality
     python -m integration.yaad_module.eval_yaad_end_to_end \\
-        --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930 \\
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N \\
         --modality ecg
 
     # Multiple modalities in one pass
     python -m integration.yaad_module.eval_yaad_end_to_end \\
-        --checkpoint experiments/sympatheia-12emo-v2-20260320-100225/checkpoint-3930 \\
+        --checkpoint experiments/sympatheia-12emo-YYYYMMDD-HHMMSS/checkpoint-N \\
         --modality ecg gsr
 
     # Then judge (neutral rubric):
@@ -56,7 +56,7 @@ from src.constants import SPEECH_ANCHORS
 # ---------------------------------------------------------------------------
 _EXPERIMENTS = PROJECT_ROOT / "experiments"
 _DEFAULT_CHECKPOINT = str(
-    _EXPERIMENTS / "sympatheia-12emo-v2-20260320-100225" / "checkpoint-2200"
+    _EXPERIMENTS / "sympatheia-12emo-YYYYMMDD-HHMMSS" / "checkpoint-N"
 )
 _DEFAULT_EVAL_AUDIO = os.environ.get("NEUTRAL_QUERY_DIR", "/path/to/eval/query/neutral")
 _DEFAULT_OUTPUT_BASE = os.environ.get("EVAL_OUTPUT_DIR", "./eval")

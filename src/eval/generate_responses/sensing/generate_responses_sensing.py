@@ -44,7 +44,7 @@ from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 
 BASE_MODEL_ID = "THUDM/glm-4-voice-9b"
 DEFAULT_CHECKPOINT = str(
-    PROJECT_ROOT / "experiments" / "sympatheia-12emo-v2-20260320-100225" / "checkpoint-2200"
+    PROJECT_ROOT / "experiments" / "sympatheia-12emo-YYYYMMDD-HHMMSS" / "checkpoint-N"
 )
 DECODER_SAMPLE_RATE = 22050
 DEFAULT_EVAL_AUDIO = (
