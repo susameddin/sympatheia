@@ -2,7 +2,7 @@
 
 > *Anonymous submission: Code, demo, and dataset links use anonymized identifiers.*
 
-[[Paper]](sympatheia_neurips_2026.pdf) &nbsp;|&nbsp; [[Demo]](https://anonymous.4open.science/w/sympatheia-1181/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k) &nbsp;|&nbsp; [[Code]](https://anonymous.4open.science/r/sympatheia-1181)
+[[Paper]](sympatheia_neurips_2026.pdf) &nbsp;|&nbsp; [[Demo]](https://anonymous.4open.science/w/sympatheia-9327/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k) &nbsp;|&nbsp; [[Code]](https://anonymous.4open.science/r/sympatheia-9327)
 
 ---
 
@@ -17,7 +17,7 @@ Sympatheia is a speech-to-speech empathetic dialogue framework that conditions r
 ### 1. Clone and install dependencies
 
 ```bash
-git clone https://anonymous.4open.science/r/sympatheia-1181
+git clone https://anonymous.4open.science/r/sympatheia-9327
 cd sympatheia
 pip install -r requirements.txt
 ```
