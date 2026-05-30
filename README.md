@@ -1,8 +1,6 @@
 # Sympatheia: Emotionally Adaptive Voice Assistant with Continuous Affect Conditioning
 
-> *Anonymous submission: Code, demo, and dataset links use anonymized identifiers.*
-
-[[Paper]](sympatheia_neurips_2026.pdf) &nbsp;|&nbsp; [[Demo]](https://anonymous.4open.science/w/sympatheia-9327/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k) &nbsp;|&nbsp; [[Code]](https://anonymous.4open.science/r/sympatheia-9327)
+[[Paper]](sympatheia.pdf) &nbsp;|&nbsp; [[Demo]](https://susameddin.github.io/sympatheia/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/susameddin/Sympatheia-18k) &nbsp;|&nbsp; [[Model]](https://github.com/susameddin/sympatheia)
 
 ---
 
@@ -17,7 +15,7 @@ Sympatheia is a speech-to-speech empathetic dialogue framework that conditions r
 ### 1. Clone and install dependencies
 
 ```bash
-git clone https://anonymous.4open.science/r/sympatheia-9327
+git clone https://github.com/susameddin/sympatheia.git
 cd sympatheia
 pip install -r requirements.txt
 ```
@@ -49,11 +47,11 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('THUDM/
 
 ## Pretrained Model Weights
 
-The Sympatheia LoRA adapter checkpoint is available at [huggingface.co/anonymous2222/Sympatheia](https://huggingface.co/anonymous2222/Sympatheia).
+The Sympatheia LoRA adapter checkpoint is available at [huggingface.co/susameddin/Sympatheia](https://huggingface.co/susameddin/Sympatheia).
 
 ```bash
 # Download checkpoint
-huggingface-cli download anonymous2222/Sympatheia --local-dir /path/to/checkpoint
+huggingface-cli download susameddin/Sympatheia --local-dir /path/to/checkpoint
 ```
 
 Download the checkpoint folder and place it anywhere convenient -- the inference and evaluation scripts accept a `--checkpoint` argument pointing to the folder.
@@ -62,7 +60,7 @@ Download the checkpoint folder and place it anywhere convenient -- the inference
 
 ## Dataset: Sympatheia-18k
 
-The full dataset is available at [huggingface.co/datasets/anonymous2222/Sympatheia-18k](https://huggingface.co/datasets/anonymous2222/Sympatheia-18k).
+The full dataset is available at [huggingface.co/datasets/susameddin/Sympatheia-18k](https://huggingface.co/datasets/susameddin/Sympatheia-18k).
 
 Sympatheia-18k consists of two complementary splits:
 
@@ -276,7 +274,7 @@ Sensing module integration experiments and end-to-end evaluations are in `src/in
 sympatheia/
 ├── README.md
 ├── requirements.txt
-├── sympatheia_neurips_2026.pdf
+├── sympatheia.pdf
 └── src/
     ├── train_sympatheia.py          # LoRA fine-tuning entry point
     ├── inference_sympatheia.py      # Batch inference with VA conditions
