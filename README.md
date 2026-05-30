@@ -1,10 +1,10 @@
 # Sympatheia: Emotionally Adaptive Voice Assistant with Continuous Affect Conditioning
 
-[[Paper]](sympatheia.pdf) &nbsp;|&nbsp; [[Demo]](https://susameddin.github.io/sympatheia/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/susameddin/Sympatheia-18k) &nbsp;|&nbsp; [[Model]](https://github.com/susameddin/sympatheia)
+[[Paper]](sympatheia.pdf) &nbsp;|&nbsp; [[Demo]](https://susameddin.github.io/sympatheia/) &nbsp;|&nbsp; [[Dataset (Sympatheia-18k)]](https://huggingface.co/datasets/susameddin/Sympatheia-18k) &nbsp;|&nbsp; [[Model]](https://huggingface.co/susameddin/Sympatheia)
 
 ---
 
-Sympatheia is a speech-to-speech empathetic dialogue framework that conditions response generation on **continuous valence–arousal (VA) affect signals** inferred from the user's spoken query and, when available, from pluggable external emotion sensing modules (face, EEG/physiological signals, textual affect descriptions). The model is built on [GLM-4-Voice-9B](https://huggingface.co/THUDM/glm-4-voice-9b) and fine-tuned with LoRA on **Sympatheia-18k**, a synthetic corpus of 18k emotion-conditioned spoken dialogue pairs spanning 12 emotion anchors.
+Sympatheia is a speech-to-speech empathetic dialogue framework that conditions response generation on **continuous valence–arousal (VA) affect signals** inferred from the user's spoken query and, when available, from pluggable external emotion sensing modules (face, EEG/physiological signals, textual affect descriptions). The model is built on [GLM-4-Voice-9B](https://huggingface.co/THUDM/glm-4-voice-9b) and fine-tuned on **Sympatheia-18k**, a synthetic corpus of 18k emotion-conditioned spoken dialogue pairs spanning 12 emotion anchors.
 
 ![System overview](figure/overview.png)
 
