@@ -53,7 +53,8 @@ src/eval/generate_responses/sensing/retired/
 # Personal utility scripts (not part of public API)
 src/prepare_demo_audio.py
 
-# Discrete-label ablation scripts (work in progress, not for commit yet)
+# Discrete-label ablation scripts (incremental variants of train_sympatheia.py /
+# inference_sympatheia.py; omitted for simplicity)
 src/train_sympatheia_discrete.py
 src/inference_sympatheia_discrete.py
 
