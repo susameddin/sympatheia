@@ -18,7 +18,7 @@ Outputs:
 
 The output dir is auto-constructed from the experiment name + checkpoint step
 when --output-dir is not explicitly provided:
-  <engram>/eval_neutral_<experiment>_ckpt<step>/
+  <eval-base>/eval_neutral_<experiment>_ckpt<step>/
 
 For base GLM-4-Voice responses, use generate_responses_neutral_glm4voice_base.py.
 
@@ -55,7 +55,7 @@ import torch
 from transformers import AutoTokenizer
 from peft import AutoPeftModelForCausalLM
 
-# Project root is 4 levels up from this file (eval/generate_responses/sympatheia_neutral/ -> sympatheia/)
+# PROJECT_ROOT is the src/ dir, 4 levels up from eval/generate_responses/sympatheia_neutral/
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -75,7 +75,7 @@ DEFAULT_NEUTRAL_AUDIO_DIR = (
     "/path/to/Sympatheia_12Emo_Neutral_v2"
     "/audio/eval/query/neutral"
 )
-DEFAULT_ENGRAM_BASE = "eval"
+DEFAULT_EVAL_BASE = "eval"
 DECODER_SAMPLE_RATE = 22050
 
 NA_SYSTEM_PROMPT = "Please respond in English. User emotion N/A"
@@ -110,7 +110,7 @@ def parse_args():
     parser.add_argument(
         "--output-dir", type=str, default=None,
         help="Output directory for audio files and manifest.jsonl. "
-             "Default: auto-constructed as <engram>/eval_neutral_<experiment>_ckpt<step>/",
+             "Default: auto-constructed as <eval-base>/eval_neutral_<experiment>_ckpt<step>/",
     )
     parser.add_argument(
         "--emotions", type=str, nargs="+", default=None,
@@ -234,7 +234,7 @@ def main():
     # Auto-construct output dir from experiment + checkpoint if not provided
     if args.output_dir is None:
         exp_name = finetuned_exp.name
-        output_dir = Path(DEFAULT_ENGRAM_BASE) / f"eval_neutral_{exp_name}_ckpt{args.checkpoint_step}"
+        output_dir = Path(DEFAULT_EVAL_BASE) / f"eval_neutral_{exp_name}_ckpt{args.checkpoint_step}"
     else:
         output_dir = Path(args.output_dir)
         if not output_dir.is_absolute():

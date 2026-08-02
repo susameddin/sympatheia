@@ -51,9 +51,13 @@ import torch
 from transformers import AutoModel, AutoTokenizer
 from peft import AutoPeftModelForCausalLM
 
-# Project root is one level up from this file
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+# This file sits one level deeper than the other generate_responses scripts, so
+# the parent counts differ: parents[4] is src/, parents[5] is the repo root. Both
+# go on sys.path so `from src.vocoder_src ...` resolves regardless of cwd.
+_HERE = Path(__file__).resolve()
+PROJECT_ROOT = _HERE.parents[4]     # .../sympatheia/src
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(_HERE.parents[5]))
 
 from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 
@@ -66,7 +70,7 @@ DEFAULT_FINETUNED_EXPERIMENT = (
     "experiments/sympatheia-12emo-YYYYMMDD-HHMMSS"
 )
 DEFAULT_CHECKPOINT_STEP = 2200
-DEFAULT_ENGRAM_BASE = "eval"
+DEFAULT_EVAL_BASE = "eval"
 DEFAULT_VOICEBENCH_DIR = "/path/to/VoiceBench/commoneval"
 DECODER_SAMPLE_RATE = 22050
 
@@ -100,7 +104,7 @@ def parse_args():
     parser.add_argument(
         "--output-dir", type=str, default=None,
         help="Output directory for audio files and manifest.jsonl. "
-             "Default: auto-constructed as <engram>/eval_voicebench_ablation_<experiment>_ckpt<step>/",
+             "Default: auto-constructed as <eval-base>/eval_voicebench_ablation_<experiment>_ckpt<step>/",
     )
     parser.add_argument(
         "--shared-dir", type=str, default=None,
@@ -263,7 +267,7 @@ def main():
     # Auto-construct output dir
     if args.output_dir is None:
         exp_name = finetuned_exp.name
-        output_dir = Path(DEFAULT_ENGRAM_BASE) / f"eval_voicebench_ablation_{exp_name}_ckpt{args.checkpoint_step}"
+        output_dir = Path(DEFAULT_EVAL_BASE) / f"eval_voicebench_ablation_{exp_name}_ckpt{args.checkpoint_step}"
     else:
         output_dir = Path(args.output_dir)
         if not output_dir.is_absolute():

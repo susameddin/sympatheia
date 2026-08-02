@@ -30,7 +30,7 @@ import soundfile as sf
 import torch
 from transformers import AutoModel, AutoTokenizer
 
-# Project root is 4 levels up from this file (eval/generate_responses/sympatheia_emotional/ -> sympatheia/)
+# PROJECT_ROOT is the src/ dir, 4 levels up from eval/generate_responses/sympatheia_emotional/
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 

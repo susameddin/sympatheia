@@ -53,9 +53,21 @@ src/eval/generate_responses/sensing/retired/
 # Personal utility scripts (not part of public API)
 src/prepare_demo_audio.py
 
+# Discrete-label ablation scripts (work in progress, not for commit yet)
+src/train_sympatheia_discrete.py
+src/inference_sympatheia_discrete.py
+
+# Exploratory analysis packages (not part of the published pipeline)
+src/offanchor/
+src/errana/
+
 # Pickle caches
 *.pkl
 
 # IDE
 .vscode/
 .idea/
+
+# Secrets
+.env
+*.env

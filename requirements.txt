@@ -30,6 +30,9 @@ hyperpyyaml>=1.2
 numpy==1.26.4
 scipy==1.15.3
 
+# LLM judge (Gemini backend; the Qwen3-Omni judge is installed separately)
+google-genai>=1.0
+
 # Experiment tracking
 wandb==0.23.1
 

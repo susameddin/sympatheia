@@ -297,9 +297,10 @@ sympatheia/
     ├── eval/
     │   ├── generate_responses/      # Response generation scripts per model
     │   │   ├── sympatheia_neutral/  # Neutral-query evaluation
-    │   │   └── sympatheia_emotional/# Emotional-query evaluation
-    │   ├── judge/                   # Qwen3-Omni LLM-as-a-judge scripts
-    │   └── metrics/                 # Prosody, coherence, naturalness metrics
+    │   │   ├── sympatheia_emotional/# Emotional-query evaluation
+    │   │   └── interpolation/       # VA intensity and inter-emotion ramps
+    │   ├── judge/                   # Qwen3-Omni and Gemini LLM-as-a-judge scripts
+    │   └── metrics/                 # Prosody, coherence, naturalness, interpolation
     ├── figures/                     # Figure generation scripts
     ├── experiments/                 # Training checkpoints (created at runtime)
     └── docs/                        # GitHub Pages demo site

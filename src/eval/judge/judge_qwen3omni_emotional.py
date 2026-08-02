@@ -44,12 +44,13 @@ from pathlib import Path
 
 import torch
 
+from eval.judge.judge_common import ALL_CONDITIONS_EMOTIONAL as ALL_CONDITIONS
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
 DEFAULT_MODEL = "Qwen/Qwen3-Omni"
-ALL_CONDITIONS = ["base", "finetuned_va", "finetuned_na", "opens2s", "osum_no_think", "osum_think", "qwen3omni", "qwen2_5omni", "kimiaudio", "face_va", "text_va", "no_va", "oracle", "eeg_only", "eye_only", "combined", "ecg_va", "gsr_va", "fusion_va", "yaad_va", "qwen3tts_cascaded", "face_image_qwen3omni", "text_qwen3omni"]
 
 JUDGE_SYSTEM_PROMPT = """\
 You are an expert evaluator of empathetic conversational AI. Your task is to \

@@ -49,7 +49,7 @@ import torch
 from transformers import AutoTokenizer
 from peft import AutoPeftModelForCausalLM
 
-# Project root is 4 levels up from this file (eval/generate_responses/sympatheia_emotional/ -> sympatheia/)
+# PROJECT_ROOT is the src/ dir, 4 levels up from eval/generate_responses/sympatheia_emotional/
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -66,7 +66,7 @@ DEFAULT_FINETUNED_EXPERIMENT = (
 )
 DEFAULT_CHECKPOINT_STEP = 2000
 DEFAULT_EVAL_AUDIO_DIR = "/path/to/Sympatheia_12Emo_Emotional_v2/audio/eval"
-DEFAULT_ENGRAM_BASE = "eval"
+DEFAULT_EVAL_BASE = "eval"
 DECODER_SAMPLE_RATE = 22050
 
 PLAIN_SYSTEM_PROMPT = "Please respond in English."
@@ -101,7 +101,7 @@ def parse_args():
     parser.add_argument(
         "--output-dir", type=str, default=None,
         help="Output directory for audio files and manifest.jsonl. "
-             "Default: auto-constructed as <engram>/eval_emotional_<experiment>_ckpt<step>/",
+             "Default: auto-constructed as <eval-base>/eval_emotional_<experiment>_ckpt<step>/",
     )
     parser.add_argument(
         "--emotions", type=str, nargs="+", default=None,
@@ -224,7 +224,7 @@ def main():
     # Auto-construct output dir from experiment + checkpoint if not provided
     if args.output_dir is None:
         exp_name = finetuned_exp.name
-        output_dir = Path(DEFAULT_ENGRAM_BASE) / f"eval_emotional_{exp_name}_ckpt{args.checkpoint_step}"
+        output_dir = Path(DEFAULT_EVAL_BASE) / f"eval_emotional_{exp_name}_ckpt{args.checkpoint_step}"
     else:
         output_dir = Path(args.output_dir)
 
