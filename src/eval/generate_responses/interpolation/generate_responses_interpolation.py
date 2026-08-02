@@ -42,13 +42,14 @@ from pathlib import Path
 
 import soundfile as sf
 
-# PROJECT_ROOT is the src/ dir, 5 levels up from
-# eval/generate_responses/interpolation/. Add both it and the repo root so
-# `from src.vocoder_src ...` resolves regardless of cwd.
+# parents[3] is src/, parents[4] is the repo root. Both go on sys.path: the
+# repo root is what `from src.vocoder_src ...` resolves against, and src/ is
+# what sibling packages are found under, regardless of cwd.
 _HERE = Path(__file__).resolve()
-PROJECT_ROOT = _HERE.parents[4]
-sys.path.insert(0, str(PROJECT_ROOT))
-sys.path.insert(0, str(_HERE.parents[5]))
+SRC_DIR = _HERE.parents[3]
+REPO_ROOT = _HERE.parents[4]
+sys.path.insert(0, str(SRC_DIR))
+sys.path.insert(0, str(REPO_ROOT))
 
 from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 
@@ -210,7 +211,7 @@ def load_stack(checkpoint: Path):
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_ID, trust_remote_code=True)
     audio_0_id = tokenizer.convert_tokens_to_ids("<|audio_0|>")
     encoder = GLM4CodecEncoder()
-    decoder = GLM4CodecDecoder(str(PROJECT_ROOT / "glm-4-voice-decoder"))
+    decoder = GLM4CodecDecoder(str(SRC_DIR / "glm-4-voice-decoder"))
 
     print(f"Loading model: {checkpoint}")
     t0 = time.time()

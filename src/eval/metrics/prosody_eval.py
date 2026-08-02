@@ -58,8 +58,11 @@ except ImportError:
     _SCIPY_OK = False
     print("WARNING: scipy not installed — correlation/discriminability will be skipped. pip install scipy")
 
+# PROJECT_ROOT is the src/ dir; its parent is the repo root, which is what
+# `from src.constants ...` resolves against. Both go on sys.path.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT.parent))
 
 from src.constants import EMOTION_VA_MAPPING, ALL_EMOTIONS
 

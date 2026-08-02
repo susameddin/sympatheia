@@ -45,8 +45,11 @@ except ImportError:
     _ROUGE_OK = False
     print("WARNING: rouge_score not installed — install with: pip install rouge-score")
 
+# PROJECT_ROOT is the src/ dir; its parent is the repo root, which is what
+# `from src.constants ...` resolves against. Both go on sys.path.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT.parent))
 
 from src.constants import ALL_EMOTIONS
 

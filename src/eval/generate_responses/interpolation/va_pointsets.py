@@ -51,10 +51,11 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-# PROJECT_ROOT is the src/ dir, 5 levels up from
-# eval/generate_responses/interpolation/
-PROJECT_ROOT = Path(__file__).resolve().parents[4]
-sys.path.insert(0, str(PROJECT_ROOT))
+# parents[4] is the repo root, which is what `from src.constants ...` resolves
+# against; parents[3] is src/.
+_HERE = Path(__file__).resolve()
+sys.path.insert(0, str(_HERE.parents[3]))
+sys.path.insert(0, str(_HERE.parents[4]))
 
 from src.constants import EMOTION_VA_MAPPING
 
