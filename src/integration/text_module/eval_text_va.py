@@ -48,6 +48,7 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT.parent))
 
 from src.integration.text_module.text_to_va import TextToVAConverter
 from src.constants import SPEECH_ANCHORS

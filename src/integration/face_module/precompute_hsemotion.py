@@ -28,6 +28,7 @@ from PIL import Image
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT.parent))
 
 from src.integration.face_module.config import EMOTION_NAMES, CACHE_DIR
 from src.constants import SPEECH_ANCHORS, _FACE_TO_SPEECH

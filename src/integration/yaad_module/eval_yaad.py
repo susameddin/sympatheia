@@ -26,6 +26,12 @@ from sklearn.preprocessing import LabelEncoder
 from .ecg_emotion.loader import load_all_data, load_multimodal_data
 from .ecg_emotion.models import ECGResNet1DDeep
 from .ecg_emotion.experiments import run_pytorch_cv
+import sys
+from pathlib import Path
+
+# Repo root on sys.path so `from src... import ...` resolves regardless of cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from src.constants import EMOTION_VA_MAPPING as SPEECH_ANCHORS
 
 from .config import (

@@ -27,8 +27,13 @@ import soundfile as sf
 import torch
 from transformers import AutoModel, AutoTokenizer
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+# This file sits one level deeper than the other generate_responses scripts, so
+# the parent counts differ: parents[4] is src/, parents[5] is the repo root. Both
+# go on sys.path so `from src... import ...` resolves regardless of cwd.
+_HERE = Path(__file__).resolve()
+PROJECT_ROOT = _HERE.parents[4]     # .../sympatheia/src
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(_HERE.parents[5]))
 
 from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 

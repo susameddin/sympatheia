@@ -48,6 +48,7 @@ from model import MAET
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT.parent))
 from src.integration.seed_module.va_utils import EEG_SPEECH_VA, EEGVASpeechMapper
 
 CACHE_DIR = Path(__file__).resolve().parent / "cache"

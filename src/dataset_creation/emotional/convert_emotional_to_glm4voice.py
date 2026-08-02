@@ -13,6 +13,8 @@ from typing import Dict, Any
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+# Repo root on sys.path so `from src... import ...` resolves regardless of cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from src.vocoder_src import GLM4CodecEncoder
 from tqdm import tqdm

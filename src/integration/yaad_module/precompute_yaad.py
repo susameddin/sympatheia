@@ -33,6 +33,11 @@ from pathlib import Path
 import numpy as np
 
 from .ecg_emotion.loader import load_all_data, load_multimodal_data
+import sys
+
+# Repo root on sys.path so `from src... import ...` resolves regardless of cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from src.constants import EMOTION_VA_MAPPING as SPEECH_ANCHORS
 
 from .config import (

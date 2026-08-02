@@ -30,6 +30,7 @@ from peft import AutoPeftModelForCausalLM
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT.parent))
 
 from src.vocoder_src import GLM4CodecEncoder, GLM4CodecDecoder
 from src.constants import EMOTION_VA_MAPPING
