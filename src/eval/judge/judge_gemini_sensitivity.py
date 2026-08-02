@@ -31,6 +31,10 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
+# src/ on sys.path so `eval.judge...` resolves whether this is run as
+# `python -m eval.judge.<name>` or as a plain script path.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from eval.judge.gemini_backend import GeminiJudge, get_pricing
 from eval.judge.judge_common import FatalJudgeError, parse_rating
 # Prompts/user-text imported to guarantee byte-identity with the neutral judge

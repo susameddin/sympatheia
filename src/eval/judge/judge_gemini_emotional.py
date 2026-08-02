@@ -30,6 +30,10 @@ import argparse
 import sys
 from pathlib import Path
 
+# src/ on sys.path so `eval.judge...` resolves whether this is run as
+# `python -m eval.judge.<name>` or as a plain script path.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import eval.judge.judge_common as jc
 from eval.judge.gemini_backend import GeminiJudge, get_pricing
 

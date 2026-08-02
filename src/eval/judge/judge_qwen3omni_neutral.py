@@ -46,6 +46,10 @@ from pathlib import Path
 
 import torch
 
+# src/ on sys.path so `eval.judge...` resolves whether this is run as
+# `python -m eval.judge.<name>` or as a plain script path.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from eval.judge.judge_common import ALL_CONDITIONS_NEUTRAL as ALL_CONDITIONS
 
 # ---------------------------------------------------------------------------

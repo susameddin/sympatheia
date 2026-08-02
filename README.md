@@ -146,7 +146,7 @@ By default the demo creates a public Gradio share link, so it can be accessed fr
 
 ## Evaluation
 
-The evaluation pipeline has two stages: (1) generating model responses for each condition and (2) scoring them with an audio-capable LLM judge (Qwen3-Omni).
+The evaluation pipeline has two stages: (1) generating model responses for each condition and (2) scoring them with an audio-capable LLM judge (Gemini or Qwen3-Omni).
 
 All evaluation scripts are under `src/eval/`. Run them from `src/`.
 
@@ -182,7 +182,28 @@ Outputs: same structure as neutral setting.
 
 ### Stage 2: LLM-as-a-judge scoring
 
-Score generated responses using Qwen3-Omni as the audio-capable judge:
+Two judges are provided. Both listen to the same generated audio and score it on the same 1--5 rubric with byte-identical prompts, so the only variable between them is the judge model.
+
+**Gemini** (hosted API):
+
+```bash
+cd src
+export GEMINI_API_KEY=...   # or put it in a .env file at the repo root
+
+# Neutral setting judge
+python eval/judge/judge_gemini_neutral.py \
+    --manifest /path/to/manifest.jsonl \
+    --conditions finetuned_va finetuned_na
+
+# Emotional setting judge
+python eval/judge/judge_gemini_emotional.py \
+    --manifest /path/to/manifest.jsonl \
+    --conditions finetuned_va finetuned_na
+```
+
+Outputs: `judgments_gemini.jsonl` + `summary_gemini.json` with mean scores per condition and emotion.
+
+**Qwen3-Omni** (local, no API cost):
 
 ```bash
 cd src
@@ -198,6 +219,8 @@ python eval/judge/judge_qwen3omni_emotional.py \
 ```
 
 Outputs: `judgments.jsonl` + `summary.json` with mean scores per condition and emotion.
+
+> **Gemini judge:** Requires `google-genai` (in `requirements.txt`) and an API key in `GEMINI_API_KEY` or `GOOGLE_API_KEY`. Select a different model with `--model`.
 
 > **Qwen3-Omni judge:** The judge scripts expect a local Qwen3-Omni model. Point the `--model-path` argument to your local copy, or set the default path in the script.
 

@@ -51,6 +51,10 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
+# src/ on sys.path so `eval.judge...` resolves whether this is run as
+# `python -m eval.judge.<name>` or as a plain script path.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from eval.generate_responses.interpolation.va_pointsets import (
     ANCHORS, nearest_anchor, ray_records)
 from eval.judge import judge_backends
